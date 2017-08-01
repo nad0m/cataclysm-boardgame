@@ -48,28 +48,36 @@ module.exports = function(passport) {
         function(req, username, password, done) {
             // find a user whose email is the same as the forms email
             // we are checking to see if the user trying to login already exists
+
             connection.query("SELECT * FROM users WHERE username = ?",[username], function(err, rows) {
                 if (err)
                     return done(err);
                 if (rows.length) {
-                    return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
+                    return done(null, false, req.flash('signupMessage', 'That E-Mail address already exists in the system.'));
                 } else {
                     // if there is no user with that username
                     // create the user
                     var newUserMysql = {
                         username: username,
-                        password: bcrypt.hashSync(password, null, null)  // use the generateHash function in our user model
+                        password: bcrypt.hashSync(password, null, null),  // use the generateHash function in our user model
+                        firstname: req.body.firstname,
+                        lastname:  req.body.lastname,
+                        games: 0
                     };
 
-                    var insertQuery = "INSERT INTO users ( username, password ) values (?,?)";
+                    var insertQuery = "INSERT INTO users (username, password, firstname, lastname, games) values (?,?,?,?,?)";
+                    connection.query(insertQuery,[newUserMysql.username, newUserMysql.password, newUserMysql.firstname,
+                        newUserMysql.lastname, newUserMysql.games],function(err, rows) {
 
-                    connection.query(insertQuery,[newUserMysql.username, newUserMysql.password],function(err, rows) {
                         newUserMysql.id = rows.insertId;
 
                         return done(null, newUserMysql);
                     });
-                }
+
+             }
             });
+
+
         })
     );
 
