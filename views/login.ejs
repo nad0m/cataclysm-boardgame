@@ -1,0 +1,51 @@
+<!-- views/login.ejs-->
+<!doctype html>
+<html>
+<head>
+	<title>Node Authentication</title>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<style>
+		body 		{ padding-top:80px; }
+	</style>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="col-sm-6 col-sm-offset-3">
+            <h1><span class="fa fa-sign-in"></span> Login to play</h1>
+
+<% if (message.length > 0) { %>
+<div class="alert alert-danger" style="font-size: 16px;"><%= message %></div>
+<% } %>
+
+
+                <div id="login">
+                    <form name="form-login" action="/login" id="testForm" method="POST">
+                        <span class="fontawesome-user"></span>
+                        <input type="text" id="user" name="username" placeholder="Email">
+
+                        <span class="fontawesome-lock"></span>
+                        <input type="password" id="pass" name="password" placeholder="Password">
+
+                        <button class="click" value="Login">Log in</button>
+
+                    </form>
+
+                </div>
+
+
+            <hr>
+
+            <h4>Need an account? <a href="/signup">Signup</a></h4>
+            <h4>Or go <a href="/">home</a>.</h4>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
