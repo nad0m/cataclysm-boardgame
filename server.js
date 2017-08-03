@@ -10,7 +10,6 @@ var morgan = require('morgan');
 var app      = express();
 var port     = process.env.PORT || 8080;
 var path = require("path");
-
 var passport = require('passport');
 var flash    = require('connect-flash');
 
@@ -47,5 +46,27 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 // launch ======================================================================
-app.listen(port);
+var io = require('socket.io').listen(app.listen(port));
 console.log('The magic happens on port ' + port);
+
+// chat ======================================================================
+io.sockets.on('connection', function (socket) {
+    console.log("a user connected");
+
+    socket.on('chat message', function(msg){
+        io.emit('chat message', msg);
+    });
+
+    socket.on('new user', function(msg){
+        io.emit('new user', msg);
+    });
+});
+
+io.sockets.on('disconnection', function (socket) {
+    console.log("a user disconnected");
+
+    socket.on('user exit', function(msg){
+        io.emit('user exit', msg);
+    });
+
+});

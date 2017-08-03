@@ -69,6 +69,15 @@ module.exports = function(app, passport) {
 		req.logout();
 		res.redirect('/');
 	});
+
+    // =====================================
+    // CHATROOM ==============================
+    // =====================================
+    app.get('/chat', isLoggedIn, function(req, res) {
+        res.render('chat.ejs', {
+        	user : req.user
+		});
+    });
 };
 
 // route middleware to make sure

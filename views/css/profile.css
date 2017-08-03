@@ -1,0 +1,15 @@
+.click {
+    background: #f44242;
+    border: 0;
+    width: 20%;
+    height: 40px;
+    border-radius: 3px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    font-size: 16px;
+}
+.click:hover {
+    background: #f47341;
+
+}

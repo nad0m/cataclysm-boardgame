@@ -13,13 +13,17 @@
 			margin: 0;}
 	</style>
 
+	<link rel="stylesheet" href="css/profile.css">
+
 </head>
 <body>
 <div class="container">
 
 	<div class="page-header text-center">
 		<h1><span class="fa fa-anchor"></span> Profile Page</h1>
-		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+		<form action="/logout">
+			<button type="submit" class="click">Logout</button>
+		</form>
 	</div>
 
 	<div class="row">
@@ -40,6 +44,11 @@
 
 	</div>
 
+	<form action="/chat">
+		<button type="submit" class="click">Go to chat room</button>
+	</form>
+
 </div>
+
 </body>
 </html>
