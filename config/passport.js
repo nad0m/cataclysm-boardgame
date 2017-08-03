@@ -7,9 +7,7 @@ var LocalStrategy   = require('passport-local').Strategy;
 var mysql = require('mysql');
 var bcrypt = require('bcrypt-nodejs');
 var dbconfig = require('./database');
-var connection = mysql.createConnection(dbconfig.connection);
 
-connection.query('USE ' + dbconfig.database);
 // expose this function to our app using module.exports
 module.exports = function(passport) {
 
@@ -24,12 +22,17 @@ module.exports = function(passport) {
         done(null, user.id);
     });
 
+
     // used to deserialize the user
+    var connection = mysql.createConnection(dbconfig.connection);
+    connection.query('USE ' + dbconfig.database);
     passport.deserializeUser(function(id, done) {
         connection.query("SELECT * FROM users WHERE id = ? ",[id], function(err, rows){
             done(err, rows[0]);
         });
+        connection.end()
     });
+   ;
 
     // =========================================================================
     // LOCAL SIGNUP ============================================================
@@ -48,7 +51,8 @@ module.exports = function(passport) {
         function(req, username, password, done) {
             // find a user whose email is the same as the forms email
             // we are checking to see if the user trying to login already exists
-
+            var connection = mysql.createConnection(dbconfig.connection);
+            connection.query('USE ' + dbconfig.database);
             connection.query("SELECT * FROM users WHERE username = ?",[username], function(err, rows) {
                 if (err)
                     return done(err);
@@ -77,6 +81,8 @@ module.exports = function(passport) {
              }
             });
 
+            connection.end();
+
 
         })
     );
@@ -96,6 +102,8 @@ module.exports = function(passport) {
             passReqToCallback : true // allows us to pass back the entire request to the callback
         },
         function(req, username, password, done) { // callback with email and password from our form
+            var connection = mysql.createConnection(dbconfig.connection);
+            connection.query('USE ' + dbconfig.database);
             connection.query("SELECT * FROM users WHERE username = ?",[username], function(err, rows){
                 if (err)
                     return done(err);
@@ -110,6 +118,10 @@ module.exports = function(passport) {
                 // all is well, return successful user
                 return done(null, rows[0]);
             });
+
+
+            connection.end();
         })
     );
 };
+
