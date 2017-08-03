@@ -30,9 +30,8 @@ module.exports = function(passport) {
         connection.query("SELECT * FROM users WHERE id = ? ",[id], function(err, rows){
             done(err, rows[0]);
         });
-        connection.end()
     });
-   ;
+
 
     // =========================================================================
     // LOCAL SIGNUP ============================================================
