@@ -50,23 +50,24 @@ var io = require('socket.io').listen(app.listen(port));
 console.log('The magic happens on port ' + port);
 
 // chat ======================================================================
-io.sockets.on('connection', function (socket) {
-    console.log("a user connected");
+var users = [];
+var allclients = [];
 
+io.sockets.on('connection', function (socket) {
+    allclients.push(socket)
     socket.on('chat message', function(msg){
         io.emit('chat message', msg);
     });
 
     socket.on('new user', function(msg){
+        users.push(msg[0]);
         io.emit('new user', msg);
     });
-});
 
-io.sockets.on('disconnection', function (socket) {
-    console.log("a user disconnected");
-
-    socket.on('user exit', function(msg){
-        io.emit('user exit', msg);
+    socket.on('disconnect', function (msg) {
+        var i = allclients.indexOf(socket);
+        io.emit('disconnect', users[i] + " has left the room.");
+        allclients.splice(i,1);
+        users.splice(i,1);
     });
-
 });

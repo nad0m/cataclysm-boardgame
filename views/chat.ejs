@@ -1,50 +1,31 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Socket.IO chat</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font: 13px Helvetica, Arial; }
-        form { background: #000; padding: 3px; bottom: 0; width: 100%; }
-        form input { border: 0; padding: 10px; width: 100%; margin-right: .5%; }
-        form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-        #messages { list-style-type: none; margin: 0; padding: 0; }
-        #messages li { padding: 5px 10px; margin-bottom: 3px;}
-        #messages li:nth-child(odd) { background: #eee; }
-        #messages { margin-bottom: 40px }
-        .chatbox { background-color: burlywood;
-                     width: 100%;
-                     height: 25%;
-                     position: relative;
-                     overflow: auto;
-                     margin-bottom: 0px;
-        }
-        .container {
-            width: 50%;
-            bottom: 0;
-            background-color: #16aa56;
-            padding: 20px;
-
-        }
-
-    </style>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/chat.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
 
+<div class="wrapper">
+<div class="panel-heading">Current Chat Room</div>
+<div class="panel-body chatbox">
+    <div id="messages" class="container">
 
-<div class="container">
-<div class="chatbox">
-    <h3><span class="fa fa-user"></span> Chat Room</h3>
-    <ul id="messages">
+    </div>
+    <div class="panel-footer">
+        <form action="" class="input-group">
 
-    </ul>
+            <input type="text" class="form-control">
+            <span class="input-group-btn">
+                    <button class="btn btn-default">Send</button>
+            </span>
 
+        </form>
+    </div>
 </div>
-<form action="">
-    <input id="m" autocomplete="off"><button class="btn">Send</button>
-</form>
 </div>
-
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script src="/socket.io/socket.io.js"></script>
@@ -57,39 +38,74 @@
 
 
         $('.btn').attr('disabled',true);
-        $('#m').keyup(function(){
+        $('.form-control').keyup(function(){
             if($(this).val().length !=0)
                 $('.btn').attr('disabled', false);
             else
                 $('.btn').attr('disabled',true);
         })
-        socket.emit('new user', fname + " " +lname + " has joined the room.");
+        // new user
 
+        socket.emit('new user', [fname + " " + lname, fname + " " +lname + " has joined the room."]);
         socket.on('new user', function(msg){
-            $('#messages').append($('<li>').text(msg));
-            $('.chatbox').scrollTop($('.chatbox')[0].scrollHeight);
+            var hr = new Date().getHours();
+            var min = new Date().getMinutes();
+            var sec = new Date().getSeconds();
+            var time = zeroFill(hr) + ":" + zeroFill(min) + ":" + zeroFill(sec);
+
+            var line = $('<div class="message-bubble">');
+            $('<b>').text("(" + time + ") " + msg[1]).appendTo(line);
+            $('#messages').append(line);
+            $('#messages').scrollTop($('#messages')[0].scrollHeight);
         });
 
-    $(function () {
+        socket.on('disconnect', function(msg){
+            var hr = new Date().getHours();
+            var min = new Date().getMinutes();
+            var sec = new Date().getSeconds();
+            var time = zeroFill(hr) + ":" + zeroFill(min) + ":" + zeroFill(sec);
 
+            var line = $('<div class="message-bubble">');
+            $('<b>').text("(" + time + ") " + msg).appendTo(line);
+            $('#messages').append(line);
+            $('#messages').scrollTop($('#messages')[0].scrollHeight);
+        });
+
+        $(function () {
             $('form').submit(function () {
-                socket.emit('chat message', [fname, $('#m').val()]);
-                $('#m').val('');
+                socket.emit('chat message', [fname, $('.form-control').val()]);
+                $('.form-control').val('');
                 return false;
             });
 
-        socket.on('chat message', function(msg){
-            var line = $('<li>');
-            $('<b>').text(msg[0] + ": ").appendTo(line); //name
-            $('<span>').text(msg[1]).appendTo(line);//msg
-            $('#messages').append(line);
-            $('.chatbox').scrollTop($('.chatbox')[0].scrollHeight);
+            socket.on('chat message', function(msg){
+                var hr = new Date().getHours().toString();
+                var min = new Date().getMinutes().toString();
+                var sec = new Date().getSeconds().toString();
+                var time = zeroFill(hr) + ":" + zeroFill(min) + ":" + zeroFill(sec);
+
+                var line = $('<div class="message-bubble">');
+                $('<b>').text("(" + time + ") " + msg[0] + ":").appendTo(line); //name
+                $('<span>').text(msg[1]).appendTo(line);//msg
+                $('#messages').append(line);
+                $('#messages').scrollTop($('#messages')[0].scrollHeight);
+            });
+
         });
 
-    });
+        var zeroFill = function (num)
+        {
+            var result = num.toString();
+            if (num < 10)
+            {
+                result = '0'+ result;
+            }
+
+            return result;
+        }
 
     });
 </script>
+
 </body>
 </html>
-
