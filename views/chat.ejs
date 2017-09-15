@@ -5,8 +5,13 @@
     <title>Title</title>
     <link rel="stylesheet" href="css/chat.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/phaser/2.0.5/phaser.min.js"></script>
 </head>
+
 <body>
+
+<div id="game"></div>
+
 
 <div class="wrapper">
 <div class="panel-heading">Current Chat Room</div>
@@ -29,9 +34,9 @@
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script src="/socket.io/socket.io.js"></script>
+
 <script>
 
-    $( document ).ready(function() {
         var fname = <%- JSON.stringify(user.firstname) %>;
         var lname = <%- JSON.stringify(user.lastname) %>;
         var socket = io();
@@ -45,8 +50,6 @@
                 $('.btn').attr('disabled',true);
         })
         // new user
-
-        socket.emit('new user', [fname + " " + lname, fname + " " +lname + " has joined the room."]);
         socket.on('new user', function(msg){
             var hr = new Date().getHours();
             var min = new Date().getMinutes();
@@ -104,8 +107,12 @@
             return result;
         }
 
-    });
 </script>
+<script type="text/javascript" src="src/Dice.js"></script>
+<script src="src/classes.js" type="text/javascript"></script>
+<script src="src/game.js" type="text/javascript"></script>
+<script src="src/main.js" type="text/javascript"></script>
+<script src="src/client.js" type="text/javascript"></script>
 
 </body>
 </html>

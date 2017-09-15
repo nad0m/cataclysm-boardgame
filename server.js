@@ -12,6 +12,7 @@ var port     = process.env.PORT || 80;
 var path = require("path");
 var passport = require('passport');
 var flash    = require('connect-flash');
+var server = require('http').Server(app);
 
 // configuration ===============================================================
 // connect to our database
@@ -50,24 +51,49 @@ var io = require('socket.io').listen(app.listen(port));
 console.log('The magic happens on port ' + port);
 
 // chat ======================================================================
-var users = [];
-var allclients = [];
+server.lastPlayerID = 0;
 
 io.sockets.on('connection', function (socket) {
-    allclients.push(socket)
+    socket.on('newplayer',function(msg){
+        socket.player = {
+            id: server.lastPlayerID++,
+            x: randomInt(100,400),
+            y: randomInt(100,400),
+            name: msg[0],
+            stats: msg[2]
+        };
+        socket.emit('allplayers',getAllPlayers());
+        socket.broadcast.emit('newplayer',socket.player);
+        io.emit('new user', msg);
+        console.log(socket.player.stats.atk);
+
+        socket.on('click',function(data){
+            console.log('click to '+data.x+', '+data.y);
+            socket.player.x = data.x;
+            socket.player.y = data.y;
+            io.emit('move',socket.player);
+        });
+        socket.on('disconnect', function (msg) {
+            io.emit('disconnect', socket.player.name + " has left the room.");
+            io.emit('remove',socket.player.id);
+        });
+    });
+
     socket.on('chat message', function(msg){
         io.emit('chat message', msg);
     });
 
-    socket.on('new user', function(msg){
-        users.push(msg[0]);
-        io.emit('new user', msg);
-    });
-
-    socket.on('disconnect', function (msg) {
-        var i = allclients.indexOf(socket);
-        io.emit('disconnect', users[i] + " has left the room.");
-        allclients.splice(i,1);
-        users.splice(i,1);
-    });
 });
+
+function getAllPlayers(){
+    var players = [];
+    Object.keys(io.sockets.connected).forEach(function(socketID){
+        var player = io.sockets.connected[socketID].player;
+        if(player) players.push(player);
+    });
+    return players;
+}
+
+function randomInt (low, high) {
+    return Math.floor(Math.random() * (high - low) + low);
+}
