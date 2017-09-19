@@ -35,7 +35,8 @@ Dice.prototype.constructor = Dice;
 
 Dice.prototype.roll = function() {
     this.filters = [this.blurX, this.blurY];
-    this.animations.play("roll", 20);
+    this.animations.play("roll", 10);
+
 };
 
 Dice.prototype.rollComplete = function() {

@@ -52,8 +52,13 @@ console.log('The magic happens on port ' + port);
 
 // chat ======================================================================
 server.lastPlayerID = 0;
+var sockets = [];
+var currentTurn = 0;
+var turn = 0;
 
 io.sockets.on('connection', function (socket) {
+
+
     socket.on('newplayer',function(msg){
         socket.player = {
             id: server.lastPlayerID++,
@@ -77,13 +82,32 @@ io.sockets.on('connection', function (socket) {
             io.emit('disconnect', socket.player.name + " has left the room.");
             io.emit('remove',socket.player.id);
         });
+        socket.on('dice', function (frameValues, total) {
+            io.emit('dice', frameValues, total);
+            console.log(frameValues);
+            io.emit('draw_circle',socket.player.x, socket.player.y, total);
+            next_turn();
+        });
+        sockets.push(socket);
+        if (sockets.length == 1)
+        {
+            next_turn();
+        }
     });
 
     socket.on('chat message', function(msg){
         io.emit('chat message', msg);
     });
 
+    function next_turn(){
+        turn = currentTurn++ % sockets.length;
+        sockets[turn].emit('your_turn');
+        console.log(sockets[turn].player.name + "'s turn.");
+
+    }
+
 });
+
 
 function getAllPlayers(){
     var players = [];
