@@ -1,4 +1,5 @@
 var Warrior = {
+    title: "Warrior",
     hp: 100,
     mp: 16,
     atk: 20,
@@ -7,6 +8,7 @@ var Warrior = {
 };
 
 var Mage = {
+    title: "Mage",
     hp: 50,
     mp: 50,
     atk: 15,
@@ -15,6 +17,7 @@ var Mage = {
 };
 
 var Ranger = {
+    title: "Ranger",
     hp: 65,
     mp: 16,
     atk: 16,

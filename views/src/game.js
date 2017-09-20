@@ -34,6 +34,7 @@ Game.preload = function() {
     game.load.image('map', 'assets/Maps/Map-1.png');
     game.load.image('sprite','assets/images/sprite-test.png');
     game.load.image('roll-dice','assets/Layout/Profile.png');
+    game.load.image('end-turn','assets/images/end.png');
     game.load.image('warrior', 'assets/images/warrior.png');
     game.load.image('mage','assets/images/Mage.png');
     game.load.image('ranger','assets/images/Ranger.png');
@@ -86,7 +87,7 @@ Game.rollDice = function() {
 
     Client.sendDice(frameValues, total);
 
-    Game.disableInput();
+    game.roll_btn.inputEnabled = false;
 };
 
 Game.updateDice = function (frameValues, newTotal) {
@@ -99,25 +100,95 @@ Game.updateDice = function (frameValues, newTotal) {
 };
 
 Game.enableInput = function (){
-    game.map.inputEnabled = true;
     game.roll_btn.inputEnabled = true;
+    game.roll_btn.input.useHandCursor = true;
+    game.end_btn.inputEnabled = true;
+    game.end_btn.input.useHandCursor = true;
 };
 
 Game.disableInput = function (){
     game.map.inputEnabled = false;
     game.roll_btn.inputEnabled = false;
+    game.roll_btn.input.useHandCursor = false;
+    game.end_btn.inputEnabled = false;
+    game.end_btn.input.useHandCursor = false;
 };
 
-Game.drawRange = function (x, y, diameter){
+Game.drawRange = function (x, y, diameter, isPlayerTurn){
     var graphics = game.add.graphics(x, y);
 
-    graphics.lineStyle(0);
-    graphics.beginFill(0xFFFF0B, 0.25);
-    graphics.drawCircle(0, 0, total*5);
+    graphics.lineStyle(1);
+    graphics.beginFill(0x00ff00, 0.15);
+    graphics.drawCircle(0, 0, diameter*10);
     graphics.endFill();
 
+    if (isPlayerTurn)
+    {
+        graphics.inputEnabled = true;
+        graphics.input.useHandCursor = true;
+        graphics.events.onInputDown.add(Game.getCoordinates, this);
+    }
 
     game.graphics = graphics;
+
+};
+
+
+Game.removeGraphics = function(){
+
+    if (game.graphics != null)
+    {
+        game.graphics.destroy();
+    }
+
+};
+
+Game.createStatBars = function (name, hero, x, y){
+
+    var name = game.add.text(x, y, hero.title + ": " + name);
+    name.font = "Roboto Slab";
+    name.fontSize = 20;
+    name.fill = "#f44242";
+
+    y += 30;
+
+    var healthConfig = {
+        width: 150,
+        height: 15,
+        x: x,
+        y: y,
+        bg: {
+            color: '#bab4b2'
+        },
+        bar: {
+            color: '#f70000'
+        },
+        animationDuration: 200,
+        flipped: false
+    };
+
+    y += 20;
+
+    var manaConfig = {
+        width: 150,
+        height: 15,
+        x: x,
+        y: y,
+        bg: {
+            color: '#bab4b2'
+        },
+        bar: {
+            color: '#205aea'
+        },
+        animationDuration: 200,
+        flipped: false
+    };
+
+    game.myHealthBar = new HealthBar(this.game, healthConfig);
+    game.myHealthBar.setPercent(50);
+    game.myManaBar = new HealthBar(this.game, manaConfig);
+    game.myManaBar.setPercent(50);
+
 };
 
 Game.loadBoard = function(hero) {
@@ -133,6 +204,7 @@ Game.loadBoard = function(hero) {
     game.map.inputEnabled = true;
     game.map.events.onInputUp.add(Game.getCoordinates, this);
     game.roll_btn = game.add.button(this.world.centerX,this.world.centerY,'roll-dice', Game.rollDice);
+    game.end_btn = game.add.button(100,400,'end-turn', Client.endTurn);
 
     Client.askNewPlayer([fname + " " + lname, fname + " " +lname + " has joined the room.", hero]);
 

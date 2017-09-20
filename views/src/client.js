@@ -23,6 +23,10 @@ Client.sendGameState = function(msg){
     Client.socket.emit('state', msg);
 };
 
+Client.endTurn = function(){
+    Client.socket.emit('end turn');
+};
+
 Client.loadWarrior = function() {
     Game.loadBoard(Warrior);
 };
@@ -34,22 +38,28 @@ Client.loadRanger = function() {
 };
 
 
-
 Client.socket.on('newplayer',function(data){
     Game.addNewPlayer(data.id,data.x,data.y);
+    Game.createStatBars(data.name, data.stats, data.uiX, data.uiY)
 });
 
 Client.socket.on('your_turn',function(){
     Game.enableInput();
 });
 
-Client.socket.on('draw_circle',function(x, y, total){
-    Game.drawRange(x, y, total);
+Client.socket.on('end turn',function(){
+    Game.disableInput();
+    Game.removeGraphics();
+});
+
+Client.socket.on('draw_circle',function(x, y, total, isPlayerTurn){
+    Game.drawRange(x, y, total, isPlayerTurn);
 });
 
 Client.socket.on('allplayers',function(data){
     for(var i = 0; i < data.length; i++){
         Game.addNewPlayer(data[i].id,data[i].x,data[i].y);
+        Game.createStatBars(data[i].name, data[i].stats, data[i].uiX, data[i].uiY);
     }
 
     Client.socket.on('move',function(data){

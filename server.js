@@ -55,6 +55,8 @@ server.lastPlayerID = 0;
 var sockets = [];
 var currentTurn = 0;
 var turn = 0;
+var statBarsX = 100;
+var statBarsY = 0;
 
 io.sockets.on('connection', function (socket) {
 
@@ -65,10 +67,16 @@ io.sockets.on('connection', function (socket) {
             x: randomInt(100,400),
             y: randomInt(100,400),
             name: msg[0],
-            stats: msg[2]
+            stats: msg[2],
+            uiX: statBarsX,
+            uiY: statBarsY
         };
+        statBarsY += 100;
+
         socket.emit('allplayers',getAllPlayers());
         socket.broadcast.emit('newplayer',socket.player);
+
+
         io.emit('new user', msg);
         console.log(socket.player.stats.atk);
 
@@ -85,11 +93,18 @@ io.sockets.on('connection', function (socket) {
         socket.on('dice', function (frameValues, total) {
             io.emit('dice', frameValues, total);
             console.log(frameValues);
-            io.emit('draw_circle',socket.player.x, socket.player.y, total);
-            next_turn();
+            sockets[turn].emit('draw_circle',socket.player.x, socket.player.y, total, true); // clickable for designated player
+
+            for (var i = 0; i < sockets.length; i++)
+            {
+                if (i != turn)
+                {
+                    sockets[i].emit('draw_circle',socket.player.x, socket.player.y, total, false);// UI change only for other players
+                }
+            }
         });
         sockets.push(socket);
-        if (sockets.length == 1)
+        if (sockets.length == 2)
         {
             next_turn();
         }
@@ -97,6 +112,11 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('chat message', function(msg){
         io.emit('chat message', msg);
+    });
+
+    socket.on('end turn', function(){
+        io.emit('end turn');
+        next_turn();
     });
 
     function next_turn(){
