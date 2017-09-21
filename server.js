@@ -56,7 +56,7 @@ var sockets = [];
 var currentTurn = 0;
 var turn = 0;
 var statBarsX = 100;
-var statBarsY = 0;
+var statBarsY = 200;
 
 io.sockets.on('connection', function (socket) {
 
@@ -117,6 +117,20 @@ io.sockets.on('connection', function (socket) {
     socket.on('end turn', function(){
         io.emit('end turn');
         next_turn();
+    });
+
+    socket.on('attack range', function () {
+        io.emit('attack range', socket.player);
+    });
+
+    socket.on('player info', function () {
+        sockets[turn].emit('player info', socket.player, getAllPlayers());
+    });
+
+    socket.on('attack', function(id){
+        console.log(sockets[id].player.stats.hp - socket.player.stats.atk)
+        sockets[id].player.stats.hp -= socket.player.stats.atk;
+        io.emit('attack', getAllPlayers());
     });
 
     function next_turn(){

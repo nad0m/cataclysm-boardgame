@@ -35,6 +35,7 @@ Game.preload = function() {
     game.load.image('sprite','assets/images/sprite-test.png');
     game.load.image('roll-dice','assets/Layout/Profile.png');
     game.load.image('end-turn','assets/images/end.png');
+    game.load.image('atk-btn', 'assets/images/attack.png');
     game.load.image('warrior', 'assets/images/warrior.png');
     game.load.image('mage','assets/images/Mage.png');
     game.load.image('ranger','assets/images/Ranger.png');
@@ -44,6 +45,9 @@ Game.preload = function() {
 var text;
 var diceGroup;
 var total;
+var myHealthBar = [];
+var myManaBar = [];
+
 Game.create = function(){
     game.warrior_btn = game.add.button(190, 300, 'warrior', Client.loadWarrior);
     game.mage_btn = game.add.button(300, 300, 'mage', Client.loadMage);
@@ -57,6 +61,50 @@ Game.getCoordinates = function(layer,pointer){
 Game.addNewPlayer = function(id,x,y){
     Game.playerMap[id] = game.add.sprite(x,y,'sprite');
     Game.playerMap[id].anchor.setTo(0.5, 0.5);
+    console.log(Game.playerMap);
+};
+
+Game.enableSpriteInput = function(id){
+    //  Enables all kind of input actions on this image (click, etc)
+    Game.playerMap[id].inputEnabled = true;
+    Game.playerMap[id].events.onInputDown.add(function(){
+        Client.attack(id); //id of person being attacked
+    }, this);
+};
+
+Game.disableAllSpriteInput = function(){
+    for (var id in Game.playerMap)
+    {
+        console.log(Game.playerMap[id] + " input false");
+        Game.playerMap[id].inputEnabled = false;
+    }
+};
+
+Game.scanForEnemies = function(hero, enemies){
+    var x = hero.x;
+    var y = hero.y;
+
+    for (var i = 0; i < enemies.length; i++)
+    {
+        if (hero.id != enemies[i].id && Phaser.Math.distance(enemies[i].x,enemies[i].y,x,y) < hero.stats.atk_distance*3)
+        {
+            Game.enableSpriteInput(enemies[i].id);
+        }
+    }
+
+};
+
+Game.updateStats = function(players){
+    for (var i = 0; i < players.length; i++)
+    {
+        var id = players[i].id;
+        var offset = players[i].stats.hp/players[i].stats.max_hp * 100;
+        console.log(offset);
+        myHealthBar[id].setPercent(offset);
+    }
+
+    Game.disableAllSpriteInput();
+
 };
 
 Game.movePlayer = function(id,x,y){
@@ -87,7 +135,8 @@ Game.rollDice = function() {
 
     Client.sendDice(frameValues, total);
 
-    game.roll_btn.inputEnabled = false;
+    Game.disableRoll();
+
 };
 
 Game.updateDice = function (frameValues, newTotal) {
@@ -99,17 +148,46 @@ Game.updateDice = function (frameValues, newTotal) {
     text.setText("Total: " + newTotal);
 };
 
-Game.enableInput = function (){
+Game.enableRoll = function (){
     game.roll_btn.inputEnabled = true;
     game.roll_btn.input.useHandCursor = true;
+};
+
+Game.enableAttack = function (){
+    game.atk_btn.inputEnabled = true;
+    game.atk_btn.input.useHandCursor = true;
+};
+
+Game.enableEnd = function (){
     game.end_btn.inputEnabled = true;
     game.end_btn.input.useHandCursor = true;
 };
+
+Game.disableRoll = function (){
+    game.roll_btn.inputEnabled = false;
+    game.roll_btn.input.useHandCursor = false;
+};
+
+Game.disableAttack = function (){
+    Game.disableRoll();
+    game.atk_btn.inputEnabled = false;
+    game.atk_btn.input.useHandCursor = false;
+};
+
+Game.disableEnd = function (){
+    Game.disableRoll();
+    Game.disableAttack();
+    game.end_btn.inputEnabled = false;
+    game.end_btn.input.useHandCursor = false;
+};
+
 
 Game.disableInput = function (){
     game.map.inputEnabled = false;
     game.roll_btn.inputEnabled = false;
     game.roll_btn.input.useHandCursor = false;
+    game.atk_btn.inputEnabled = false;
+    game.atk_btn.input.useHandCursor = false;
     game.end_btn.inputEnabled = false;
     game.end_btn.input.useHandCursor = false;
 };
@@ -119,7 +197,7 @@ Game.drawRange = function (x, y, diameter, isPlayerTurn){
 
     graphics.lineStyle(1);
     graphics.beginFill(0x00ff00, 0.15);
-    graphics.drawCircle(0, 0, diameter*10);
+    graphics.drawCircle(0, 0, diameter*15);
     graphics.endFill();
 
     if (isPlayerTurn)
@@ -128,6 +206,18 @@ Game.drawRange = function (x, y, diameter, isPlayerTurn){
         graphics.input.useHandCursor = true;
         graphics.events.onInputDown.add(Game.getCoordinates, this);
     }
+
+    game.graphics = graphics;
+
+};
+
+Game.drawAttackRange = function (x, y, diameter){
+    var graphics = game.add.graphics(x, y);
+
+    graphics.lineStyle(1);
+    graphics.beginFill(0xf44242, 0.15);
+    graphics.drawCircle(0, 0, diameter*6);
+    graphics.endFill();
 
     game.graphics = graphics;
 
@@ -143,12 +233,13 @@ Game.removeGraphics = function(){
 
 };
 
-Game.createStatBars = function (name, hero, x, y){
+Game.createStatBars = function (name, hero, x, y, id){
 
     var name = game.add.text(x, y, hero.title + ": " + name);
     name.font = "Roboto Slab";
     name.fontSize = 20;
     name.fill = "#f44242";
+    name.anchor.setTo(0.5, 0.5);
 
     y += 30;
 
@@ -184,10 +275,8 @@ Game.createStatBars = function (name, hero, x, y){
         flipped: false
     };
 
-    game.myHealthBar = new HealthBar(this.game, healthConfig);
-    game.myHealthBar.setPercent(50);
-    game.myManaBar = new HealthBar(this.game, manaConfig);
-    game.myManaBar.setPercent(50);
+    myHealthBar[id] = new HealthBar(this.game, healthConfig);
+    myManaBar[id] = new HealthBar(this.game, manaConfig);
 
 };
 
@@ -198,19 +287,21 @@ Game.loadBoard = function(hero) {
 
     Game.playerMap = {};
 
-
     game.map = game.add.image(game.world.centerX,game.world.centerY,'map');
     game.map.anchor.setTo(0.5,0.5);
     game.map.inputEnabled = true;
     game.map.events.onInputUp.add(Game.getCoordinates, this);
     game.roll_btn = game.add.button(this.world.centerX,this.world.centerY,'roll-dice', Game.rollDice);
+    game.atk_btn = game.add.button(350,400,'atk-btn', Client.attackPhase);
     game.end_btn = game.add.button(100,400,'end-turn', Client.endTurn);
+
+
 
     Client.askNewPlayer([fname + " " + lname, fname + " " +lname + " has joined the room.", hero]);
 
     diceGroup = game.add.group();
     var i;
-    for (i=0; i < 5; i++) {
+    for (i=0; i < 3; i++) {
         var d = new Dice(game, i*100+190, 100);
         diceGroup.add(d);
     }

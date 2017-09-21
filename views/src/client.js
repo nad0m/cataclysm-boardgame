@@ -27,6 +27,19 @@ Client.endTurn = function(){
     Client.socket.emit('end turn');
 };
 
+Client.attackPhase = function(){
+    Client.socket.emit('attack range'); // draw range circle to all clients
+    Client.getCurrentStats();
+};
+
+Client.attack = function(id){
+    Client.socket.emit('attack', id);
+};
+
+Client.getCurrentStats = function(){
+    Client.socket.emit('player info');
+};
+
 Client.loadWarrior = function() {
     Game.loadBoard(Warrior);
 };
@@ -40,15 +53,24 @@ Client.loadRanger = function() {
 
 Client.socket.on('newplayer',function(data){
     Game.addNewPlayer(data.id,data.x,data.y);
-    Game.createStatBars(data.name, data.stats, data.uiX, data.uiY)
+    Game.createStatBars(data.name, data.stats, data.uiX, data.uiY, data.id)
+});
+
+Client.socket.on('attack range',function(player){
+    Game.disableAttack();
+    Game.removeGraphics();
+    Game.drawAttackRange(player.x, player.y, player.stats.atk_distance);
+
 });
 
 Client.socket.on('your_turn',function(){
-    Game.enableInput();
+    Game.enableRoll();
+    Game.enableAttack();
+    Game.enableEnd();
 });
 
 Client.socket.on('end turn',function(){
-    Game.disableInput();
+    Game.disableEnd();
     Game.removeGraphics();
 });
 
@@ -56,10 +78,19 @@ Client.socket.on('draw_circle',function(x, y, total, isPlayerTurn){
     Game.drawRange(x, y, total, isPlayerTurn);
 });
 
+Client.socket.on('attack', function(players){
+    Game.removeGraphics();
+    Game.updateStats(players);
+});
+
+Client.socket.on('player info',function(hero, enemies){
+    Game.scanForEnemies(hero, enemies);
+});
+
 Client.socket.on('allplayers',function(data){
     for(var i = 0; i < data.length; i++){
         Game.addNewPlayer(data[i].id,data[i].x,data[i].y);
-        Game.createStatBars(data[i].name, data[i].stats, data[i].uiX, data[i].uiY);
+        Game.createStatBars(data[i].name, data[i].stats, data[i].uiX, data[i].uiY, data[i].id);
     }
 
     Client.socket.on('move',function(data){
