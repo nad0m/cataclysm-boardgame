@@ -27,13 +27,13 @@ Client.endTurn = function(){
     Client.socket.emit('end turn');
 };
 
-Client.attackPhase = function(){
-    Client.socket.emit('attack range'); // draw range circle to all clients
+Client.attackPhase = function(card){
+    Client.socket.emit('attack range', card); // draw range circle to all clients
     Client.getCurrentStats();
 };
 
-Client.attack = function(id){
-    Client.socket.emit('attack', id);
+Client.attack = function(id, card){
+    Client.socket.emit('attack', id, card);
 };
 
 Client.getCurrentStats = function(){
@@ -52,14 +52,14 @@ Client.loadRanger = function() {
 
 
 Client.socket.on('newplayer',function(data){
-    Game.addNewPlayer(data.id,data.x,data.y);
+    Game.addNewPlayer(data, data.id,data.x,data.y);
     Game.createStatBars(data.name, data.stats, data.uiX, data.uiY, data.id)
 });
 
-Client.socket.on('attack range',function(player){
+Client.socket.on('attack range',function(player, card){
     Game.disableAttack();
     Game.removeGraphics();
-    Game.drawAttackRange(player.x, player.y, player.stats.atk_distance);
+    Game.drawAttackRange(player.x, player.y, card.reach*10);
 
 });
 
@@ -78,18 +78,22 @@ Client.socket.on('draw_circle',function(x, y, total, isPlayerTurn){
     Game.drawRange(x, y, total, isPlayerTurn);
 });
 
-Client.socket.on('attack', function(players){
+Client.socket.on('attack', function(players, attacker, defender, card){
     Game.removeGraphics();
-    Game.updateStats(players);
+    Game.moveBullet(players, attacker, defender, card);
 });
 
 Client.socket.on('player info',function(hero, enemies){
     Game.scanForEnemies(hero, enemies);
 });
 
+Client.socket.on('update players',function(players){
+    Game.updateStats(players);
+});
+
 Client.socket.on('allplayers',function(data){
     for(var i = 0; i < data.length; i++){
-        Game.addNewPlayer(data[i].id,data[i].x,data[i].y);
+        Game.addNewPlayer(data[i], data[i].id,data[i].x,data[i].y);
         Game.createStatBars(data[i].name, data[i].stats, data[i].uiX, data[i].uiY, data[i].id);
     }
 

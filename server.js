@@ -69,7 +69,8 @@ io.sockets.on('connection', function (socket) {
             name: msg[0],
             stats: msg[2],
             uiX: statBarsX,
-            uiY: statBarsY
+            uiY: statBarsY,
+            cards: []
         };
         statBarsY += 100;
 
@@ -119,22 +120,24 @@ io.sockets.on('connection', function (socket) {
         next_turn();
     });
 
-    socket.on('attack range', function () {
-        io.emit('attack range', socket.player);
+    socket.on('attack range', function (card) {
+        io.emit('attack range', socket.player, card);
     });
 
     socket.on('player info', function () {
         sockets[turn].emit('player info', socket.player, getAllPlayers());
     });
 
-    socket.on('attack', function(id){
-        console.log(sockets[id].player.stats.hp - socket.player.stats.atk)
-        sockets[id].player.stats.hp -= socket.player.stats.atk;
-        io.emit('attack', getAllPlayers());
+    socket.on('attack', function(id, card){
+        var damage = card.natural + (card.scale * socket.player.stats.atk);
+        socket.player.stats.mp -= (card.will * 5);
+        sockets[id].player.stats.hp -= damage;
+        io.emit('attack', getAllPlayers(), socket.player, sockets[id].player, card);
     });
 
     function next_turn(){
         turn = currentTurn++ % sockets.length;
+        io.emit('update players', getAllPlayers());
         sockets[turn].emit('your_turn');
         console.log(sockets[turn].player.name + "'s turn.");
 

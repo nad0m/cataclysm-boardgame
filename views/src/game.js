@@ -33,6 +33,7 @@ Game.preload = function() {
     game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
     game.load.image('map', 'assets/Maps/Map-1.png');
     game.load.image('sprite','assets/images/sprite-test.png');
+    game.load.image('bullet','assets/images/bullet.png');
     game.load.image('roll-dice','assets/Layout/Profile.png');
     game.load.image('end-turn','assets/images/end.png');
     game.load.image('atk-btn', 'assets/images/attack.png');
@@ -47,37 +48,95 @@ var diceGroup;
 var total;
 var myHealthBar = [];
 var myManaBar = [];
+var statOverlay;
+
 
 Game.create = function(){
     game.warrior_btn = game.add.button(190, 300, 'warrior', Client.loadWarrior);
     game.mage_btn = game.add.button(300, 300, 'mage', Client.loadMage);
     game.ranger_btn = game.add.button(410, 300, 'ranger', Client.loadRanger);
+
 };
 
 Game.getCoordinates = function(layer,pointer){
     Client.sendClick(pointer.worldX,pointer.worldY);
 };
 
-Game.addNewPlayer = function(id,x,y){
+Game.createOverlay = function(player){
+    statOverlay = game.add.text(player.x, player.y, "Name: " + player.name + "\n" +
+                                                    "Health: " + player.stats.hp + "\n" +
+                                                    "Atk: " + player.stats.atk + "\n" +
+                                                    "Def: " + player.stats.def + "\n", { font: "16px Arial", fill: "#ffffff", align: "center" });
+    statOverlay.anchor.setTo(0.5, 0.5);
+};
+
+Game.addNewPlayer = function(player,id,x,y){
     Game.playerMap[id] = game.add.sprite(x,y,'sprite');
     Game.playerMap[id].anchor.setTo(0.5, 0.5);
-    console.log(Game.playerMap);
+    Game.playerMap[id].player = player;
+    Game.playerMap[id].inputEnabled = true;
+    Game.playerMap[id].events.onInputOver.add(function(){
+        Game.playerMap[id].tint = 0x0bef26;
+        Game.createOverlay(Game.playerMap[id].player);
+    }, game);
+    Game.playerMap[id].events.onInputOut.add(function(){
+        Game.playerMap[id].tint = 0xffffff;
+        statOverlay.destroy();
+    }, game);
+
+    game.roll_btn = game.add.button(this.world.centerX,this.world.centerY,'roll-dice', Game.rollDice);
+    game.atk_btn = game.add.button(350,400,'atk-btn', function(){
+        if (Game.playerMap[id].player.stats.mp >= Fireball.will) {
+            Client.attackPhase(Fireball);
+        } else {
+            console.log("Not enough mana.");
+        }
+    });
+    game.end_btn = game.add.button(100,400,'end-turn', Client.endTurn);
+
+    Game.disableInput();
 };
+
 
 Game.enableSpriteInput = function(id){
     //  Enables all kind of input actions on this image (click, etc)
-    Game.playerMap[id].inputEnabled = true;
-    Game.playerMap[id].events.onInputDown.add(function(){
-        Client.attack(id); //id of person being attacked
-    }, this);
+
+        Game.playerMap[id].events.onInputOver.add(function () {
+            Game.playerMap[id].tint = 0xf44242;
+        }, game);
+        Game.playerMap[id].events.onInputOut.add(function () {
+            Game.playerMap[id].tint = 0xffffff;
+        }, game);
+        Game.playerMap[id].events.onInputDown.add(function () {
+            Game.playerMap[id].tint = 0xffffff;
+            Client.attack(id, Fireball); //id of person being attacked
+            for(var i in Game.playerMap)
+            {
+                if (Game.playerMap.hasOwnProperty(i))
+                {
+                    Game.disableAllSpriteInput(i);
+                }
+            }
+
+        }, game);
+
 };
 
-Game.disableAllSpriteInput = function(){
-    for (var id in Game.playerMap)
-    {
-        console.log(Game.playerMap[id] + " input false");
-        Game.playerMap[id].inputEnabled = false;
-    }
+Game.disableAllSpriteInput = function(id){
+
+    console.log(id + " input false");
+    Game.playerMap[id].events.destroy();
+
+    Game.playerMap[id].inputEnabled = true;
+    Game.playerMap[id].events.onInputOver.add(function () {
+        Game.playerMap[id].tint = 0x0bef26;
+        Game.createOverlay(Game.playerMap[id].player);
+    }, game);
+    Game.playerMap[id].events.onInputOut.add(function () {
+        Game.playerMap[id].tint = 0xffffff;
+        statOverlay.destroy();
+    }, game);
+
 };
 
 Game.scanForEnemies = function(hero, enemies){
@@ -86,25 +145,27 @@ Game.scanForEnemies = function(hero, enemies){
 
     for (var i = 0; i < enemies.length; i++)
     {
-        if (hero.id != enemies[i].id && Phaser.Math.distance(enemies[i].x,enemies[i].y,x,y) < hero.stats.atk_distance*3)
+        if (hero.id != enemies[i].id && Phaser.Math.distance(enemies[i].x,enemies[i].y,x,y) < hero.stats.atk_distance*3+6)
         {
             Game.enableSpriteInput(enemies[i].id);
         }
     }
-
 };
 
 Game.updateStats = function(players){
     for (var i = 0; i < players.length; i++)
     {
         var id = players[i].id;
-        var offset = players[i].stats.hp/players[i].stats.max_hp * 100;
-        console.log(offset);
-        myHealthBar[id].setPercent(offset);
+        var healthOffset = players[i].stats.hp/players[i].stats.max_hp * 100;
+        myHealthBar[id].setPercent(healthOffset);
+        var manaOffset = players[i].stats.mp/players[i].stats.max_mp * 100;
+        myManaBar[id].setPercent(manaOffset);
+
+        if (Game.playerMap.hasOwnProperty(id)){
+            Game.playerMap[id].player = players[i];
+            console.log(Game.playerMap[id].player.stats.hp + "/" + Game.playerMap[id].player.stats.max_hp);
+        }
     }
-
-    Game.disableAllSpriteInput();
-
 };
 
 Game.movePlayer = function(id,x,y){
@@ -114,6 +175,22 @@ Game.movePlayer = function(id,x,y){
     var duration = distance*10;
     tween.to({x:x,y:y}, duration);
     tween.start();
+};
+
+Game.moveBullet = function(players, attacker, defender, card){
+    var bullet = game.add.sprite(attacker.x, attacker.y, 'bullet');
+    bullet.anchor.setTo(0.5, 0.5);
+    var distance = Phaser.Math.distance(attacker.x,attacker.y,defender.x,defender.y);
+    var tween = game.add.tween(bullet);
+    var duration = distance*5;
+    tween.to({x:defender.x,y:defender.y}, duration);
+    tween.start();
+
+    tween.onComplete.add(function(){
+        bullet.destroy();
+        Game.updateStats(players);
+    }, game);
+
 };
 
 Game.removePlayer = function(id){
@@ -291,11 +368,6 @@ Game.loadBoard = function(hero) {
     game.map.anchor.setTo(0.5,0.5);
     game.map.inputEnabled = true;
     game.map.events.onInputUp.add(Game.getCoordinates, this);
-    game.roll_btn = game.add.button(this.world.centerX,this.world.centerY,'roll-dice', Game.rollDice);
-    game.atk_btn = game.add.button(350,400,'atk-btn', Client.attackPhase);
-    game.end_btn = game.add.button(100,400,'end-turn', Client.endTurn);
-
-
 
     Client.askNewPlayer([fname + " " + lname, fname + " " +lname + " has joined the room.", hero]);
 
@@ -305,8 +377,6 @@ Game.loadBoard = function(hero) {
         var d = new Dice(game, i*100+190, 100);
         diceGroup.add(d);
     }
-
-    Game.disableInput();
 
     text = game.add.text(190,10, "Total: ");
     text.font = "Roboto Slab";

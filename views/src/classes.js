@@ -15,7 +15,7 @@ var Mage = {
     hp: 50,
     max_mp: 50,
     mp: 50,
-    atk: 15,
+    atk: 8,
     def: 8,
     atk_distance: 30
 };
@@ -26,7 +26,7 @@ var Ranger = {
     hp: 65,
     max_mp: 16,
     mp: 16,
-    atk: 16,
+    atk: 12,
     def: 10,
     atk_distance: 35
 };
