@@ -7,9 +7,16 @@ var LocalStrategy   = require('passport-local').Strategy;
 var mysql = require('mysql');
 var bcrypt = require('bcrypt-nodejs');
 var dbconfig = require('./database');
+var pool  = mysql.createPool({
+    host     : 'us-cdbr-iron-east-05.cleardb.net',
+    user     : 'bf25dd664c1fe0',
+    password : '86ed6e54',
+    database : 'heroku_6ba6bab28475a17'
+});
 
-var connection = mysql.createConnection(dbconfig.connection);
-connection.query('USE ' + dbconfig.database);
+
+//var connection = mysql.createConnection(dbconfig.connection);
+//connection.query('USE ' + dbconfig.database);
 
 // expose this function to our app using module.exports
 module.exports = function(passport) {
@@ -28,8 +35,10 @@ module.exports = function(passport) {
 
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
-        connection.query("SELECT * FROM users WHERE id = ? ",[id], function(err, rows){
-            done(err, rows[0]);
+        pool.getConnection(function(err, connection) {
+            connection.query("SELECT * FROM users WHERE id = ? ", [id], function (err, rows) {
+                done(err, rows[0]);
+            });
         });
     });
 
@@ -51,32 +60,34 @@ module.exports = function(passport) {
         function(req, username, password, done) {
             // find a user whose email is the same as the forms email
             // we are checking to see if the user trying to login already exists
-            connection.query("SELECT * FROM users WHERE username = ?",[username], function(err, rows) {
-                if (err)
-                    return done(err);
-                if (rows.length) {
-                    return done(null, false, req.flash('signupMessage', 'That E-Mail address already exists in the system.'));
-                } else {
-                    // if there is no user with that username
-                    // create the user
-                    var newUserMysql = {
-                        username: username,
-                        password: bcrypt.hashSync(password, null, null),  // use the generateHash function in our user model
-                        firstname: req.body.firstname,
-                        lastname:  req.body.lastname,
-                        games: 0
-                    };
+            pool.getConnection(function(err, connection) {
+                connection.query("SELECT * FROM users WHERE username = ?", [username], function (err, rows) {
+                    if (err)
+                        return done(err);
+                    if (rows.length) {
+                        return done(null, false, req.flash('signupMessage', 'That E-Mail address already exists in the system.'));
+                    } else {
+                        // if there is no user with that username
+                        // create the user
+                        var newUserMysql = {
+                            username: username,
+                            password: bcrypt.hashSync(password, null, null),  // use the generateHash function in our user model
+                            firstname: req.body.firstname,
+                            lastname: req.body.lastname,
+                            games: 0
+                        };
 
-                    var insertQuery = "INSERT INTO users (username, password, firstname, lastname, games) values (?,?,?,?,?)";
-                    connection.query(insertQuery,[newUserMysql.username, newUserMysql.password, newUserMysql.firstname,
-                        newUserMysql.lastname, newUserMysql.games],function(err, rows) {
+                        var insertQuery = "INSERT INTO users (username, password, firstname, lastname, games) values (?,?,?,?,?)";
+                        connection.query(insertQuery, [newUserMysql.username, newUserMysql.password, newUserMysql.firstname,
+                            newUserMysql.lastname, newUserMysql.games], function (err, rows) {
 
-                        newUserMysql.id = rows.insertId;
+                            newUserMysql.id = rows.insertId;
 
-                        return done(null, newUserMysql);
-                    });
+                            return done(null, newUserMysql);
+                        });
 
-             }
+                    }
+                });
             });
 
 
@@ -99,21 +110,23 @@ module.exports = function(passport) {
             passReqToCallback : true // allows us to pass back the entire request to the callback
         },
         function(req, username, password, done) { // callback with email and password from our form
-            connection.query("SELECT * FROM users WHERE username = ?",[username], function(err, rows){
-                if (err)
-                    return done(err);
-                if (!rows.length) {
-                    return done(null, false, req.flash('loginMessage', 'No user found.')); // req.flash is the way to set flashdata using connect-flash
-                }
+            pool.getConnection(function(err, connection) {
+                connection.query("SELECT * FROM users WHERE username = ?", [username], function (err, rows) {
+                    if (err)
+                        return done(err);
+                    if (!rows.length) {
+                        return done(null, false, req.flash('loginMessage', 'No user found.')); // req.flash is the way to set flashdata using connect-flash
+                    }
 
-                // if the user is found but the password is wrong
-                if (!bcrypt.compareSync(password, rows[0].password))
-                    return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+                    // if the user is found but the password is wrong
+                    if (!bcrypt.compareSync(password, rows[0].password))
+                        return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
 
-                // all is well, return successful user
-                return done(null, rows[0]);
+                    // all is well, return successful user
+                    connection.release();
+                    return done(null, rows[0]);
+                });
             });
-
         })
     );
 };

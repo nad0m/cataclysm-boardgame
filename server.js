@@ -93,7 +93,7 @@ io.sockets.on('connection', function (socket) {
             io.emit('disconnect', socket.player.name + " has left the room.");
             io.emit('remove',socket.player.id);
             numberOfPlayers--;
-            
+
             if (numberOfPlayers == 0)
             {
                 resetServer();
