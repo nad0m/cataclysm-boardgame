@@ -57,6 +57,7 @@ var currentTurn = 0;
 var turn = 0;
 var statBarsX = 100;
 var statBarsY = 200;
+var numberOfPlayers = 0;
 
 io.sockets.on('connection', function (socket) {
 
@@ -72,6 +73,7 @@ io.sockets.on('connection', function (socket) {
             uiY: statBarsY,
             cards: []
         };
+        numberOfPlayers++;
         statBarsY += 100;
 
         socket.emit('allplayers',getAllPlayers());
@@ -90,6 +92,12 @@ io.sockets.on('connection', function (socket) {
         socket.on('disconnect', function (msg) {
             io.emit('disconnect', socket.player.name + " has left the room.");
             io.emit('remove',socket.player.id);
+            numberOfPlayers--;
+            
+            if (numberOfPlayers == 0)
+            {
+                resetServer();
+            }
         });
         socket.on('dice', function (frameValues, total) {
             io.emit('dice', frameValues, total);
@@ -157,4 +165,13 @@ function getAllPlayers(){
 
 function randomInt (low, high) {
     return Math.floor(Math.random() * (high - low) + low);
+}
+
+function resetServer(){
+    server.lastPlayerID = 0;
+    sockets = [];
+    currentTurn = 0;
+    turn = 0;
+    statBarsX = 100;
+    statBarsY = 200;
 }
