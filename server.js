@@ -8,7 +8,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var app      = express();
-var port     = process.env.PORT || 80;
+var port     = process.env.PORT || 8080;
 var path = require("path");
 var passport = require('passport');
 var flash    = require('connect-flash');
@@ -105,7 +105,7 @@ io.sockets.on('connection', function (socket) {
             }
         });
         sockets.push(socket);
-        if (sockets.length == 2)
+        if (sockets.length == 3)
         {
             next_turn();
         }
