@@ -65,8 +65,8 @@ io.sockets.on('connection', function (socket) {
     socket.on('newplayer',function(msg){
         socket.player = {
             id: server.lastPlayerID++,
-            x: randomInt(100,400),
-            y: randomInt(100,400),
+            x: randomInt(550,750),
+            y: randomInt(55,400),
             name: msg[0],
             stats: msg[2],
             uiX: statBarsX,
@@ -113,7 +113,7 @@ io.sockets.on('connection', function (socket) {
             }
         });
         sockets.push(socket);
-        if (sockets.length == 3)
+        if (sockets.length == 1)
         {
             next_turn();
         }

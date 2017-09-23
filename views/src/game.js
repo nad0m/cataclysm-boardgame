@@ -31,7 +31,13 @@ Game.preload = function() {
     game.load.script("BlurX", path + "assets/Layout/BlurX.js");
     game.load.script("BlurY", path + "assets/Layout/BlurY.js");
     game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
-    game.load.image('map', 'assets/Maps/Map-1.png');
+    game.load.image('map', 'assets/Board-62-height/Board.png');
+    game.load.image('status', 'assets/Board-62-height/Status.png');
+    game.load.image('red_gem', 'assets/Board-62-height/RedGem.png');
+    game.load.image('yellow_gem', 'assets/Board-62-height/YellowGem.png');
+    game.load.image('green_gem', 'assets/Board-62-height/GreenGem.png');
+    game.load.image('player_profile', 'assets/Board-62-height/Players.png');
+    game.load.image('banner', 'assets/Board-62-height/Banner.png');
     game.load.image('sprite','assets/images/sprite-test.png');
     game.load.image('bullet','assets/images/bullet.png');
     game.load.image('roll-dice','assets/Layout/Profile.png');
@@ -59,7 +65,10 @@ Game.create = function(){
 };
 
 Game.getCoordinates = function(layer,pointer){
-    Client.sendClick(pointer.worldX,pointer.worldY);
+    if (pointer.worldX > 500 && pointer.worldX < 1872 && pointer.worldY > 55 && pointer.worldY < 550)
+    {
+        Client.sendClick(pointer.worldX,pointer.worldY);
+    }
 };
 
 Game.createOverlay = function(player){
@@ -84,15 +93,22 @@ Game.addNewPlayer = function(player,id,x,y){
         statOverlay.destroy();
     }, game);
 
-    game.roll_btn = game.add.button(this.world.centerX,this.world.centerY,'roll-dice', Game.rollDice);
-    game.atk_btn = game.add.button(350,400,'atk-btn', function(){
+    game.roll_btn = game.add.button(this.world.centerX,this.world.centerY,'green_gem', Game.rollDice);
+    game.roll_btn.anchor.setTo(0.5,0.5);
+
+    game.atk_btn = game.add.button(this.world.centerX+50,this.world.centerY,'yellow_gem', function(){
         if (Game.playerMap[id].player.stats.mp >= Fireball.will) {
             Client.attackPhase(Fireball);
         } else {
             console.log("Not enough mana.");
         }
     });
-    game.end_btn = game.add.button(100,400,'end-turn', Client.endTurn);
+    game.atk_btn.anchor.setTo(0.5,0.5);
+
+    game.end_btn = game.add.button(this.world.centerX+100,this.world.centerY,'red_gem', Client.endTurn);
+    game.end_btn.anchor.setTo(0.5,0.5);
+
+
 
     Game.disableInput();
 };
@@ -368,6 +384,16 @@ Game.loadBoard = function(hero) {
     game.map.anchor.setTo(0.5,0.5);
     game.map.inputEnabled = true;
     game.map.events.onInputUp.add(Game.getCoordinates, this);
+
+    game.test5 = game.add.image(game.world.centerX,game.world.centerY,'status');
+    game.test5.anchor.setTo(0.5,0.5);
+
+    game.test4 = game.add.image(game.world.centerX,game.world.centerY,'banner');
+    game.test4.anchor.setTo(0.5,0.5);
+
+    game.test6 = game.add.image(game.world.centerX,game.world.centerY,'player_profile');
+    game.test6.anchor.setTo(0.5,0.5);
+
 
     Client.askNewPlayer([fname + " " + lname, fname + " " +lname + " has joined the room.", hero]);
 
