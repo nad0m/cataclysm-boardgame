@@ -93,7 +93,10 @@ Game.addNewPlayer = function(player,id,x,y){
         statOverlay.destroy();
     }, game);
 
-    game.roll_btn = game.add.button(this.world.centerX,this.world.centerY,'green_gem', Game.rollDice);
+    game.roll_btn = game.add.button(this.world.centerX,this.world.centerY,'green_gem', function(){
+        console.log(Game.playerMap[id].player.name);
+        Game.rollDice();
+    });
     game.roll_btn.anchor.setTo(0.5,0.5);
 
     game.atk_btn = game.add.button(this.world.centerX+50,this.world.centerY,'yellow_gem', function(){
@@ -108,9 +111,8 @@ Game.addNewPlayer = function(player,id,x,y){
     game.end_btn = game.add.button(this.world.centerX+100,this.world.centerY,'red_gem', Client.endTurn);
     game.end_btn.anchor.setTo(0.5,0.5);
 
-
-
     Game.disableInput();
+
 };
 
 
