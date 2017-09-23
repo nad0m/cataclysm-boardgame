@@ -37,6 +37,12 @@ module.exports = function(passport) {
     passport.deserializeUser(function(id, done) {
         pool.getConnection(function(err, connection) {
             connection.query("SELECT * FROM users WHERE id = ? ", [id], function (err, rows) {
+                if (err){
+                    connection.release();
+                    console.log("ERROR: " + err);
+                    throw err;
+                }
+                connection.release();
                 done(err, rows[0]);
             });
         });
@@ -61,6 +67,10 @@ module.exports = function(passport) {
             // find a user whose email is the same as the forms email
             // we are checking to see if the user trying to login already exists
             pool.getConnection(function(err, connection) {
+                if (err){
+                    connection.release();
+                    throw err;
+                }
                 connection.query("SELECT * FROM users WHERE username = ?", [username], function (err, rows) {
                     if (err)
                         return done(err);
@@ -80,6 +90,7 @@ module.exports = function(passport) {
                         var insertQuery = "INSERT INTO users (username, password, firstname, lastname, games) values (?,?,?,?,?)";
                         connection.query(insertQuery, [newUserMysql.username, newUserMysql.password, newUserMysql.firstname,
                             newUserMysql.lastname, newUserMysql.games], function (err, rows) {
+                            connection.release();
 
                             newUserMysql.id = rows.insertId;
 
@@ -111,7 +122,12 @@ module.exports = function(passport) {
         },
         function(req, username, password, done) { // callback with email and password from our form
             pool.getConnection(function(err, connection) {
+                if (err) {
+                    connection.release();
+                    throw err;
+                }
                 connection.query("SELECT * FROM users WHERE username = ?", [username], function (err, rows) {
+                    connection.release();
                     if (err)
                         return done(err);
                     if (!rows.length) {
@@ -123,7 +139,6 @@ module.exports = function(passport) {
                         return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
 
                     // all is well, return successful user
-                    connection.release();
                     return done(null, rows[0]);
                 });
             });
