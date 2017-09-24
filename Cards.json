@@ -71,7 +71,6 @@
 		reach: 1,
 		will: 4
 	};
-	//REMOVETHISAFTER
 	var Cleave = {
 		title: "Cleave",
 		proficiency: "Force",
@@ -144,7 +143,6 @@
 		reach: 0,
 		will: 4
 	};
-	//REMOVEYAH
 	var Trueshot = {
 		title: "Trueshot",
 		proficiency: "Clarify",
