@@ -28,12 +28,25 @@ Client.endTurn = function(){
 };
 
 Client.attackPhase = function(card){
-    Client.socket.emit('attack range', card); // draw range circle to all clients
-    Client.getCurrentStats(card);
+    if (card.type == "ATTACK")
+    {
+        Client.socket.emit('attack range', card); // draw range circle to current client
+        Client.getCurrentStats(card);
+    }
+
+    else if (card.type == "SELF")
+    {
+        Client.socket.emit('self card', card);
+    }
+
 };
 
 Client.attack = function(id, card){
     Client.socket.emit('attack', id, card);
+};
+
+Client.applyCardToSelf = function (id, card){
+    Client.socket.emit('apply self', id, card)
 };
 
 Client.getCurrentStats = function(card){
@@ -60,6 +73,13 @@ Client.socket.on('attack range',function(player, card){
     Game.disableAttack();
     Game.removeGraphics();
     Game.drawAttackRange(player.x, player.y, card.reach*10);
+
+});
+
+Client.socket.on('self card',function(player, card){
+    Game.disableAttack();
+    Game.removeGraphics();
+    Game.enableSelfInput(player.id, card);
 
 });
 

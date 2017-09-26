@@ -132,15 +132,38 @@ io.sockets.on('connection', function (socket) {
         io.emit('attack range', socket.player, card);
     });
 
+    socket.on('self card', function (card) {
+        io.emit('self card', socket.player, card);
+    });
+
+
+
     socket.on('player info', function (card) {
         sockets[turn].emit('player info', socket.player, getAllPlayers(), card);
     });
 
     socket.on('attack', function(id, card){
-        var damage = card.natural + (card.scale * socket.player.stats.atk);
+        var damage = card.natural + (card.scale * socket.player.stats.atk) - sockets[id].player.stats.mitigation;
         socket.player.stats.mp -= (card.will * 5);
+        if (damage < 0)
+        {
+            damage = 0;
+        }
         sockets[id].player.stats.hp -= damage;
         io.emit('attack', getAllPlayers(), socket.player, sockets[id].player, card);
+    });
+
+    socket.on('apply self', function (id, card){
+        var stats = socket.player.stats;
+        stats.mp -= card.will;
+        switch (card.title)
+        {
+            case "Stone Skin": // SHIELD: +1 for every 3 Arcana (Does not scale. Must reuse card to update and reflect new Arcana levels.)
+                stats.mitigation = stats.mp/3; //TODO change to Arcana instead of mp
+                break;
+        }
+
+        io.emit('update players', getAllPlayers());
     });
 
     function next_turn(){

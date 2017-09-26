@@ -80,7 +80,8 @@ Game.createOverlay = function(player){
     statOverlay = game.add.text(player.x, player.y, "Name: " + player.name + "\n" +
                                                     "Health: " + player.stats.hp + "\n" +
                                                     "Atk: " + player.stats.atk + "\n" +
-                                                    "Def: " + player.stats.def + "\n", { font: "16px Arial", fill: "#ffffff", align: "center" });
+                                                    "Def: " + player.stats.def + "\n" +
+                                                    "Reduction: " + player.stats.mitigation, { font: "16px Arial", fill: "#ffffff", align: "center" });
     statOverlay.anchor.setTo(0.5, 0.5);
 };
 
@@ -97,8 +98,9 @@ Game.addNewPlayer = function(player,id,x,y){
         Game.playerMap[id].tint = 0xffffff;
         statOverlay.destroy();
     }, game);
-
 };
+
+
 
 Game.createButtons = function(id){
     game.roll_btn = game.add.button(this.world.centerX,this.world.centerY,'green_gem', function(){
@@ -162,6 +164,28 @@ Game.disableAllSpriteInput = function(id){
         statOverlay.destroy();
     }, game);
 
+};
+
+Game.enableSelfInput = function(id, card){
+    var card = card;
+    Game.playerMap[id].events.onInputOver.add(function () {
+        Game.playerMap[id].tint = 0x4289f4;
+    }, game);
+    Game.playerMap[id].events.onInputOut.add(function () {
+        Game.playerMap[id].tint = 0xffffff;
+    }, game);
+    Game.playerMap[id].events.onInputDown.add(function () {
+        Game.playerMap[id].tint = 0xffffff;
+        Client.applyCardToSelf(id, card);
+        for(var i in Game.playerMap)
+        {
+            if (Game.playerMap.hasOwnProperty(i))
+            {
+                Game.disableAllSpriteInput(i);
+            }
+        }
+
+    }, game);
 };
 
 Game.scanForEnemies = function(hero, enemies, card){
@@ -457,8 +481,9 @@ Game.createCardButton = function (card){
                 myCards[index].card = null;
                 button.destroy();
                 cardDesc.destroy();
+
                 Client.attackPhase(card);
-            }, game);
+          }, game);
 
             button.onInputOver.add(function(){
                 cardDesc = game.add.text(myCards[i].x, myCards[i].y, card.title + "\n" +

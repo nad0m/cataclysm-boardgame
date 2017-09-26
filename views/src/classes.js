@@ -6,7 +6,8 @@ var Warrior = {
     mp: 16,
     atk: 20,
     def: 18,
-    atk_distance: 15
+    atk_distance: 15,
+    mitigation: 0
 };
 
 var Mage = {
@@ -17,7 +18,8 @@ var Mage = {
     mp: 50,
     atk: 8,
     def: 8,
-    atk_distance: 30
+    atk_distance: 30,
+    mitigation: 0
 };
 
 var Ranger = {
@@ -28,5 +30,6 @@ var Ranger = {
     mp: 16,
     atk: 12,
     def: 10,
-    atk_distance: 35
+    atk_distance: 35,
+    mitigation: 0
 };

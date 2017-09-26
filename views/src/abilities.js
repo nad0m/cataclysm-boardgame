@@ -33,7 +33,7 @@ var CardAbilities = [
         scale: 0,
         max: 0,
         reach: 0,
-        will: 6
+        will: 6,
     },
 {
         title: "Waterweave",
