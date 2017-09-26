@@ -29,15 +29,15 @@ Client.endTurn = function(){
 
 Client.attackPhase = function(card){
     Client.socket.emit('attack range', card); // draw range circle to all clients
-    Client.getCurrentStats();
+    Client.getCurrentStats(card);
 };
 
 Client.attack = function(id, card){
     Client.socket.emit('attack', id, card);
 };
 
-Client.getCurrentStats = function(){
-    Client.socket.emit('player info');
+Client.getCurrentStats = function(card){
+    Client.socket.emit('player info', card);
 };
 
 Client.loadWarrior = function() {
@@ -64,6 +64,7 @@ Client.socket.on('attack range',function(player, card){
 });
 
 Client.socket.on('your_turn',function(){
+    Game.pickCard();
     Game.enableRoll();
     Game.enableAttack();
     Game.enableEnd();
@@ -83,15 +84,15 @@ Client.socket.on('attack', function(players, attacker, defender, card){
     Game.moveBullet(players, attacker, defender, card);
 });
 
-Client.socket.on('player info',function(hero, enemies){
-    Game.scanForEnemies(hero, enemies);
+Client.socket.on('player info',function(hero, enemies, card){
+    Game.scanForEnemies(hero, enemies, card);
 });
 
 Client.socket.on('update players',function(players){
     Game.updateStats(players);
 });
 
-Client.socket.on('allplayers',function(data){
+Client.socket.on('allplayers',function(data, player){
     for(var i = 0; i < data.length; i++){
         Game.addNewPlayer(data[i], data[i].id,data[i].x,data[i].y);
         Game.createStatBars(data[i].name, data[i].stats, data[i].uiX, data[i].uiY, data[i].id);
@@ -108,6 +109,8 @@ Client.socket.on('allplayers',function(data){
     Client.socket.on('dice',function(frameValues, total){
         Game.updateDice(frameValues, total);
     });
+
+    Game.createButtons(player.id);
 });
 
 

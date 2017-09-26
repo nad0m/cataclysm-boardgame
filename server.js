@@ -76,8 +76,8 @@ io.sockets.on('connection', function (socket) {
         numberOfPlayers++;
         statBarsY += 100;
 
-        socket.emit('allplayers',getAllPlayers());
-        socket.broadcast.emit('newplayer',socket.player);
+        socket.emit('allplayers', getAllPlayers(), socket.player);
+        socket.broadcast.emit('newplayer', socket.player);
 
 
         io.emit('new user', msg);
@@ -132,8 +132,8 @@ io.sockets.on('connection', function (socket) {
         io.emit('attack range', socket.player, card);
     });
 
-    socket.on('player info', function () {
-        sockets[turn].emit('player info', socket.player, getAllPlayers());
+    socket.on('player info', function (card) {
+        sockets[turn].emit('player info', socket.player, getAllPlayers(), card);
     });
 
     socket.on('attack', function(id, card){

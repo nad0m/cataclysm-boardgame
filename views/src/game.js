@@ -46,6 +46,8 @@ Game.preload = function() {
     game.load.image('warrior', 'assets/images/warrior.png');
     game.load.image('mage','assets/images/Mage.png');
     game.load.image('ranger','assets/images/Ranger.png');
+    game.load.image('mat', 'assets/Board-62-height/temp-mat.png');
+    game.load.image('card_sprite', 'assets/Board-62-height/temp-card.png');
 
 };
 
@@ -54,7 +56,10 @@ var diceGroup;
 var total;
 var myHealthBar = [];
 var myManaBar = [];
+var cardChoices = [];
 var statOverlay;
+var cardDesc;
+var group;
 
 
 Game.create = function(){
@@ -93,6 +98,9 @@ Game.addNewPlayer = function(player,id,x,y){
         statOverlay.destroy();
     }, game);
 
+};
+
+Game.createButtons = function(id){
     game.roll_btn = game.add.button(this.world.centerX,this.world.centerY,'green_gem', function(){
         console.log(Game.playerMap[id].player.name);
         Game.rollDice();
@@ -112,13 +120,12 @@ Game.addNewPlayer = function(player,id,x,y){
     game.end_btn.anchor.setTo(0.5,0.5);
 
     Game.disableInput();
-
 };
 
 
-Game.enableSpriteInput = function(id){
+Game.enableSpriteInput = function(id, card){
     //  Enables all kind of input actions on this image (click, etc)
-
+        var card = card;
         Game.playerMap[id].events.onInputOver.add(function () {
             Game.playerMap[id].tint = 0xf44242;
         }, game);
@@ -127,7 +134,7 @@ Game.enableSpriteInput = function(id){
         }, game);
         Game.playerMap[id].events.onInputDown.add(function () {
             Game.playerMap[id].tint = 0xffffff;
-            Client.attack(id, Fireball); //id of person being attacked
+            Client.attack(id, card); //id of person being attacked
             for(var i in Game.playerMap)
             {
                 if (Game.playerMap.hasOwnProperty(i))
@@ -157,15 +164,15 @@ Game.disableAllSpriteInput = function(id){
 
 };
 
-Game.scanForEnemies = function(hero, enemies){
+Game.scanForEnemies = function(hero, enemies, card){
     var x = hero.x;
     var y = hero.y;
 
     for (var i = 0; i < enemies.length; i++)
     {
-        if (hero.id != enemies[i].id && Phaser.Math.distance(enemies[i].x,enemies[i].y,x,y) < hero.stats.atk_distance*3+6)
+        if (hero.id != enemies[i].id && Phaser.Math.distance(enemies[i].x,enemies[i].y,x,y) < card.reach*10*6/2+6)
         {
-            Game.enableSpriteInput(enemies[i].id);
+            Game.enableSpriteInput(enemies[i].id, card);
         }
     }
 };
@@ -375,12 +382,114 @@ Game.createStatBars = function (name, hero, x, y, id){
 
 };
 
+Game.pickRandomProperty = function (arr) {
+    var card = arr[Math.floor(Math.random()*arr.length)];
+    return card;
+};
+
+Game.getRandomCards = function() {
+    var randomArr = [];
+    for (var i = 0; i < 6; i++)
+    {
+        var card = Game.pickRandomProperty(CardAbilities);
+        if (randomArr.indexOf(card) != -1)
+        {
+            i--;
+        } else {
+            randomArr.push(card);
+        }
+    }
+    return randomArr;
+}
+
+Game.pickCard = function() {
+    var cards = Game.getRandomCards();
+    game.card_mat = game.add.image(game.world.centerX, game.world.centerY, 'mat');
+    game.card_mat.anchor.setTo(0.5, 0.5);
+
+    Game.createCardChoices(game.card0, game.card_mat.centerX, game.card_mat.centerY, 'card_sprite', cards[0]);
+    Game.createCardChoices(game.card1, game.card_mat.centerX + 70, game.card_mat.centerY, 'card_sprite', cards[1]);
+    Game.createCardChoices(game.card2, game.card_mat.centerX + 140, game.card_mat.centerY, 'card_sprite', cards[2]);
+    Game.createCardChoices(game.card3, game.card_mat.centerX + 210, game.card_mat.centerY, 'card_sprite', cards[3]);
+    Game.createCardChoices(game.card4, game.card_mat.centerX + 280, game.card_mat.centerY, 'card_sprite', cards[4]);
+    Game.createCardChoices(game.card5, game.card_mat.centerX + 350, game.card_mat.centerY, 'card_sprite', cards[5]);
+};
+
+Game.createCardChoices = function(context, x, y, image, card) {
+    context = game.add.button(x + 0, y, image, function(){
+        Game.createCardButton(card);
+        game.card_mat.destroy();
+        cardDesc.destroy();
+        //Destroy all cards upon choice
+        for (var i = 0; i < cardChoices.length; i++)
+        {
+            cardChoices[i].destroy();
+        }
+        cardChoices = [];
+    });
+
+    context.onInputOver.add(function(){
+        cardDesc = game.add.text(x,y, card.title + "\n" +
+                                      card.proficiency + "\n" +
+                                      "Will required: " + card.will);
+        cardDesc.font = "Roboto Slab";
+        cardDesc.fontSize = 12;
+        cardDesc.fill = "#f44242";
+    }, game);
+
+    context.onInputOut.add(function(){
+        cardDesc.destroy();
+    }, game);
+
+    cardChoices.push(context);
+};
+
+Game.createCardButton = function (card){
+    for (var i = 0; i < myCards.length; i++)
+    {
+        var card = card;
+        var index = i;
+
+        if (myCards[i].card == null)
+        {
+            myCards[i].card = card;
+            var button = game.add.button(myCards[i].x, myCards[i].y, 'card_sprite', function(){
+                myCards[index].card = null;
+                button.destroy();
+                cardDesc.destroy();
+                Client.attackPhase(card);
+            }, game);
+
+            button.onInputOver.add(function(){
+                cardDesc = game.add.text(myCards[i].x, myCards[i].y, card.title + "\n" +
+                    card.proficiency + "\n" +
+                    "Will required: " + card.will);
+                cardDesc.font = "Roboto Slab";
+                cardDesc.fontSize = 12;
+                cardDesc.fill = "#f44242";
+            }, game);
+
+            button.onInputOut.add(function(){
+                cardDesc.destroy();
+            }, game);
+
+            break;
+        }
+    }
+
+};
+
+Game.removeCardFromHand = function(index){
+    myCards.splice(index, 1);
+};
+
 Game.loadBoard = function(hero) {
     game.warrior_btn.destroy();
     game.mage_btn.destroy();
     game.ranger_btn.destroy();
 
     Game.playerMap = {};
+
 
     game.map = game.add.image(game.world.centerX,game.world.centerY,'map');
     game.map.anchor.setTo(0.5,0.5);
