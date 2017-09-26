@@ -123,9 +123,10 @@ Game.createButtons = function(id){
 };
 
 
-Game.enableSpriteInput = function(id, card){
+Game.enableSpriteInput = function(id, card, index){
     //  Enables all kind of input actions on this image (click, etc)
         var card = card;
+        var index = index;
         Game.playerMap[id].events.onInputOver.add(function () {
             Game.playerMap[id].tint = 0xf44242;
         }, game);
@@ -135,6 +136,10 @@ Game.enableSpriteInput = function(id, card){
         Game.playerMap[id].events.onInputDown.add(function () {
             Game.playerMap[id].tint = 0xffffff;
             Client.attack(id, card); //id of person being attacked
+            myCards[index].card = null;
+            myCards[index].button.destroy();
+            myCards[index].button = null;
+            cardDesc.destroy();
             for(var i in Game.playerMap)
             {
                 if (Game.playerMap.hasOwnProperty(i))
@@ -148,8 +153,6 @@ Game.enableSpriteInput = function(id, card){
 };
 
 Game.disableAllSpriteInput = function(id){
-
-    console.log(id + " input false");
     Game.playerMap[id].events.destroy();
 
     Game.playerMap[id].inputEnabled = true;
@@ -164,7 +167,7 @@ Game.disableAllSpriteInput = function(id){
 
 };
 
-Game.scanForEnemies = function(hero, enemies, card){
+Game.scanForEnemies = function(hero, enemies, card, button){
     var x = hero.x;
     var y = hero.y;
 
@@ -172,7 +175,7 @@ Game.scanForEnemies = function(hero, enemies, card){
     {
         if (hero.id != enemies[i].id && Phaser.Math.distance(enemies[i].x,enemies[i].y,x,y) < card.reach*10*6/2+6)
         {
-            Game.enableSpriteInput(enemies[i].id, card);
+            Game.enableSpriteInput(enemies[i].id, card, button);
         }
     }
 };
@@ -225,6 +228,14 @@ Game.removePlayer = function(id){
 
 
 Game.rollDice = function() {
+    for(var i in Game.playerMap)
+    {
+        if (Game.playerMap.hasOwnProperty(i))
+        {
+            Game.disableAllSpriteInput(i);
+        }
+    }
+
     var frameValues = [];
     total = 0;
     diceGroup.forEach(function(item) {
@@ -236,7 +247,8 @@ Game.rollDice = function() {
     text.setText("Total: " + total);
 
     Client.sendDice(frameValues, total);
-
+    Game.removeGraphics();
+    Game.turnSlotsOn();
     Game.disableRoll();
 
 };
@@ -327,7 +339,6 @@ Game.drawAttackRange = function (x, y, diameter){
 
 
 Game.removeGraphics = function(){
-
     if (game.graphics != null)
     {
         game.graphics.destroy();
@@ -454,10 +465,11 @@ Game.createCardButton = function (card){
         {
             myCards[i].card = card;
             var button = game.add.button(myCards[i].x, myCards[i].y, 'card_sprite', function(){
-                myCards[index].card = null;
-                button.destroy();
+               /* myCards[index].card = null;
+                button.destroy();*/
                 cardDesc.destroy();
-                Client.attackPhase(card);
+                Game.turnSlotOff(index);
+                Client.attackPhase(card, index);
             }, game);
 
             button.onInputOver.add(function(){
@@ -473,10 +485,44 @@ Game.createCardButton = function (card){
                 cardDesc.destroy();
             }, game);
 
+            myCards[i].button = button;
             break;
         }
     }
 
+};
+
+Game.turnSlotOff = function(index){
+    for(var i in Game.playerMap)
+    {
+        if (Game.playerMap.hasOwnProperty(i))
+        {
+            Game.disableAllSpriteInput(i);
+        }
+    }
+
+    for (var i = 0; i < myCards.length; i++)
+    {
+        if (myCards[i].button != null && i == index)
+        {
+            myCards[i].button.inputEnabled = false;
+        } 
+
+        else if (myCards[i].button != null && i != index)
+        {
+            myCards[i].button.inputEnabled = true;
+        }
+    }
+};
+
+Game.turnSlotsOn = function(){
+    for (var i = 0; i < myCards.length; i++)
+    {
+        if (myCards[i].button != null)
+        {
+            myCards[i].button.inputEnabled = true;
+        }
+    }
 };
 
 Game.removeCardFromHand = function(index){

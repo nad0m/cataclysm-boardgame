@@ -129,11 +129,11 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('attack range', function (card) {
-        io.emit('attack range', socket.player, card);
+        socket.emit('attack range', socket.player, card);
     });
 
-    socket.on('player info', function (card) {
-        sockets[turn].emit('player info', socket.player, getAllPlayers(), card);
+    socket.on('player info', function (card, button) {
+        sockets[turn].emit('player info', socket.player, getAllPlayers(), card, button);
     });
 
     socket.on('attack', function(id, card){

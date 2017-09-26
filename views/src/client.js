@@ -27,17 +27,17 @@ Client.endTurn = function(){
     Client.socket.emit('end turn');
 };
 
-Client.attackPhase = function(card){
+Client.attackPhase = function(card, button){
     Client.socket.emit('attack range', card); // draw range circle to all clients
-    Client.getCurrentStats(card);
+    Client.getCurrentStats(card, button);
 };
 
 Client.attack = function(id, card){
     Client.socket.emit('attack', id, card);
 };
 
-Client.getCurrentStats = function(card){
-    Client.socket.emit('player info', card);
+Client.getCurrentStats = function(card, button){
+    Client.socket.emit('player info', card, button);
 };
 
 Client.loadWarrior = function() {
@@ -57,7 +57,6 @@ Client.socket.on('newplayer',function(data){
 });
 
 Client.socket.on('attack range',function(player, card){
-    Game.disableAttack();
     Game.removeGraphics();
     Game.drawAttackRange(player.x, player.y, card.reach*10);
 
@@ -84,8 +83,8 @@ Client.socket.on('attack', function(players, attacker, defender, card){
     Game.moveBullet(players, attacker, defender, card);
 });
 
-Client.socket.on('player info',function(hero, enemies, card){
-    Game.scanForEnemies(hero, enemies, card);
+Client.socket.on('player info',function(hero, enemies, card, button){
+    Game.scanForEnemies(hero, enemies, card, button);
 });
 
 Client.socket.on('update players',function(players){

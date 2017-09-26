@@ -222,13 +222,15 @@ var myCards =[
         card: null,
         slot: 1,
         x: 60,
-        y: 340
+        y: 340,
+        button: null
     },
     {
         card: null,
         slot: 2,
         x: 130,
-        y: 340
+        y: 340,
+        button: null
     },
     {
         card: null,
@@ -240,19 +242,22 @@ var myCards =[
         card: null,
         slot: 4,
         x: 60,
-        y: 460
+        y: 460,
+        button: null
     },
     {
         card: null,
         slot: 5,
         x: 130,
-        y: 460
+        y: 460,
+        button: null
     },
     {
         card: null,
         slot: 6,
         x: 200,
-        y: 460
+        y: 460,
+        button: null
     },
 ];
 
