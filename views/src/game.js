@@ -48,6 +48,7 @@ Game.preload = function() {
     game.load.image('ranger','assets/images/Ranger.png');
     game.load.image('mat', 'assets/Board-62-height/temp-mat.png');
     game.load.image('card_sprite', 'assets/Board-62-height/temp-card.png');
+    game.load.image('arrow','assets/images/arrow.png');
 
 };
 
@@ -206,8 +207,9 @@ Game.movePlayer = function(id,x,y){
 };
 
 Game.moveBullet = function(players, attacker, defender, card){
-    var bullet = game.add.sprite(attacker.x, attacker.y, 'bullet');
+    var bullet = game.add.sprite(attacker.x, attacker.y, 'arrow');
     bullet.anchor.setTo(0.5, 0.5);
+    bullet.rotation = game.physics.arcade.angleBetween(attacker, defender);
     var distance = Phaser.Math.distance(attacker.x,attacker.y,defender.x,defender.y);
     var tween = game.add.tween(bullet);
     var duration = distance*5;
