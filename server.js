@@ -25,7 +25,7 @@ require('./config/passport')(passport); // pass passport for configuration
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser.urlencoded({
-	extended: true
+    extended: true
 }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'views')));
@@ -34,10 +34,10 @@ app.set('view engine', 'ejs'); // set up ejs for templating
 
 // required for passport
 app.use(session({
-	secret: 'huyandlawrence',
-	resave: true,
-	saveUninitialized: true
- } )); // session secret
+    secret: 'huyandlawrence',
+    resave: true,
+    saveUninitialized: true
+} )); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
@@ -129,17 +129,17 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('attack range', function (card) {
-        io.emit('attack range', socket.player, card);
+        socket.emit('attack range', socket.player, card);
     });
 
-    socket.on('self card', function (card) {
-        io.emit('self card', socket.player, card);
+    socket.on('self card', function (card, index) {
+        io.emit('self card', socket.player, card, index);
     });
 
 
 
-    socket.on('player info', function (card) {
-        sockets[turn].emit('player info', socket.player, getAllPlayers(), card);
+    socket.on('player info', function (card, button) {
+        sockets[turn].emit('player info', socket.player, getAllPlayers(), card, button);
     });
 
     socket.on('attack', function(id, card){
