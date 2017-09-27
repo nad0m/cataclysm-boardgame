@@ -159,18 +159,18 @@ io.sockets.on('connection', function (socket) {
         var ratio;
         switch (card.proficiency)
         {
-            case ("FORCE"):
+            case ("Force"):
                 ratio = stats.force;
                 break;
-            case ("ARCANA"):
+            case ("Arcana"):
                 ratio = stats.arcana;
                 break;
-            case ("CLARITY"):
+            case ("Clarity"):
                 ratio = stats.clarity;
                 break;
         }
 
-        var damage = card.natural + (card.scale * (ratio + stats.damage_bonus)) - (sockets[id].player.stats.mitigation + sockets[id].player.stats.def_bonus);
+        var damage = card.natural + stats.damage_bonus + (card.scale * ratio) - (sockets[id].player.stats.mitigation + sockets[id].player.stats.def_bonus);
         stats.mp -= (card.will * 5);
         if (damage < 0)
         {
@@ -187,8 +187,8 @@ io.sockets.on('connection', function (socket) {
         stats.mp -= card.will;
         switch (card.title)
         {
-            case "Stone Skin": // SHIELD: +1 for every 3 Arcana permanently (Does not scale with subsequent increase of Arcana. Must reuse card to update and reflect new Arcana levels.)
-                stats.mitigation = stats.arcana/3;
+            case "Stone Skin": // SHIELD: +1 and +1 for every 3 Arcana permanently (Does not scale with subsequent increase of Arcana. Must reuse card to update and reflect new Arcana levels.)
+                stats.mitigation = 1 + stats.arcana/3;
                 break;
             case "Bloodlust": //STEROID: Add 2 (+1 for every 4 Force) Power to your next attack.
                 stats.damage_bonus = 2 + (stats.force/4);
