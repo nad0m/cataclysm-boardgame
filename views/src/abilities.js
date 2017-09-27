@@ -46,7 +46,8 @@ var CardAbilities = [
         scale: 0,
         max: 0,
         reach: 4,
-        will: 5
+        will: 5,
+        type: "SPELL"
     },
 {
         title: "Lightning Step",
@@ -55,7 +56,8 @@ var CardAbilities = [
         scale: 0.3,
         max: 0,
         reach: 3,
-        will: 3
+        will: 3,
+        type: "SELF"
     },
 {
         title: "Geomancer",
@@ -64,7 +66,8 @@ var CardAbilities = [
         scale: 0,
         max: 0,
         reach: 5,
-        will: 6
+        will: 6,
+        type: "SPELL"
     },
 {
         title: "Gale",
@@ -73,7 +76,8 @@ var CardAbilities = [
         scale: 0.25,
         max: 11,
         reach: 1,
-        will: 4
+        will: 4,
+        type: "ATTACK"
     },
 {
         title: "Cleave",
@@ -82,7 +86,8 @@ var CardAbilities = [
         scale: 0.5,
         max: 16,
         reach: 1,
-        will: 2
+        will: 2,
+        type: "ATTACK"
     },
 {
         title: "Bloodlust",
@@ -91,7 +96,8 @@ var CardAbilities = [
         scale: 0,
         max: 0,
         reach: 0,
-        will: 4
+        will: 4,
+        type: "SELF"
     },
 {
         title: "Frenzy",
@@ -100,7 +106,8 @@ var CardAbilities = [
         scale: 0.5,
         max: 13,
         reach: 1,
-        will: 3
+        will: 3,
+        type: "ATTACK"
     },
 {
         title: "Intrepid Strike",
@@ -109,7 +116,8 @@ var CardAbilities = [
         scale: 1,
         max: 28,
         reach: 1,
-        will: 7
+        will: 7,
+        type: "ATTACK"
     },
 {
         title: "Offhand Blow",
@@ -118,7 +126,8 @@ var CardAbilities = [
         scale: 1,
         max: 24,
         reach: 1,
-        will: 5
+        will: 5,
+        type: "ATTACK"
     },
 {
         title: "Grapple",
@@ -127,7 +136,8 @@ var CardAbilities = [
         scale: 0.5,
         max: 14,
         reach: 2,
-        will: 3
+        will: 3,
+        type: "ATTACK"
     },
 {
         title: "Dauntless Advance",
@@ -136,7 +146,8 @@ var CardAbilities = [
         scale: 0.5,
         max: 0,
         reach: 2,
-        will: 4
+        will: 4,
+        type: "SPELL"
     },
 {
         title: "Adanai's Embrace",
@@ -145,7 +156,8 @@ var CardAbilities = [
         scale: 0,
         max: 0,
         reach: 0,
-        will: 4
+        will: 4,
+        type: "SELF"
     },
 {
         title: "Trueshot",
@@ -154,7 +166,8 @@ var CardAbilities = [
         scale: 0.5,
         max: 13,
         reach: 6,
-        will: 2
+        will: 2,
+        type: "ATTACK"
     },
 {
         title: "Skyfather's Arrow",
@@ -173,7 +186,8 @@ var CardAbilities = [
         scale: 0.334,
         max: 11,
         reach: 6,
-        will: 4
+        will: 4,
+        type: "ATTACK"
     },
 {
         title: "Hail of Iron",
@@ -182,7 +196,8 @@ var CardAbilities = [
         scale: 0.334,
         max: 10,
         reach: 6,
-        will: 4
+        will: 4,
+        type: "ATTACK"
     },
 {
         title: "Barrage",
@@ -191,7 +206,8 @@ var CardAbilities = [
         scale: 0.5,
         max: 14,
         reach: 4,
-        will: 5
+        will: 5,
+        type: "ATTACK"
     },
 {
         title: "Windsplitter",
@@ -200,7 +216,8 @@ var CardAbilities = [
         scale: 0.334,
         max: 11,
         reach: 8,
-        will: 3
+        will: 3,
+        type: "ATTACK"
     },
 {
         title: "Bushwack",
@@ -209,7 +226,8 @@ var CardAbilities = [
         scale: 0,
         max: 0,
         reach: 3,
-        will: 4
+        will: 4,
+        type: "SPELL"
     },
 {
         title: "Oros' Blessing",
@@ -218,7 +236,8 @@ var CardAbilities = [
         scale: 0,
         max: 0,
         reach: 0,
-        will: 4
+        will: 4,
+        type: "SELF"
     }
     ];
 

@@ -24,6 +24,7 @@ Client.sendGameState = function(msg){
 };
 
 Client.endTurn = function(){
+    Game.disableAllSprites();
     Client.socket.emit('end turn');
 };
 
@@ -39,6 +40,11 @@ Client.attackPhase = function(card, buttonIndex){
         Client.socket.emit('self card', card, buttonIndex);
     }
 
+    else if (card.type == "SPELL")
+    {
+        Client.socket.emit('spell card', card, buttonIndex);
+    }
+
 };
 
 Client.attack = function(id, card){
@@ -47,6 +53,10 @@ Client.attack = function(id, card){
 
 Client.applyCardToSelf = function (id, card){
     Client.socket.emit('apply self', id, card)
+};
+
+Client.applyCardToOthers = function (id, card){
+    Client.socket.emit('apply others', id, card)
 };
 
 Client.getCurrentStats = function(card, button){
@@ -71,15 +81,20 @@ Client.socket.on('newplayer',function(data){
 
 Client.socket.on('attack range',function(player, card){
     Game.removeGraphics();
-    Game.drawAttackRange(player.x, player.y, card.reach*10);
+    Game.drawAttackRange(player.x, player.y, (card.reach + player.stats.reach_bonus)*10, 0xf44242);
 
 });
 
 Client.socket.on('self card',function(player, card, index){
-    Game.disableAttack();
     Game.removeGraphics();
-    Game.enableSelfInput(player.id, card, index);
+    if (player.turn) {
+        Game.enableSelfInput(player.id, card, index);
+    }
+});
 
+Client.socket.on('spell card',function(players, player, card, index){
+    Game.removeGraphics();
+    Game.scanForFriendlies(players, player, card, index);
 });
 
 Client.socket.on('your_turn',function(){
@@ -101,6 +116,11 @@ Client.socket.on('draw_circle',function(x, y, total, isPlayerTurn){
 Client.socket.on('attack', function(players, attacker, defender, card){
     Game.removeGraphics();
     Game.moveBullet(players, attacker, defender, card);
+});
+
+Client.socket.on('apply others', function(players, source, recipient, card){
+    Game.removeGraphics();
+    Game.moveBullet(players, source, recipient, card);
 });
 
 Client.socket.on('player info',function(hero, enemies, card, button){

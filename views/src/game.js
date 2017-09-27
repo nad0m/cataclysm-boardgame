@@ -81,7 +81,9 @@ Game.createOverlay = function(player){
                                                     "Health: " + player.stats.hp + "\n" +
                                                     "Atk: " + player.stats.atk + "\n" +
                                                     "Def: " + player.stats.def + "\n" +
-                                                    "Reduction: " + player.stats.mitigation, { font: "16px Arial", fill: "#ffffff", align: "center" });
+                                                    "Reduction: " + player.stats.mitigation + "\n" +
+                                                    "Def bonus: " + player.stats.def_bonus + "\n" +
+                                                    "Reach bonus: " + player.stats.reach_bonus,{ font: "16px Arial", fill: "#ffffff", align: "center" });
     statOverlay.anchor.setTo(0.5, 0.5);
 };
 
@@ -122,6 +124,16 @@ Game.createButtons = function(id){
     game.end_btn.anchor.setTo(0.5,0.5);
 
     Game.disableInput();
+};
+
+Game.disableAllSprites = function(){
+    for(var i in Game.playerMap)
+    {
+        if (Game.playerMap.hasOwnProperty(i))
+        {
+            Game.disableAllSpriteInput(i);
+        }
+    }
 };
 
 
@@ -172,15 +184,41 @@ Game.disableAllSpriteInput = function(id){
 
 Game.enableSelfInput = function(id, card, index){
     var card = card;
+
+    Game.playerMap[id].tint = 0x4289f4;
+
     Game.playerMap[id].events.onInputOver.add(function () {
         Game.playerMap[id].tint = 0x4289f4;
     }, game);
-    Game.playerMap[id].events.onInputOut.add(function () {
-        Game.playerMap[id].tint = 0x4289f4;
-    }, game);
+
     Game.playerMap[id].events.onInputDown.add(function () {
         Game.playerMap[id].tint = 0xffffff;
         Client.applyCardToSelf(id, card);
+        myCards[index].card = null;
+        myCards[index].button.destroy();
+        myCards[index].button = null;
+        for(var i in Game.playerMap)
+        {
+            if (Game.playerMap.hasOwnProperty(i))
+            {
+                Game.disableAllSpriteInput(i);
+            }
+        }
+
+    }, game);
+};
+
+Game.enableFriendlyInput = function(id, card, index){
+    var card = card;
+
+    Game.playerMap[id].tint = 0xebf442;
+
+    Game.playerMap[id].events.onInputOver.add(function () {
+        Game.playerMap[id].tint = 0xebf442;
+    }, game);
+    Game.playerMap[id].events.onInputDown.add(function () {
+        Game.playerMap[id].tint = 0xffffff;
+        Client.applyCardToOthers(id, card);
         myCards[index].card = null;
         myCards[index].button.destroy();
         myCards[index].button = null;
@@ -201,11 +239,29 @@ Game.scanForEnemies = function(hero, enemies, card, button){
 
     for (var i = 0; i < enemies.length; i++)
     {
-        if (hero.id != enemies[i].id && Phaser.Math.distance(enemies[i].x,enemies[i].y,x,y) < card.reach*10*6/2+6)
+        if (hero.turn && hero.id != enemies[i].id && Phaser.Math.distance(enemies[i].x,enemies[i].y,x,y) < (card.reach*10*6 + hero.stats.reach_bonus)/2+6)
         {
             Game.enableSpriteInput(enemies[i].id, card, button);
         }
     }
+};
+
+Game.scanForFriendlies = function (players, player, card, buttonIndex) {
+    var spriteID = player.id;
+    var currentSprite = Game.playerMap[spriteID];
+
+    Game.drawAttackRange(player.x, player.y, (card.reach + player.stats.reach_bonus)*10, 0xebf442);
+
+    for (var id in Game.playerMap)
+    {
+        if (player.turn == true && Game.playerMap.hasOwnProperty(id))
+        {
+            if (game.physics.arcade.distanceBetween(currentSprite, Game.playerMap[id]) < (card.reach*10*6 + player.stats.reach_bonus)/2+6){
+                Game.enableFriendlyInput(id, card, buttonIndex);
+            }
+        }
+    }
+
 };
 
 Game.updateStats = function(players){
@@ -355,11 +411,11 @@ Game.drawRange = function (x, y, diameter, isPlayerTurn){
 
 };
 
-Game.drawAttackRange = function (x, y, diameter){
+Game.drawAttackRange = function (x, y, diameter, color){
     var graphics = game.add.graphics(x, y);
 
     graphics.lineStyle(1);
-    graphics.beginFill(0xf44242, 0.15);
+    graphics.beginFill(color, 0.15);
     graphics.drawCircle(0, 0, diameter*6);
     graphics.endFill();
 
