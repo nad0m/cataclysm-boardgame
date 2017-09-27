@@ -31,7 +31,7 @@ Game.preload = function() {
     game.load.script("BlurX", path + "assets/Layout/BlurX.js");
     game.load.script("BlurY", path + "assets/Layout/BlurY.js");
     game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
-    game.load.image('map', 'assets/Board-62-height/Board.png');
+    game.load.image('map', 'assets/Board/Board2.png');
     game.load.image('status', 'assets/Board-62-height/Status.png');
     game.load.image('red_gem', 'assets/Board-62-height/RedGem.png');
     game.load.image('yellow_gem', 'assets/Board-62-height/YellowGem.png');
@@ -40,9 +40,9 @@ Game.preload = function() {
     game.load.image('banner', 'assets/Board-62-height/Banner.png');
     game.load.image('sprite','assets/images/sprite-test.png');
     game.load.image('bullet','assets/images/bullet.png');
-    game.load.image('roll-dice','assets/Layout/Profile.png');
-    game.load.image('end-turn','assets/images/end.png');
-    game.load.image('atk-btn', 'assets/images/attack.png');
+    game.load.image('roll-dice','assets/Buttons/ButtonRoll.png');
+    game.load.image('end-turn','assets/Buttons/ButtonEnd.png');
+    game.load.image('atk-btn', 'assets/Buttons/ButtonOff.png');
     game.load.image('warrior', 'assets/images/warrior.png');
     game.load.image('mage','assets/images/Mage.png');
     game.load.image('ranger','assets/images/Ranger.png');
@@ -60,6 +60,8 @@ var cardChoices = [];
 var statOverlay;
 var cardDesc;
 var group;
+var trap = null;
+var trapVictim = null;
 
 
 Game.create = function(){
@@ -67,6 +69,19 @@ Game.create = function(){
     game.mage_btn = game.add.button(300, 300, 'mage', Client.loadMage);
     game.ranger_btn = game.add.button(410, 300, 'ranger', Client.loadRanger);
 
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+
+};
+
+Game.update = function(){
+    // object1, object2, collideCallback, processCallback, callbackContext
+    game.physics.arcade.collide(trap, trapVictim, Game.collisionHandler, null, this);
+};
+
+Game.collisionHandler = function(){
+    console.log("Trapped!!");
+    trap = null;
+    trapVictim = null;
 };
 
 Game.getCoordinates = function(layer,pointer){
@@ -83,7 +98,7 @@ Game.createOverlay = function(player){
                                                     "Def: " + player.stats.def + "\n" +
                                                     "Reduction: " + player.stats.mitigation + "\n" +
                                                     "Def bonus: " + player.stats.def_bonus + "\n" +
-                                                    "Reach bonus: " + player.stats.reach_bonus,{ font: "16px Arial", fill: "#ffffff", align: "center" });
+                                                    "Reach bonus: " + player.stats.reach_bonus,{ font: "12px Arial", fill: "#ffffff", align: "center" });
     statOverlay.anchor.setTo(0.5, 0.5);
 };
 
@@ -105,13 +120,13 @@ Game.addNewPlayer = function(player,id,x,y){
 
 
 Game.createButtons = function(id){
-    game.roll_btn = game.add.button(this.world.centerX,this.world.centerY,'green_gem', function(){
+    game.roll_btn = game.add.button(this.world.centerX,this.world.centerY,'roll-dice', function(){
         console.log(Game.playerMap[id].player.name);
         Game.rollDice();
     });
     game.roll_btn.anchor.setTo(0.5,0.5);
 
-    game.atk_btn = game.add.button(this.world.centerX+50,this.world.centerY,'yellow_gem', function(){
+    game.atk_btn = game.add.button(this.world.centerX+50,this.world.centerY,'atk-btn', function(){
         if (Game.playerMap[id].player.stats.mp >= Fireball.will) {
             Client.attackPhase(Fireball);
         } else {
@@ -120,7 +135,7 @@ Game.createButtons = function(id){
     });
     game.atk_btn.anchor.setTo(0.5,0.5);
 
-    game.end_btn = game.add.button(this.world.centerX+100,this.world.centerY,'red_gem', Client.endTurn);
+    game.end_btn = game.add.button(this.world.centerX+100,this.world.centerY,'end-turn', Client.endTurn);
     game.end_btn.anchor.setTo(0.5,0.5);
 
     Game.disableInput();
@@ -411,7 +426,7 @@ Game.drawRange = function (x, y, diameter, isPlayerTurn){
 
 };
 
-Game.drawAttackRange = function (x, y, diameter, color){
+Game.drawAttackRange = function (players, x, y, diameter, color, isTrap){
     var graphics = game.add.graphics(x, y);
 
     graphics.lineStyle(1);
@@ -419,8 +434,34 @@ Game.drawAttackRange = function (x, y, diameter, color){
     graphics.drawCircle(0, 0, diameter*6);
     graphics.endFill();
 
-    game.graphics = graphics;
+    if (isTrap)
+    {
+        var allPlayers = players;
+        graphics.inputEnabled = true;
+        graphics.input.useHandCursor = true;
+        graphics.events.onInputDown.add(function(){
+            Game.setTrap(allPlayers);
+        }, this);
+    }
 
+    game.graphics = graphics;
+};
+
+Game.setTrap = function(allPlayers){
+    var x = game.input.mousePointer.x;
+    var y = game.input.mousePointer.y;
+
+    trap = game.add.sprite(x, y, 'red_gem');
+    trap.anchor.setTo(0.5,0.5);
+
+    for (var i = 0; i < allPlayers.length; i++)
+    {
+        var id = allPlayers[i].id;
+        trapVictim = Game.playerMap[id];
+    }
+     
+    game.physics.enable( [ trap, trapVictim ], Phaser.Physics.ARCADE);
+    game.graphics.destroy();
 };
 
 
@@ -612,6 +653,12 @@ Game.turnSlotsOn = function(){
     }
 };
 
+Game.destroyCard = function(index){
+    myCards[index].card = null;
+    myCards[index].button.destroy();
+    myCards[index].button = null;
+};
+
 
 Game.removeCardFromHand = function(index){
     myCards.splice(index, 1);
@@ -629,15 +676,6 @@ Game.loadBoard = function(hero) {
     game.map.anchor.setTo(0.5,0.5);
     game.map.inputEnabled = true;
     game.map.events.onInputUp.add(Game.getCoordinates, this);
-
-    game.test5 = game.add.image(game.world.centerX,game.world.centerY,'status');
-    game.test5.anchor.setTo(0.5,0.5);
-
-    game.test4 = game.add.image(game.world.centerX,game.world.centerY,'banner');
-    game.test4.anchor.setTo(0.5,0.5);
-
-    game.test6 = game.add.image(game.world.centerX,game.world.centerY,'player_profile');
-    game.test6.anchor.setTo(0.5,0.5);
 
 
     Client.askNewPlayer([fname + " " + lname, fname + " " +lname + " has joined the room.", hero]);

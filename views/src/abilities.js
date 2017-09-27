@@ -67,7 +67,7 @@ var CardAbilities = [
         max: 0,
         reach: 5,
         will: 6,
-        type: "SPELL"
+        type: "TRAP"
     },
 {
         title: "Gale",
@@ -227,7 +227,7 @@ var CardAbilities = [
         max: 0,
         reach: 3,
         will: 4,
-        type: "SPELL"
+        type: "TRAP"
     },
 {
         title: "Oros' Blessing",

@@ -150,6 +150,10 @@ io.sockets.on('connection', function (socket) {
         socket.emit('spell card', getAllPlayers(), socket.player, card, index);
     });
 
+    socket.on('trap card', function (card, index) {
+        socket.emit('trap card', getAllPlayers(), socket.player, card, index);
+    });
+
     socket.on('player info', function (card, button) {
         sockets[turn].emit('player info', socket.player, getAllPlayers(), card, button);
     });
@@ -170,12 +174,17 @@ io.sockets.on('connection', function (socket) {
                 break;
         }
 
-        var damage = card.natural + stats.damage_bonus + (card.scale * ratio) - (sockets[id].player.stats.mitigation + sockets[id].player.stats.def_bonus);
+        var damage = card.natural + stats.damage_bonus + (card.scale * ratio);
+        var reduction = sockets[id].player.stats.mitigation + sockets[id].player.stats.def_bonus;
+
+        damage -= reduction;
+
         stats.mp -= (card.will * 5);
         if (damage < 0)
         {
             damage = 0;
         }
+
         sockets[id].player.stats.hp -= damage;
         stats.damage_bonus = 0; //reset if any bonus exists, e.g. "Bloodlust"
         sockets[id].player.stats.def_bonus = 0; //reset bonus

@@ -45,6 +45,11 @@ Client.attackPhase = function(card, buttonIndex){
         Client.socket.emit('spell card', card, buttonIndex);
     }
 
+    else if (card.type == "TRAP")
+    {
+        Client.socket.emit('trap card', card, buttonIndex);
+    }
+
 };
 
 Client.attack = function(id, card){
@@ -81,7 +86,7 @@ Client.socket.on('newplayer',function(data){
 
 Client.socket.on('attack range',function(player, card){
     Game.removeGraphics();
-    Game.drawAttackRange(player.x, player.y, (card.reach + player.stats.reach_bonus)*10, 0xf44242);
+    Game.drawAttackRange(player.x, player.y, (card.reach + player.stats.reach_bonus)*10, 0xf44242, false);
 
 });
 
@@ -96,6 +101,12 @@ Client.socket.on('spell card',function(players, player, card, index){
     Game.removeGraphics();
     Game.scanForFriendlies(players, player, card, index);
 });
+
+Client.socket.on('trap card',function(players, player, card, index){
+    Game.removeGraphics();
+    Game.drawAttackRange(players, player.x, player.y, (card.reach + player.stats.reach_bonus)*10, 0xd6b5fc, true)
+    Game.destroyCard(index);
+})
 
 Client.socket.on('your_turn',function(){
     Game.pickCard();
