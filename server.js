@@ -58,6 +58,12 @@ var turn = 0;
 var statBarsX = 100;
 var statBarsY = 200;
 var numberOfPlayers = 0;
+var checkForReset = 0;
+var trapID = 0;
+var currentTraps = [];
+const LEVEL_UP_SCALE = 0.08;
+
+
 
 io.sockets.on('connection', function (socket) {
 
@@ -74,7 +80,7 @@ io.sockets.on('connection', function (socket) {
             turn: false,
             cards: []
         };
-        numberOfPlayers++;
+        checkForReset++;
         statBarsY += 100;
 
         socket.emit('allplayers', getAllPlayers(), socket.player);
@@ -93,9 +99,9 @@ io.sockets.on('connection', function (socket) {
         socket.on('disconnect', function (msg) {
             io.emit('disconnect', socket.player.name + " has left the room.");
             io.emit('remove',socket.player.id);
-            numberOfPlayers--;
+            checkForReset--;
 
-            if (numberOfPlayers == 0)
+            if (checkForReset == 0)
             {
                 resetServer();
             }
@@ -132,14 +138,14 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('end turn', function(){
-        io.emit('end turn');
+        io.emit('end turn', socket.player.id);
         socket.player.stats.reach_bonus = 0; //reset
         socket.player.turn = false;
         next_turn();
     });
 
-    socket.on('attack range', function (card) {
-        socket.emit('attack range', socket.player, card);
+    socket.on('attack range', function (card, index) {
+        socket.emit('attack range', getAllPlayers(), socket.player, card, trapID, index);
     });
 
     socket.on('self card', function (card, index) {
@@ -151,11 +157,60 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('trap card', function (card, index) {
-        socket.emit('trap card', getAllPlayers(), socket.player, card, index);
+        socket.emit('trap card', getAllPlayers(), socket.player, card, index, trapID);
     });
+
+    socket.on('update traps', function (id, card, player) {
+        currentTraps.push(id);
+        trapID++;
+});
 
     socket.on('player info', function (card, button) {
         sockets[turn].emit('player info', socket.player, getAllPlayers(), card, button);
+    });
+
+    socket.on('after level up', function(choice) {
+        var stats = sockets[turn].player.stats;
+        socket.player.stats.level++; // level up
+        switch (choice){
+            case 0:
+                stats.force++;
+                break;
+            case 1:
+                stats.arcana++;
+                break;
+            case 2:
+                stats.clarity++;
+                break;
+        }
+
+        numberOfPlayers--;
+
+        if (numberOfPlayers == 0)
+        {
+            stats.max_hp += Math.floor(stats.max_hp * LEVEL_UP_SCALE);
+            stats.max_mp += Math.floor(stats.max_mp * LEVEL_UP_SCALE);
+
+            var addHP = Math.floor(stats.max_hp * stats.hp_recovery);
+            var addMP = Math.floor(stats.max_mp * stats.mp_recovery);
+
+            stats.hp += addHP;
+            stats.mp += addMP;
+
+            if (stats.hp > stats.max_hp)
+            {
+                stats.hp = stats.max_hp;
+            }
+
+            if (stats.mp > stats.max_mp)
+            {
+                stats.mp = stats.max_mp;
+            }
+
+            io.emit('update players', getAllPlayers());
+            sockets[turn].emit('your_turn');
+            console.log(sockets[turn].player.name + "'s turn.");
+        }
     });
 
     socket.on('attack', function(id, card){
@@ -179,7 +234,13 @@ io.sockets.on('connection', function (socket) {
 
         damage -= reduction;
 
-        stats.mp -= (card.will * 5);
+        damage = Math.floor(damage);
+
+        if (card.type != "TRAP")
+        {
+            stats.mp -= card.will;
+        }
+
         if (damage < 0)
         {
             damage = 0;
@@ -193,7 +254,8 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('apply self', function (id, card){
         var stats = socket.player.stats;
-        stats.mp -= card.will;
+        stats.mp = stats.mp - card.will;
+        console.log(socket.player.stats.mp + "-" + card.will);
         switch (card.title)
         {
             case "Stone Skin": // SHIELD: +1 and +1 for every 3 Arcana permanently (Does not scale with subsequent increase of Arcana. Must reuse card to update and reflect new Arcana levels.)
@@ -238,10 +300,38 @@ io.sockets.on('connection', function (socket) {
 
     function next_turn(){
         turn = currentTurn++ % sockets.length;
+        var stats = sockets[turn].player.stats;
         sockets[turn].player.turn = true;
-        io.emit('update players', getAllPlayers());
-        sockets[turn].emit('your_turn');
-        console.log(sockets[turn].player.name + "'s turn.");
+        if (turn == 0)
+        {
+            numberOfPlayers = sockets.length;
+            io.emit('level up');
+        } else {
+            stats.max_hp += Math.floor(stats.max_hp * LEVEL_UP_SCALE);
+            stats.max_mp += Math.floor(stats.max_mp * LEVEL_UP_SCALE);
+
+            var addHP = Math.floor(stats.max_hp * stats.hp_recovery);
+            var addMP = Math.floor(stats.max_mp * stats.mp_recovery);
+
+            stats.hp += addHP;
+            stats.mp += addMP;
+
+            if (stats.hp > stats.max_hp)
+            {
+                stats.hp = stats.max_hp;
+            }
+
+            if (stats.mp > stats.max_mp)
+            {
+                stats.mp = stats.max_mp;
+            }
+
+            io.emit('update players', getAllPlayers());
+            sockets[turn].emit('your_turn');
+            console.log(sockets[turn].player.name + "'s turn.");
+        }
+
+
     }
 
 });

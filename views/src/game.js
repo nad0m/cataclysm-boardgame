@@ -33,7 +33,7 @@ Game.preload = function() {
     game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
     game.load.image('map', 'assets/Board/Board2.png');
     game.load.image('status', 'assets/Board-62-height/Status.png');
-    game.load.image('red_gem', 'assets/Board-62-height/RedGem.png');
+    game.load.image('trap', 'assets/images/trap.png');
     game.load.image('yellow_gem', 'assets/Board-62-height/YellowGem.png');
     game.load.image('green_gem', 'assets/Board-62-height/GreenGem.png');
     game.load.image('player_profile', 'assets/Board-62-height/Players.png');
@@ -60,8 +60,9 @@ var cardChoices = [];
 var statOverlay;
 var cardDesc;
 var group;
-var trap = null;
-var trapVictim = null;
+var force;
+var arcana;
+var clarity;
 
 
 Game.create = function(){
@@ -73,15 +74,8 @@ Game.create = function(){
 
 };
 
-Game.update = function(){
-    // object1, object2, collideCallback, processCallback, callbackContext
-    game.physics.arcade.collide(trap, trapVictim, Game.collisionHandler, null, this);
-};
-
 Game.collisionHandler = function(){
-    console.log("Trapped!!");
-    trap = null;
-    trapVictim = null;
+
 };
 
 Game.getCoordinates = function(layer,pointer){
@@ -94,11 +88,12 @@ Game.getCoordinates = function(layer,pointer){
 Game.createOverlay = function(player){
     statOverlay = game.add.text(player.x, player.y, "Name: " + player.name + "\n" +
                                                     "Health: " + player.stats.hp + "\n" +
-                                                    "Atk: " + player.stats.atk + "\n" +
-                                                    "Def: " + player.stats.def + "\n" +
+                                                    "Force: " + player.stats.force + "\n" +
+                                                    "Arcana: " + player.stats.arcana + "\n" +
+                                                    "Clarity: " + player.stats.clarity + "\n" +
                                                     "Reduction: " + player.stats.mitigation + "\n" +
                                                     "Def bonus: " + player.stats.def_bonus + "\n" +
-                                                    "Reach bonus: " + player.stats.reach_bonus,{ font: "12px Arial", fill: "#ffffff", align: "center" });
+                                                    "Reach bonus: " + player.stats.reach_bonus,{ font: "12px Arial", fill: "#ffffff", align: "left" });
     statOverlay.anchor.setTo(0.5, 0.5);
 };
 
@@ -265,7 +260,7 @@ Game.scanForFriendlies = function (players, player, card, buttonIndex) {
     var spriteID = player.id;
     var currentSprite = Game.playerMap[spriteID];
 
-    Game.drawAttackRange(player.x, player.y, (card.reach + player.stats.reach_bonus)*10, 0xebf442);
+    Game.drawAttackRange(players, player, card, 0xebf442, null, null, buttonIndex);
 
     for (var id in Game.playerMap)
     {
@@ -426,8 +421,9 @@ Game.drawRange = function (x, y, diameter, isPlayerTurn){
 
 };
 
-Game.drawAttackRange = function (players, x, y, diameter, color, isTrap){
-    var graphics = game.add.graphics(x, y);
+Game.drawAttackRange = function (players, player, card, color, isTrap, trapID, slotIndex){
+    var graphics = game.add.graphics(player.x, player.y);
+    var diameter = (card.reach + player.stats.reach_bonus)*10;
 
     graphics.lineStyle(1);
     graphics.beginFill(color, 0.15);
@@ -437,31 +433,51 @@ Game.drawAttackRange = function (players, x, y, diameter, color, isTrap){
     if (isTrap)
     {
         var allPlayers = players;
+        var index = slotIndex
         graphics.inputEnabled = true;
         graphics.input.useHandCursor = true;
         graphics.events.onInputDown.add(function(){
-            Game.setTrap(allPlayers);
+            Game.setTrap(allPlayers, player, trapID, index, card);
         }, this);
     }
 
     game.graphics = graphics;
 };
 
-Game.setTrap = function(allPlayers){
+Game.setTrap = function(allPlayers, player, id, index, card){
     var x = game.input.mousePointer.x;
     var y = game.input.mousePointer.y;
 
-    trap = game.add.sprite(x, y, 'red_gem');
-    trap.anchor.setTo(0.5,0.5);
+    Game.traps[id] = game.add.sprite(x, y, 'trap');
+    Game.traps[id].anchor.setTo(0.5,0.5);
+    Game.traps[id].alpha = 0.5;
 
-    for (var i = 0; i < allPlayers.length; i++)
+
+    for(var i in Game.playerMap)
     {
-        var id = allPlayers[i].id;
-        trapVictim = Game.playerMap[id];
+        if (Game.playerMap.hasOwnProperty(i))
+        {
+            game.physics.enable( [ Game.traps[id], Game.playerMap[i] ], Phaser.Physics.ARCADE);
+        }
     }
-     
-    game.physics.enable( [ trap, trapVictim ], Phaser.Physics.ARCADE);
-    game.graphics.destroy();
+
+    Game.trapCard[id] = card;
+    Client.sendTrapID(id, index, card, player);
+};
+
+Game.checkForTraps = function(id){
+
+    for(var i in Game.traps)
+    {
+        if (Game.traps.hasOwnProperty(i))
+        {
+            game.physics.arcade.collide(Game.traps[i], Game.playerMap[id], function(){
+                Client.attack(id, Game.trapCard[i]);
+                Game.traps[i].destroy();
+            }, null, this);
+        }
+    }
+
 };
 
 
@@ -664,12 +680,40 @@ Game.removeCardFromHand = function(index){
     myCards.splice(index, 1);
 };
 
+Game.levelUpScreen = function(){
+    game.card_mat = game.add.image(game.world.centerX, game.world.centerY, 'mat');
+    game.card_mat.anchor.setTo(0.5, 0.5);
+
+
+    game.prompt = game.add.text(game.card_mat.centerX, game.card_mat.centerY-100, "Pick a skill to level up");
+    force = game.add.button(game.card_mat.centerX, game.card_mat.centerY, 'warrior', function(){
+        Client.sendChoice(0);
+    });
+    arcana = game.add.button(game.card_mat.centerX+100, game.card_mat.centerY, 'mage', function(){
+        Client.sendChoice(1);
+    });
+    clarity = game.add.button(game.card_mat.centerX+200, game.card_mat.centerY, 'ranger', function(){
+        Client.sendChoice(2);
+    });
+
+};
+
+Game.destroyLevelUpScreen = function(){
+    force.destroy();
+    arcana.destroy();
+    clarity.destroy();
+    game.card_mat.destroy();
+    game.prompt.destroy();
+};
+
 Game.loadBoard = function(hero) {
     game.warrior_btn.destroy();
     game.mage_btn.destroy();
     game.ranger_btn.destroy();
 
     Game.playerMap = {};
+    Game.traps = {};
+    Game.trapCard ={};
 
 
     game.map = game.add.image(game.world.centerX,game.world.centerY,'map');

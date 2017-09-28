@@ -23,15 +23,28 @@ Client.sendGameState = function(msg){
     Client.socket.emit('state', msg);
 };
 
+Client.sendChoice = function(choice){
+    Client.socket.emit('after level up', choice);
+    Game.destroyLevelUpScreen();
+};
+
 Client.endTurn = function(){
     Game.disableAllSprites();
+    Game.checkForTraps();
     Client.socket.emit('end turn');
+};
+
+Client.sendTrapID = function(id, index, card, player){
+    Game.removeGraphics();
+    Game.destroyCard(index);
+    Client.socket.emit('update traps', id, card, player);
+
 };
 
 Client.attackPhase = function(card, buttonIndex){
     if (card.type == "ATTACK")
     {
-        Client.socket.emit('attack range', card); // draw range circle to current client
+        Client.socket.emit('attack range', card, buttonIndex); // draw range circle to current client
         Client.getCurrentStats(card, buttonIndex);
     }
 
@@ -80,13 +93,13 @@ Client.loadRanger = function() {
 
 
 Client.socket.on('newplayer',function(data){
-    Game.addNewPlayer(data, data.id,data.x,data.y);
+    Game.addNewPlayer(data, data.id, data.x, data.y);
     Game.createStatBars(data.name, data.stats, data.uiX, data.uiY, data.id)
 });
 
-Client.socket.on('attack range',function(player, card){
+Client.socket.on('attack range',function(players, player, card, trapID, slotIndex){
     Game.removeGraphics();
-    Game.drawAttackRange(player.x, player.y, (card.reach + player.stats.reach_bonus)*10, 0xf44242, false);
+    Game.drawAttackRange(players, player, card, 0xf44242, false, trapID, slotIndex);
 
 });
 
@@ -102,11 +115,14 @@ Client.socket.on('spell card',function(players, player, card, index){
     Game.scanForFriendlies(players, player, card, index);
 });
 
-Client.socket.on('trap card',function(players, player, card, index){
+Client.socket.on('trap card',function(players, player, card, index, trapID){
     Game.removeGraphics();
-    Game.drawAttackRange(players, player.x, player.y, (card.reach + player.stats.reach_bonus)*10, 0xd6b5fc, true)
-    Game.destroyCard(index);
+    Game.drawAttackRange(players, player, card, 0xd6b5fc, true, trapID, index)
 })
+
+Client.socket.on('level up',function(){
+    Game.levelUpScreen();
+});
 
 Client.socket.on('your_turn',function(){
     Game.pickCard();
@@ -115,9 +131,10 @@ Client.socket.on('your_turn',function(){
     Game.enableEnd();
 });
 
-Client.socket.on('end turn',function(){
+Client.socket.on('end turn',function(playerID){
     Game.disableEnd();
     Game.removeGraphics();
+    Game.checkForTraps(playerID);
 });
 
 Client.socket.on('draw_circle',function(x, y, total, isPlayerTurn){

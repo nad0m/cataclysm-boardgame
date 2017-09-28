@@ -62,8 +62,8 @@ var CardAbilities = [
 {
         title: "Geomancer",
         proficiency: "Arcana",
-        natural: 0,
-        scale: 0,
+        natural: 6,
+        scale: .5,
         max: 0,
         reach: 5,
         will: 6,
@@ -85,7 +85,7 @@ var CardAbilities = [
         natural: 6,
         scale: 0.5,
         max: 16,
-        reach: 1,
+        reach: 2,
         will: 2,
         type: "ATTACK"
     },
@@ -105,7 +105,7 @@ var CardAbilities = [
         natural: 4,
         scale: 0.5,
         max: 13,
-        reach: 1,
+        reach: 2,
         will: 3,
         type: "ATTACK"
     },
@@ -115,7 +115,7 @@ var CardAbilities = [
         natural: 8,
         scale: 1,
         max: 28,
-        reach: 1,
+        reach: 2,
         will: 7,
         type: "ATTACK"
     },
@@ -125,7 +125,7 @@ var CardAbilities = [
         natural: 4,
         scale: 1,
         max: 24,
-        reach: 1,
+        reach: 2,
         will: 5,
         type: "ATTACK"
     },
@@ -222,8 +222,8 @@ var CardAbilities = [
 {
         title: "Bushwack",
         proficiency: "Clarity",
-        natural: 0,
-        scale: 0,
+        natural: 6,
+        scale: 0.334,
         max: 0,
         reach: 3,
         will: 4,
@@ -287,4 +287,11 @@ var myCards =[
         button: null
     },
 ];
+
+function Trap(x, y, sprite, victims) {
+    this.x = x;
+    this.y = y;
+    this.sprite = sprite;
+    this.victims = victims;
+}
 
