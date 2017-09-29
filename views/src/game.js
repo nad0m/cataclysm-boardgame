@@ -51,8 +51,8 @@ Game.preload = function() {
     game.load.image('mat', 'assets/Board-62-height/temp-mat.png');
     game.load.image('card_sprite', 'assets/Board-62-height/temp-card.png');
 
-    //game.load.atlasJSONHash('test', 'assets/test2.png', 'assets/test2.json');
-    //game.load.atlas('test', 'assets/test.png', 'assets/test.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
+    game.load.atlasJSONHash('all_cards', 'assets/all_cards.png', 'assets/all_cards.json');
+    //game.load.atlas('cards', 'assets/all_cards.png', 'assets/all_cards.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 
 };
 
@@ -77,7 +77,10 @@ Game.create = function(){
     game.mage_btn = game.add.button(300, 300, 'mage', Client.loadMage);
     game.ranger_btn = game.add.button(410, 300, 'ranger', Client.loadRanger);
 
-    //var greenGem = game.add.sprite(0, 0, 'test', 'GreenGem.png');
+   /*var str = 'Fireball.png';
+   var test = game.add.button(0, 0, 'cards', function(){
+    console.log("hello");
+   }, this, str);*/
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -565,7 +568,7 @@ Game.pickCard = function() {
 };
 
 Game.createCardChoices = function(context, x, y, image, card) {
-    context = game.add.button(x + 0, y, image, function(){
+    context = game.add.button(x, y, 'all_cards', function(){
         if (numOfCards < 6) {
             Game.createCardButton(card);
             game.card_mat.destroy();
@@ -578,7 +581,7 @@ Game.createCardChoices = function(context, x, y, image, card) {
             choiceGroup = null;
             cardChoices = [];
         }
-    });
+    }, game, 'Bushwack.png');
 
     context.onInputOver.add(function(){
         cardDesc = game.add.text(x,y, card.title + "\n" +

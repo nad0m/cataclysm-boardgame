@@ -7,7 +7,8 @@ var CardAbilities = [
         max: 8,
         reach: 4,
         will: 2,
-        type: "ATTACK"
+        type: "ATTACK",
+        sprite: 'Fireball.png'
     },
 {
         title: "Poison Whip ",
@@ -17,7 +18,8 @@ var CardAbilities = [
         max: 12,
         reach: 3,
         will: 4,
-        type: "ATTACK"
+        type: "ATTACK",
+        sprite: 'Fireball.png'
     },
 {
         title: "Frost Lance",
@@ -27,7 +29,8 @@ var CardAbilities = [
         max: 16,
         reach: 3,
         will: 3,
-        type: "ATTACK"
+        type: "ATTACK",
+        sprite: 'Fireball.png'
     },
 {
         title: "Stone Skin",
@@ -37,7 +40,8 @@ var CardAbilities = [
         max: 0,
         reach: 0,
         will: 6,
-        type: "SELF"
+        type: "SELF",
+        sprite: 'Fireball.png'
     },
 {
         title: "Waterweave",
@@ -47,7 +51,8 @@ var CardAbilities = [
         max: 0,
         reach: 4,
         will: 5,
-        type: "SPELL"
+        type: "SPELL",
+        sprite: 'Fireball.png'
     },
 {
         title: "Lightning Step",
@@ -57,7 +62,8 @@ var CardAbilities = [
         max: 0,
         reach: 3,
         will: 3,
-        type: "SELF"
+        type: "SELF",
+        sprite: 'Fireball.png'
     },
 {
         title: "Geomancer",
@@ -67,7 +73,8 @@ var CardAbilities = [
         max: 0,
         reach: 5,
         will: 6,
-        type: "TRAP"
+        type: "TRAP",
+        sprite: 'Fireball.png'
     },
     {
         title: "Gale",
@@ -77,7 +84,8 @@ var CardAbilities = [
         max: 11,
         reach: 1,
         will: 4,
-        type: "ATTACK"
+        type: "ATTACK",
+        sprite: 'Fireball.png'
     },
 {
         title: "Gale",
@@ -87,7 +95,8 @@ var CardAbilities = [
         max: 11,
         reach: 3,
         will: 4,
-        type: "ATTACK"
+        type: "ATTACK",
+        sprite: 'Fireball.png'
     },
 {
         title: "Cleave",
@@ -97,7 +106,8 @@ var CardAbilities = [
         max: 16,
         reach: 2,
         will: 2,
-        type: "ATTACK"
+        type: "ATTACK",
+        sprite: 'Fireball.png'
     },
 {
         title: "Bloodlust",
@@ -107,7 +117,8 @@ var CardAbilities = [
         max: 0,
         reach: 0,
         will: 4,
-        type: "SELF"
+        type: "SELF",
+        sprite: 'Fireball.png'
     },
 {
         title: "Frenzy",
@@ -117,7 +128,8 @@ var CardAbilities = [
         max: 13,
         reach: 2,
         will: 3,
-        type: "ATTACK"
+        type: "ATTACK",
+        sprite: 'Fireball.png'
     },
 {
         title: "Intrepid Strike",
@@ -127,7 +139,8 @@ var CardAbilities = [
         max: 28,
         reach: 2,
         will: 7,
-        type: "ATTACK"
+        type: "ATTACK",
+        sprite: 'Fireball.png'
     },
 {
         title: "Offhand Blow",
@@ -137,7 +150,8 @@ var CardAbilities = [
         max: 24,
         reach: 2,
         will: 5,
-        type: "ATTACK"
+        type: "ATTACK",
+        sprite: 'Fireball.png'
     },
 {
         title: "Grapple",
@@ -147,7 +161,8 @@ var CardAbilities = [
         max: 14,
         reach: 2,
         will: 3,
-        type: "ATTACK"
+        type: "ATTACK",
+        sprite: 'Fireball.png'
     },
 {
         title: "Dauntless Advance",
@@ -157,7 +172,8 @@ var CardAbilities = [
         max: 0,
         reach: 2,
         will: 4,
-        type: "SELF"
+        type: "SELF",
+        sprite: 'Fireball.png'
     },
 {
         title: "Adanai's Embrace",
@@ -167,7 +183,8 @@ var CardAbilities = [
         max: 0,
         reach: 0,
         will: 4,
-        type: "SELF"
+        type: "SELF",
+        sprite: 'Fireball.png'
     },
 {
         title: "Trueshot",
@@ -177,7 +194,8 @@ var CardAbilities = [
         max: 13,
         reach: 6,
         will: 2,
-        type: "ATTACK"
+        type: "ATTACK",
+        sprite: 'Fireball.png'
     },
 {
         title: "Skyfather's Arrow",
@@ -187,7 +205,8 @@ var CardAbilities = [
         max: 26,
         reach: 10,
         will: 9,
-        type: "ATTACK"
+        type: "ATTACK",
+        sprite: 'Fireball.png'
     },
 {
         title: "Nether Whisper",
@@ -197,7 +216,8 @@ var CardAbilities = [
         max: 11,
         reach: 6,
         will: 4,
-        type: "ATTACK"
+        type: "ATTACK",
+        sprite: 'Fireball.png'
     },
 {
         title: "Hail of Iron",
@@ -207,7 +227,8 @@ var CardAbilities = [
         max: 10,
         reach: 6,
         will: 4,
-        type: "ATTACK"
+        type: "ATTACK",
+        sprite: 'Fireball.png'
     },
 {
         title: "Barrage",
@@ -217,7 +238,8 @@ var CardAbilities = [
         max: 14,
         reach: 4,
         will: 5,
-        type: "ATTACK"
+        type: "ATTACK",
+        sprite: 'Fireball.png'
     },
 {
         title: "Windsplitter",
@@ -227,7 +249,8 @@ var CardAbilities = [
         max: 11,
         reach: 8,
         will: 3,
-        type: "ATTACK"
+        type: "ATTACK",
+        sprite: 'Fireball.png'
     },
 {
         title: "Bushwack",
@@ -237,7 +260,8 @@ var CardAbilities = [
         max: 0,
         reach: 3,
         will: 4,
-        type: "TRAP"
+        type: "TRAP",
+        sprite: 'Fireball.png'
     },
 {
         title: "Oros' Blessing",
@@ -247,7 +271,8 @@ var CardAbilities = [
         max: 0,
         reach: 0,
         will: 4,
-        type: "SELF"
+        type: "SELF",
+        sprite: 'Fireball.png'
     }
     ];
 var numOfCards = 0;

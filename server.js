@@ -89,7 +89,6 @@ io.sockets.on('connection', function (socket) {
 
 
         io.emit('new user', msg);
-        console.log(socket.player.stats.atk);
 
         socket.on('click',function(data){
             console.log('click to '+data.x+', '+data.y);
@@ -164,6 +163,8 @@ io.sockets.on('connection', function (socket) {
     socket.on('update traps', function (id, card, player) {
         currentTraps.push(id);
         trapID++;
+        socket[player.id].player.stats.mp -= card.will;
+        io.emit('update players', getAllPlayers());
 });
 
     socket.on('player info', function (card, button) {
@@ -309,6 +310,7 @@ io.sockets.on('connection', function (socket) {
 
         var addHP = Math.floor(stats.max_hp * (stats.hp_recovery + stats.hp_recovery_bonus));
         var addMP = Math.floor(stats.max_mp * stats.mp_recovery);
+        stats.hp_recovery_bonus = 0; // reset
 
         stats.hp += addHP;
         stats.mp += addMP;
