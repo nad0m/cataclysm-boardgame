@@ -51,8 +51,8 @@ Game.preload = function() {
     game.load.image('mat', 'assets/Board-62-height/temp-mat.png');
     game.load.image('card_sprite', 'assets/Board-62-height/temp-card.png');
 
-    game.load.atlasJSONHash('all_cards', 'assets/all_cards.png', 'assets/all_cards.json');
-    //game.load.atlas('cards', 'assets/all_cards.png', 'assets/all_cards.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+    game.load.atlasJSONArray('all_cards', 'assets/all_cards2.png', 'assets/all_cards2.json');
+    //game.load.atlas('all_cards', 'assets/all_cards.png', 'assets/all_cards.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 
 };
 
@@ -77,10 +77,8 @@ Game.create = function(){
     game.mage_btn = game.add.button(300, 300, 'mage', Client.loadMage);
     game.ranger_btn = game.add.button(410, 300, 'ranger', Client.loadRanger);
 
-   /*var str = 'Fireball.png';
-   var test = game.add.button(0, 0, 'cards', function(){
-    console.log("hello");
-   }, this, str);*/
+   var str = 'Fireball.png';
+   var test = game.add.button(0, 0, 'all_cards', Game.rollDice, this, 10);
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 

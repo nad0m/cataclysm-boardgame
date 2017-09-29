@@ -1,0 +1,204 @@
+{"frames": [
+
+{
+	"filename": "AdanaisEmbrace.png",
+	"frame": {"x":1,"y":1,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "Barage.png",
+	"frame": {"x":1,"y":233,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "Bloodlust.png",
+	"frame": {"x":163,"y":1,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "Bushwack.png",
+	"frame": {"x":163,"y":233,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "Cleave.png",
+	"frame": {"x":325,"y":1,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "DauntlessAdvance.png",
+	"frame": {"x":325,"y":233,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "Fireball.png",
+	"frame": {"x":487,"y":1,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "Frenzy.png",
+	"frame": {"x":487,"y":233,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "FrostLance.png",
+	"frame": {"x":649,"y":1,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "Gale.png",
+	"frame": {"x":649,"y":233,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "Geomancer.png",
+	"frame": {"x":811,"y":1,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "Grapple.png",
+	"frame": {"x":811,"y":233,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "HailyofIron.png",
+	"frame": {"x":973,"y":1,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "IntrepidStrike.png",
+	"frame": {"x":973,"y":233,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "LightningStep.png",
+	"frame": {"x":1135,"y":1,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "NetherWhisper.png",
+	"frame": {"x":1135,"y":233,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "OffhandBlow.png",
+	"frame": {"x":1297,"y":1,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "OrosBlessing.png",
+	"frame": {"x":1297,"y":233,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "PoisonWhip.png",
+	"frame": {"x":1459,"y":1,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "SkyfathersArrow.png",
+	"frame": {"x":1459,"y":233,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "StoneSkin.png",
+	"frame": {"x":1621,"y":1,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "Trueshot.png",
+	"frame": {"x":1621,"y":233,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "Waterweave.png",
+	"frame": {"x":1783,"y":1,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+},
+{
+	"filename": "Windsplitter.png",
+	"frame": {"x":1783,"y":233,"w":160,"h":230},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
+	"sourceSize": {"w":160,"h":230}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "all_cards2.png",
+	"format": "RGBA8888",
+	"size": {"w":1944,"h":464},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:f89bfce377c4c7b3a31ab35c90486c22:f46cac70e42cab5e1177ec0e99497ba5:ab5658a5a7590d96fc4be9699d09602f$"
+}
+}
