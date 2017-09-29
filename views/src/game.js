@@ -61,6 +61,9 @@ var diceGroup;
 var total;
 var myHealthBar = [];
 var myManaBar = [];
+var hp_text =[];
+var mp_text = [];
+var title = [];
 var cardChoices = [];
 var statOverlay;
 var cardDesc;
@@ -70,6 +73,7 @@ var arcana;
 var clarity;
 var choiceGroup;
 var mySpriteID;
+
 
 
 Game.create = function(){
@@ -122,10 +126,7 @@ Game.addNewPlayer = function(player,id,x,y){
 
 
 Game.createButtons = function(id){
-    game.roll_btn = game.add.button(this.world.centerX,this.world.centerY,'roll-dice', function(){
-        console.log(Game.playerMap[id].player.name);
-        Game.rollDice();
-    });
+    game.roll_btn = game.add.button(this.world.centerX,this.world.centerY,'roll-dice', Game.rollDice);
     game.roll_btn.anchor.setTo(0.5,0.5);
 
     game.end_btn = game.add.button(this.world.centerX+100,this.world.centerY,'end-turn', Client.endTurn);
@@ -134,6 +135,8 @@ Game.createButtons = function(id){
     Game.disableInput();
 
     mySpriteID = id;
+
+    console.log("my id is: " + mySpriteID);
 
 };
 
@@ -272,14 +275,22 @@ Game.updateStats = function(players){
     for (var i = 0; i < players.length; i++)
     {
         var id = players[i].id;
-        var healthOffset = players[i].stats.hp/players[i].stats.max_hp * 100;
+
+        title[id].setText(players[id].stats.title + " - Lvl. " + players[id].stats.level + ": " + players[id].name);
+
+        var healthOffset = players[id].stats.hp/players[id].stats.max_hp * 100;
         myHealthBar[id].setPercent(healthOffset);
-        var manaOffset = players[i].stats.mp/players[i].stats.max_mp * 100;
+        hp_text[id].setText("HP: " + players[id].stats.hp + "/" + players[id].stats.max_hp);
+
+
+        var manaOffset = players[id].stats.mp/players[id].stats.max_mp * 100;
         myManaBar[id].setPercent(manaOffset);
+        mp_text[id].setText("MP: " + players[id].stats.mp + "/" + players[id].stats.max_mp);
+
 
         if (Game.playerMap.hasOwnProperty(id)){
             Game.playerMap[id].player = players[i];
-            console.log(Game.playerMap[id].player.stats.hp + "/" + Game.playerMap[id].player.stats.max_hp);
+            console.log(Game.playerMap[id].player.stats.hp + "/" + Game.playerMap[id].player.stats.max_hp + Game.playerMap[id].player.turn);
         }
     }
 };
@@ -412,7 +423,7 @@ Game.drawAttackRange = function (players, player, card, color, isTrap, trapID, s
     graphics.drawCircle(0, 0, diameter*6);
     graphics.endFill();
 
-    if (isTrap)
+    if (isTrap && player.stats.mp >= card.will)
     {
         var allPlayers = players;
         var index = slotIndex
@@ -474,16 +485,25 @@ Game.removeGraphics = function(){
 
 Game.createStatBars = function (name, hero, x, y, id){
 
-    var name = game.add.text(x, y, hero.title + ": " + name);
-    name.fontSize = 14;
-    name.fill = "#f44242";
-    name.anchor.setTo(0.5, 0.5);
+    title[id] = game.add.text(x, y, hero.title + " - Lvl. " + hero.level + ": " + name, {
+        font: "12px Arial",
+        align: "left"
+    });
+    title[id].anchor.setTo(0.5, 0.5);
+
+    y += 15;
+
+    hp_text[id] = game.add.text(x, y, "HP: " + hero.hp + "/" + hero.max_hp, {
+        font: "12px Arial",
+        align: "left"
+    });
+    hp_text[id].anchor.setTo(0.5, 0.5);
 
     y += 10;
 
     var healthConfig = {
-        width: 100,
-        height: 10,
+        width: 200,
+        height: 15,
         x: x,
         y: y,
         bg: {
@@ -496,11 +516,19 @@ Game.createStatBars = function (name, hero, x, y, id){
         flipped: false
     };
 
+    y += 20;
+
+    mp_text[id] = game.add.text(x, y, "MP: " + hero.mp + "/" + hero.max_mp, {
+        font: "12px Arial",
+        align: "left"
+    });
+    mp_text[id].anchor.setTo(0.5, 0.5);
+
     y += 10;
 
     var manaConfig = {
-        width: 100,
-        height: 10,
+        width: 200,
+        height: 15,
         x: x,
         y: y,
         bg: {
@@ -610,16 +638,19 @@ Game.createCardButton = function (card){
         {
             numOfCards++;
             myCards[index].card = card;
-            myCards[index].button = game.add.button(myCards[i].x, myCards[i].y, 'card_sprite', function(){
+            myCards[index].button = game.add.button(myCards[i].x, myCards[i].y, 'all_cards', function(){
                 /* myCards[index].card = null;
                  button.destroy();*/
+                console.log(Game.playerMap[mySpriteID].player.turn);
                 if (Game.playerMap[mySpriteID].player.turn) {
                     myCards[index].cardDesc.destroy();
                     Game.turnSlotOff(index);
                     Client.attackPhase(card, index);
                 }
 
-          }, game);
+          }, game, card.sprite, card.sprite, card.sprite);
+
+            myCards[index].button.scale.setTo(0.7, 0.7);
 
             myCards[index].button.onInputOver.add(function(){
                 myCards[index].cardDesc = game.add.text(myCards[i].x, myCards[i].y, card.title + "\n" +
@@ -746,11 +777,11 @@ Game.loadBoard = function(hero) {
     diceGroup = game.add.group();
     var i;
     for (i=0; i < 3; i++) {
-        var d = new Dice(game, i*100+190, 100);
+        var d = new Dice(game, i*100+360, 100);
         diceGroup.add(d);
     }
 
-    text = game.add.text(190,10, "Total: ");
+    text = game.add.text(360,10, "Total: ");
     text.font = "Roboto Slab";
     text.fontSize = 30;
     text.fill = "#f44242";

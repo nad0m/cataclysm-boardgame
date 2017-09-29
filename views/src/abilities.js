@@ -3,9 +3,9 @@ var CardAbilities = [
         title: "Fireball",
         proficiency: "Arcana",
         natural: 4,
-        scale: 0.2,
+        scale: 0.5,
         max: 8,
-        reach: 4,
+        reach: 5,
         will: 2,
         type: "ATTACK",
         sprite: 'Fireball.png'
@@ -14,9 +14,9 @@ var CardAbilities = [
         title: "Poison Whip ",
         proficiency: "Arcana",
         natural: 2,
-        scale: 0.5,
+        scale: 1,
         max: 12,
-        reach: 3,
+        reach: 4,
         will: 4,
         type: "ATTACK",
         sprite: 'PoisonWhip.png'
@@ -27,7 +27,7 @@ var CardAbilities = [
         natural: 6,
         scale: 0.5,
         max: 16,
-        reach: 3,
+        reach: 5,
         will: 3,
         type: "ATTACK",
         sprite: 'FrostLance.png'
@@ -76,22 +76,12 @@ var CardAbilities = [
         type: "TRAP",
         sprite: 'Geomancer.png'
     },
-    {
-        title: "Gale",
-        proficiency: "Arcana",
-        natural: 6,
-        scale: 0.25,
-        max: 11,
-        reach: 1,
-        will: 4,
-        type: "ATTACK",
-        sprite: 'Gale.png'
-    },
+
 {
         title: "Gale",
         proficiency: "Arcana",
         natural: 6,
-        scale: 0.25,
+        scale: 0.5,
         max: 11,
         reach: 3,
         will: 4,
@@ -126,7 +116,7 @@ var CardAbilities = [
         natural: 4,
         scale: 0.5,
         max: 13,
-        reach: 2,
+        reach: 3,
         will: 3,
         type: "ATTACK",
         sprite: 'Frenzy.png'
@@ -138,17 +128,17 @@ var CardAbilities = [
         scale: 1,
         max: 28,
         reach: 2,
-        will: 7,
+        will: 8,
         type: "ATTACK",
         sprite: 'IntrepidStrike.png'
     },
 {
         title: "Offhand Blow",
         proficiency: "Force",
-        natural: 4,
+        natural: 2,
         scale: 1,
         max: 24,
-        reach: 2,
+        reach: 3,
         will: 5,
         type: "ATTACK",
         sprite: 'OffhandBlow.png'
@@ -203,8 +193,8 @@ var CardAbilities = [
         natural: 6,
         scale: 1,
         max: 26,
-        reach: 10,
-        will: 9,
+        reach: 8,
+        will: 10,
         type: "ATTACK",
         sprite: 'SkyfathersArrow.png'
     },
@@ -212,7 +202,7 @@ var CardAbilities = [
         title: "Nether Whisper",
         proficiency: "Clarity",
         natural: 4,
-        scale: 0.334,
+        scale: 0.5,
         max: 11,
         reach: 6,
         will: 4,
@@ -223,7 +213,7 @@ var CardAbilities = [
         title: "Hail of Iron",
         proficiency: "Clarity",
         natural: 3,
-        scale: 0.334,
+        scale: 0.5,
         max: 10,
         reach: 6,
         will: 4,
@@ -236,7 +226,7 @@ var CardAbilities = [
         natural: 4,
         scale: 0.5,
         max: 14,
-        reach: 4,
+        reach: 5,
         will: 5,
         type: "ATTACK",
         sprite: 'Barrage.png'
@@ -245,10 +235,10 @@ var CardAbilities = [
         title: "Windsplitter",
         proficiency: "Clarity",
         natural: 4,
-        scale: 0.334,
+        scale: 0.5,
         max: 11,
-        reach: 8,
-        will: 3,
+        reach: 7,
+        will: 4,
         type: "ATTACK",
         sprite: 'Windsplitter.png'
     },
@@ -282,7 +272,7 @@ var myCards =[
         card: null,
         slot: 1,
         x: 60,
-        y: 340,
+        y: 420,
         button: null,
         removeButton: null,
         cardDesc: null
@@ -291,7 +281,7 @@ var myCards =[
         card: null,
         slot: 2,
         x: 130,
-        y: 340,
+        y: 420,
         button: null,
         removeButton: null,
         cardDesc: null
@@ -300,7 +290,7 @@ var myCards =[
         card: null,
         slot: 3,
         x: 200,
-        y: 340,
+        y: 420,
         button: null,
         removeButton: null,
         cardDesc: null
@@ -309,7 +299,7 @@ var myCards =[
         card: null,
         slot: 4,
         x: 60,
-        y: 460,
+        y: 500,
         button: null,
         removeButton: null,
         cardDesc: null
@@ -318,7 +308,7 @@ var myCards =[
         card: null,
         slot: 5,
         x: 130,
-        y: 460,
+        y: 500,
         button: null,
         removeButton: null,
         cardDesc: null
@@ -327,7 +317,7 @@ var myCards =[
         card: null,
         slot: 6,
         x: 200,
-        y: 460,
+        y: 500,
         button: null,
         removeButton: null,
         cardDesc: null

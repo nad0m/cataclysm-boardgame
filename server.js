@@ -55,8 +55,8 @@ server.lastPlayerID = 0;
 var sockets = [];
 var currentTurn = 0;
 var turn = 0;
-var statBarsX = 100;
-var statBarsY = 200;
+var statBarsX = 150;
+var statBarsY = 10;
 var numberOfPlayers = 0;
 var checkForReset = 0;
 var trapID = 0;
@@ -82,7 +82,7 @@ io.sockets.on('connection', function (socket) {
             cards: []
         };
         checkForReset++;
-        statBarsY += 100;
+        statBarsY += 80;
 
         socket.emit('allplayers', getAllPlayers(), socket.player);
         socket.broadcast.emit('newplayer', socket.player);
@@ -113,20 +113,15 @@ io.sockets.on('connection', function (socket) {
             console.log(total + " + " + stats.move_bonus)
             total += stats.move_bonus;
             sockets[turn].emit('draw_circle',socket.player.x, socket.player.y, total, true); // clickable for designated player
+            socket.broadcast.emit('draw_circle',socket.player.x, socket.player.y, total, false);// UI change only for other players
 
-            for (var i = 0; i < sockets.length; i++)
-            {
-                if (i != turn)
-                {
-                    sockets[i].emit('draw_circle',socket.player.x, socket.player.y, total, false);// UI change only for other players
-                }
-            }
+
 
             stats.move_bonus = 0;
         });
 
         sockets.push(socket);
-        if (sockets.length == 1)
+        if (sockets.length == 2)
         {
             next_turn();
         }
@@ -173,9 +168,10 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('after level up', function(choice) {
         var stats = socket.player.stats;
-        stats.max_hp += Math.floor(stats.max_hp * LEVEL_UP_SCALE);
+        stats.max_hp += Math.floor(stats.max_hp * stats.hp_level_scale);
         stats.max_mp++;
         stats.level++; // level up
+        stats.hp_level_scale += 0.02;
 
         switch (choice){
             case 0:
@@ -243,22 +239,22 @@ io.sockets.on('connection', function (socket) {
         switch (card.title)
         {
             case "Stone Skin": // SHIELD: +1 and +1 for every 3 Arcana permanently (Does not scale with subsequent increase of Arcana. Must reuse card to update and reflect new Arcana levels.)
-                stats.mitigation = 1 + stats.arcana/3;
+                stats.mitigation = Math.floor(1 + stats.arcana/3);
                 break;
             case "Bloodlust": //STEROID: Add 2 (+1 for every 4 Force) Power to your next attack.
-                stats.damage_bonus += 2 + (stats.force/4);
+                stats.damage_bonus += Math.floor(2 + (stats.force/4));
                 break;
             case "Adanai's Embrace": //HARDEN: Absorbs up to 2 (+1 for every 3 Force) damage. Expires after you get attacked.
-                stats.def_bonus += 2 + (stats.force/4);
+                stats.def_bonus += Math.floor(2 + (stats.force/4));
                 break;
             case "Oros' Blessing": // SNIPE: For this turn, all abilities gain 1 (+1 for every 5 Clarity) Reach.
-                stats.reach_bonus += stats.clarity/5;
+                stats.reach_bonus += Math.floor(stats.clarity/5);
                 break;
             case "Lightning Step": // BLINK: +10 toward your next roll and +1 for every 1 Clarity
-                stats.move_bonus += 10 + stats.clarity;
+                stats.move_bonus += Math.floor(10 + stats.clarity);
                 break;
             case "Dauntless Advance": // CHARGE: +5 and +1 for every Force toward your next roll.
-                stats.move_bonus += 5 + stats.force;
+                stats.move_bonus += Math.floor(5 + stats.force);
                 break;
 
         }
@@ -295,7 +291,7 @@ io.sockets.on('connection', function (socket) {
 
     function next_turn(){
         turn = currentTurn++ % sockets.length;
-        sockets[turn].player.turn = true;
+
         if (turn == 0)
         {
             numberOfPlayers = sockets.length;
@@ -324,7 +320,7 @@ io.sockets.on('connection', function (socket) {
         {
             stats.mp = stats.max_mp;
         }
-
+        sockets[turn].player.turn = true;
         io.emit('update players', getAllPlayers());
         sockets[turn].emit('your_turn');
         console.log(sockets[turn].player.name + "'s turn.");

@@ -1,6 +1,6 @@
 var Warrior = {
     title: "Warrior",
-    level: 0,
+    level: 1,
     force: 4,
     arcana: 2,
     clarity: 2,
@@ -8,9 +8,11 @@ var Warrior = {
     hp: 25,
     max_mp: 6,
     mp: 6,
-    mitigation: 1,
-    hp_recovery: 0.2,
+    mitigation: 0,
+    hp_recovery: 0.1,
     mp_recovery: 0.3,
+    hp_level_scale: 0.1,
+    exp: 0,
 
     //temporary bonuses, resets after a certain time
     damage_bonus: 0,
@@ -22,7 +24,7 @@ var Warrior = {
 
 var Mage = {
     title: "Mage",
-    level: 0,
+    level: 1,
     force: 2,
     arcana: 4,
     clarity: 2,
@@ -33,6 +35,8 @@ var Mage = {
     mitigation: 0,
     hp_recovery: 0.2,
     mp_recovery: 0.3,
+    hp_level_scale: 0.05,
+    exp: 0,
 
     //temporary bonuses, resets after a certain time
     damage_bonus: 0,
@@ -44,7 +48,7 @@ var Mage = {
 
 var Ranger = {
     title: "Ranger",
-    level: 0,
+    level: 1,
     force: 2,
     arcana: 2,
     clarity: 4,
@@ -55,6 +59,8 @@ var Ranger = {
     mitigation: 0,
     hp_recovery: 0.2,
     mp_recovery: 0.3,
+    hp_level_scale: 0.05,
+    exp: 0,
 
     //temporary bonuses, resets after a certain time
     damage_bonus: 0,
