@@ -36,7 +36,7 @@ Client.endTurn = function(){
 
 Client.sendTrapID = function(id, index, card, player){
     Game.removeGraphics();
-    Game.destroyCard(index);
+    Game.removeCardFromHand(index);
     Client.socket.emit('update traps', id, card, player);
 
 };
@@ -105,7 +105,7 @@ Client.socket.on('attack range',function(players, player, card, trapID, slotInde
 
 Client.socket.on('self card',function(player, card, index){
     Game.removeGraphics();
-    if (player.turn) {
+    if (player.turn && player.stats.mp >= card.will) {
         Game.enableSelfInput(player.id, card, index);
     }
 });
@@ -127,7 +127,6 @@ Client.socket.on('level up',function(){
 Client.socket.on('your_turn',function(){
     Game.pickCard();
     Game.enableRoll();
-    Game.enableAttack();
     Game.enableEnd();
 });
 

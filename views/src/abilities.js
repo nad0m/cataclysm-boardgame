@@ -15,7 +15,7 @@ var CardAbilities = [
         natural: 2,
         scale: 0.5,
         max: 12,
-        reach: 1,
+        reach: 3,
         will: 4,
         type: "ATTACK"
     },
@@ -25,7 +25,7 @@ var CardAbilities = [
         natural: 6,
         scale: 0.5,
         max: 16,
-        reach: 2,
+        reach: 3,
         will: 3,
         type: "ATTACK"
     },
@@ -62,12 +62,22 @@ var CardAbilities = [
 {
         title: "Geomancer",
         proficiency: "Arcana",
-        natural: 6,
-        scale: .5,
+        natural: 10,
+        scale: .334,
         max: 0,
         reach: 5,
         will: 6,
         type: "TRAP"
+    },
+    {
+        title: "Gale",
+        proficiency: "Arcana",
+        natural: 6,
+        scale: 0.25,
+        max: 11,
+        reach: 1,
+        will: 4,
+        type: "ATTACK"
     },
 {
         title: "Gale",
@@ -75,7 +85,7 @@ var CardAbilities = [
         natural: 6,
         scale: 0.25,
         max: 11,
-        reach: 1,
+        reach: 3,
         will: 4,
         type: "ATTACK"
     },
@@ -147,7 +157,7 @@ var CardAbilities = [
         max: 0,
         reach: 2,
         will: 4,
-        type: "SPELL"
+        type: "SELF"
     },
 {
         title: "Adanai's Embrace",
@@ -222,7 +232,7 @@ var CardAbilities = [
 {
         title: "Bushwack",
         proficiency: "Clarity",
-        natural: 6,
+        natural: 10,
         scale: 0.334,
         max: 0,
         reach: 3,
@@ -240,6 +250,7 @@ var CardAbilities = [
         type: "SELF"
     }
     ];
+var numOfCards = 0;
 
 var myCards =[
     {
@@ -247,51 +258,55 @@ var myCards =[
         slot: 1,
         x: 60,
         y: 340,
-        button: null
-
-
+        button: null,
+        removeButton: null,
+        cardDesc: null
     },
     {
         card: null,
         slot: 2,
         x: 130,
         y: 340,
-        button: null
+        button: null,
+        removeButton: null,
+        cardDesc: null
     },
     {
         card: null,
         slot: 3,
         x: 200,
         y: 340,
-        button: null
+        button: null,
+        removeButton: null,
+        cardDesc: null
     },
     {
         card: null,
         slot: 4,
         x: 60,
         y: 460,
-        button: null
+        button: null,
+        removeButton: null,
+        cardDesc: null
     },
     {
         card: null,
         slot: 5,
         x: 130,
         y: 460,
-        button: null
+        button: null,
+        removeButton: null,
+        cardDesc: null
     },
     {
         card: null,
         slot: 6,
         x: 200,
         y: 460,
-        button: null
+        button: null,
+        removeButton: null,
+        cardDesc: null
     },
 ];
 
-function Trap(x, y, sprite, victims) {
-    this.x = x;
-    this.y = y;
-    this.sprite = sprite;
-    this.victims = victims;
-}
 

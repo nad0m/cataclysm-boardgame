@@ -40,6 +40,8 @@ Game.preload = function() {
     game.load.image('banner', 'assets/Board-62-height/Banner.png');
     game.load.image('sprite','assets/images/sprite-test.png');
     game.load.image('bullet','assets/images/bullet.png');
+    game.load.image('remove','assets/images/remove.png');
+    game.load.image('exit','assets/images/exit.png');
     game.load.image('roll-dice','assets/Buttons/ButtonRoll.png');
     game.load.image('end-turn','assets/Buttons/ButtonEnd.png');
     game.load.image('atk-btn', 'assets/Buttons/ButtonOff.png');
@@ -48,6 +50,9 @@ Game.preload = function() {
     game.load.image('ranger','assets/images/Ranger.png');
     game.load.image('mat', 'assets/Board-62-height/temp-mat.png');
     game.load.image('card_sprite', 'assets/Board-62-height/temp-card.png');
+
+    //game.load.atlasJSONHash('test', 'assets/test2.png', 'assets/test2.json');
+    //game.load.atlas('test', 'assets/test.png', 'assets/test.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
 
 };
 
@@ -63,6 +68,8 @@ var group;
 var force;
 var arcana;
 var clarity;
+var choiceGroup;
+var mySpriteID;
 
 
 Game.create = function(){
@@ -70,11 +77,9 @@ Game.create = function(){
     game.mage_btn = game.add.button(300, 300, 'mage', Client.loadMage);
     game.ranger_btn = game.add.button(410, 300, 'ranger', Client.loadRanger);
 
+    //var greenGem = game.add.sprite(0, 0, 'test', 'GreenGem.png');
+
     game.physics.startSystem(Phaser.Physics.ARCADE);
-
-};
-
-Game.collisionHandler = function(){
 
 };
 
@@ -87,7 +92,8 @@ Game.getCoordinates = function(layer,pointer){
 
 Game.createOverlay = function(player){
     statOverlay = game.add.text(player.x, player.y, "Name: " + player.name + "\n" +
-                                                    "Health: " + player.stats.hp + "\n" +
+                                                    "Health: " + player.stats.hp + "/" + player.stats.max_hp + "\n" +
+                                                    "Will: " + player.stats.mp + "/" + player.stats.max_mp + "\n" +
                                                     "Force: " + player.stats.force + "\n" +
                                                     "Arcana: " + player.stats.arcana + "\n" +
                                                     "Clarity: " + player.stats.clarity + "\n" +
@@ -121,19 +127,13 @@ Game.createButtons = function(id){
     });
     game.roll_btn.anchor.setTo(0.5,0.5);
 
-    game.atk_btn = game.add.button(this.world.centerX+50,this.world.centerY,'atk-btn', function(){
-        if (Game.playerMap[id].player.stats.mp >= Fireball.will) {
-            Client.attackPhase(Fireball);
-        } else {
-            console.log("Not enough mana.");
-        }
-    });
-    game.atk_btn.anchor.setTo(0.5,0.5);
-
     game.end_btn = game.add.button(this.world.centerX+100,this.world.centerY,'end-turn', Client.endTurn);
     game.end_btn.anchor.setTo(0.5,0.5);
 
     Game.disableInput();
+
+    mySpriteID = id;
+
 };
 
 Game.disableAllSprites = function(){
@@ -161,9 +161,7 @@ Game.enableSpriteInput = function(id, card, index){
         Game.playerMap[id].events.onInputDown.add(function () {
             Game.playerMap[id].tint = 0xffffff;
             Client.attack(id, card); //id of person being attacked
-            myCards[index].card = null;
-            myCards[index].button.destroy();
-            myCards[index].button = null;
+            Game.removeCardFromHand(index);
             cardDesc.destroy();
             for(var i in Game.playerMap)
             {
@@ -174,7 +172,6 @@ Game.enableSpriteInput = function(id, card, index){
             }
 
         }, game);
-
 };
 
 Game.disableAllSpriteInput = function(id){
@@ -204,9 +201,7 @@ Game.enableSelfInput = function(id, card, index){
     Game.playerMap[id].events.onInputDown.add(function () {
         Game.playerMap[id].tint = 0xffffff;
         Client.applyCardToSelf(id, card);
-        myCards[index].card = null;
-        myCards[index].button.destroy();
-        myCards[index].button = null;
+        Game.removeCardFromHand(index);
         for(var i in Game.playerMap)
         {
             if (Game.playerMap.hasOwnProperty(i))
@@ -229,9 +224,7 @@ Game.enableFriendlyInput = function(id, card, index){
     Game.playerMap[id].events.onInputDown.add(function () {
         Game.playerMap[id].tint = 0xffffff;
         Client.applyCardToOthers(id, card);
-        myCards[index].card = null;
-        myCards[index].button.destroy();
-        myCards[index].button = null;
+        Game.removeCardFromHand(index);
         for(var i in Game.playerMap)
         {
             if (Game.playerMap.hasOwnProperty(i))
@@ -249,7 +242,7 @@ Game.scanForEnemies = function(hero, enemies, card, button){
 
     for (var i = 0; i < enemies.length; i++)
     {
-        if (hero.turn && hero.id != enemies[i].id && Phaser.Math.distance(enemies[i].x,enemies[i].y,x,y) < (card.reach*10*6 + hero.stats.reach_bonus)/2+6)
+        if (hero.stats.mp >= card.will && hero.turn && hero.id != enemies[i].id && Phaser.Math.distance(enemies[i].x,enemies[i].y,x,y) < (card.reach*10*6 + hero.stats.reach_bonus)/2+6)
         {
             Game.enableSpriteInput(enemies[i].id, card, button);
         }
@@ -266,7 +259,7 @@ Game.scanForFriendlies = function (players, player, card, buttonIndex) {
     {
         if (player.turn == true && Game.playerMap.hasOwnProperty(id))
         {
-            if (game.physics.arcade.distanceBetween(currentSprite, Game.playerMap[id]) < (card.reach*10*6 + player.stats.reach_bonus)/2+6){
+            if (player.stats.mp >= card.will && game.physics.arcade.distanceBetween(currentSprite, Game.playerMap[id]) < (card.reach*10*6 + player.stats.reach_bonus)/2+6){
                 Game.enableFriendlyInput(id, card, buttonIndex);
             }
         }
@@ -363,10 +356,6 @@ Game.enableRoll = function (){
     game.roll_btn.input.useHandCursor = true;
 };
 
-Game.enableAttack = function (){
-    game.atk_btn.inputEnabled = true;
-    game.atk_btn.input.useHandCursor = true;
-};
 
 Game.enableEnd = function (){
     game.end_btn.inputEnabled = true;
@@ -378,15 +367,9 @@ Game.disableRoll = function (){
     game.roll_btn.input.useHandCursor = false;
 };
 
-Game.disableAttack = function (){
-    Game.disableRoll();
-    game.atk_btn.inputEnabled = false;
-    game.atk_btn.input.useHandCursor = false;
-};
 
 Game.disableEnd = function (){
     Game.disableRoll();
-    Game.disableAttack();
     game.end_btn.inputEnabled = false;
     game.end_btn.input.useHandCursor = false;
 };
@@ -396,8 +379,6 @@ Game.disableInput = function (){
     game.map.inputEnabled = false;
     game.roll_btn.inputEnabled = false;
     game.roll_btn.input.useHandCursor = false;
-    game.atk_btn.inputEnabled = false;
-    game.atk_btn.input.useHandCursor = false;
     game.end_btn.inputEnabled = false;
     game.end_btn.input.useHandCursor = false;
 };
@@ -493,16 +474,15 @@ Game.removeGraphics = function(){
 Game.createStatBars = function (name, hero, x, y, id){
 
     var name = game.add.text(x, y, hero.title + ": " + name);
-    name.font = "Roboto Slab";
-    name.fontSize = 20;
+    name.fontSize = 14;
     name.fill = "#f44242";
     name.anchor.setTo(0.5, 0.5);
 
-    y += 30;
+    y += 10;
 
     var healthConfig = {
-        width: 150,
-        height: 15,
+        width: 100,
+        height: 10,
         x: x,
         y: y,
         bg: {
@@ -511,15 +491,15 @@ Game.createStatBars = function (name, hero, x, y, id){
         bar: {
             color: '#f70000'
         },
-        animationDuration: 200,
+        animationDuration: 300,
         flipped: false
     };
 
-    y += 20;
+    y += 10;
 
     var manaConfig = {
-        width: 150,
-        height: 15,
+        width: 100,
+        height: 10,
         x: x,
         y: y,
         bg: {
@@ -528,7 +508,7 @@ Game.createStatBars = function (name, hero, x, y, id){
         bar: {
             color: '#205aea'
         },
-        animationDuration: 200,
+        animationDuration: 300,
         flipped: false
     };
 
@@ -559,28 +539,45 @@ Game.getRandomCards = function() {
 
 Game.pickCard = function() {
     var cards = Game.getRandomCards();
+    choiceGroup = game.add.group();
     game.card_mat = game.add.image(game.world.centerX, game.world.centerY, 'mat');
     game.card_mat.anchor.setTo(0.5, 0.5);
-
+    choiceGroup.add(game.card_mat);
     Game.createCardChoices(game.card0, game.card_mat.centerX, game.card_mat.centerY, 'card_sprite', cards[0]);
     Game.createCardChoices(game.card1, game.card_mat.centerX + 70, game.card_mat.centerY, 'card_sprite', cards[1]);
     Game.createCardChoices(game.card2, game.card_mat.centerX + 140, game.card_mat.centerY, 'card_sprite', cards[2]);
     Game.createCardChoices(game.card3, game.card_mat.centerX + 210, game.card_mat.centerY, 'card_sprite', cards[3]);
     Game.createCardChoices(game.card4, game.card_mat.centerX + 280, game.card_mat.centerY, 'card_sprite', cards[4]);
     Game.createCardChoices(game.card5, game.card_mat.centerX + 350, game.card_mat.centerY, 'card_sprite', cards[5]);
+
+    var exit = game.add.button(game.card_mat.centerX-50, game.card_mat.centerY-50, 'exit', function() {
+        game.card_mat.destroy();
+        for (var i = 0; i < cardChoices.length; i++) {
+            cardChoices[i].destroy();
+        }
+        cardChoices = [];
+        game.world.remove(choiceGroup);
+        choiceGroup = null;
+    });
+
+    choiceGroup.add(exit);
+
 };
 
 Game.createCardChoices = function(context, x, y, image, card) {
     context = game.add.button(x + 0, y, image, function(){
-        Game.createCardButton(card);
-        game.card_mat.destroy();
-        cardDesc.destroy();
-        //Destroy all cards upon choice
-        for (var i = 0; i < cardChoices.length; i++)
-        {
-            cardChoices[i].destroy();
+        if (numOfCards < 6) {
+            Game.createCardButton(card);
+            game.card_mat.destroy();
+            cardDesc.destroy();
+            //Destroy all cards upon choice
+            for (var i = 0; i < cardChoices.length; i++) {
+                cardChoices[i].destroy();
+            }
+            game.world.remove(choiceGroup);
+            choiceGroup = null;
+            cardChoices = [];
         }
-        cardChoices = [];
     });
 
     context.onInputOver.add(function(){
@@ -596,6 +593,9 @@ Game.createCardChoices = function(context, x, y, image, card) {
         cardDesc.destroy();
     }, game);
 
+    //var testText = game.add.text(context.centerX, context.centerY, "test" + "\n" + "hello");
+    //testText.anchor.setTo(0.5, 0.5);
+
     cardChoices.push(context);
 };
 
@@ -607,31 +607,44 @@ Game.createCardButton = function (card){
 
         if (myCards[i].card == null)
         {
-            myCards[i].card = card;
-            var button = game.add.button(myCards[i].x, myCards[i].y, 'card_sprite', function(){
+            numOfCards++;
+            myCards[index].card = card;
+            myCards[index].button = game.add.button(myCards[i].x, myCards[i].y, 'card_sprite', function(){
                 /* myCards[index].card = null;
                  button.destroy();*/
-                cardDesc.destroy();
-                Game.turnSlotOff(index);
-                Client.attackPhase(card, index);
+                if (Game.playerMap[mySpriteID].player.turn) {
+                    myCards[index].cardDesc.destroy();
+                    Game.turnSlotOff(index);
+                    Client.attackPhase(card, index);
+                }
 
           }, game);
 
-            button.onInputOver.add(function(){
-                cardDesc = game.add.text(myCards[i].x, myCards[i].y, card.title + "\n" +
+            myCards[index].button.onInputOver.add(function(){
+                myCards[index].cardDesc = game.add.text(myCards[i].x, myCards[i].y, card.title + "\n" +
                     card.proficiency + "\n" +
                     "Will required: " + card.will);
-                cardDesc.font = "Roboto Slab";
-                cardDesc.fontSize = 12;
-                cardDesc.fill = "#f44242";
+                myCards[index].cardDesc.font = "Roboto Slab";
+                myCards[index].cardDesc.fontSize = 12;
+                myCards[index].cardDesc.fill = "#f44242";
+                myCards[index].cardDesc.anchor.setTo(0.5, 0.5);
             }, game);
 
-            button.onInputOut.add(function(){
-                cardDesc.destroy();
+            myCards[index].button.onInputOut.add(function(){
+                myCards[index].cardDesc.destroy();
             }, game);
-            myCards[i].button = button;
+
+            myCards[index].removeButton = game.add.button(myCards[i].x, myCards[i].y+60, 'remove', function(){
+                Game.removeCardFromHand(index);
+            }, game);
+
+            myCards[index].button.anchor.setTo(0.5, 0.5);
+            myCards[index].removeButton.anchor.setTo(0.5, 0.5);
+
             break;
         }
+
+
     }
 
 };
@@ -649,7 +662,7 @@ Game.turnSlotOff = function(index){
     {
         if (myCards[i].button != null && i == index)
         {
-            myCards[i].button.inputEnabled = false;
+            //myCards[i].button.inputEnabled = false;
         }
 
         else if (myCards[i].button != null && i != index)
@@ -657,6 +670,8 @@ Game.turnSlotOff = function(index){
             myCards[i].button.inputEnabled = true;
         }
     }
+
+
 };
 
 Game.turnSlotsOn = function(){
@@ -669,15 +684,18 @@ Game.turnSlotsOn = function(){
     }
 };
 
-Game.destroyCard = function(index){
+Game.removeCardFromHand = function(index){
     myCards[index].card = null;
     myCards[index].button.destroy();
     myCards[index].button = null;
-};
+    myCards[index].removeButton.destroy();
+    myCards[index].removeButton = null;
+    myCards[index].cardDesc.destroy();
+    myCards[index].cardDesc = null;
 
+    numOfCards--;
 
-Game.removeCardFromHand = function(index){
-    myCards.splice(index, 1);
+    Game.disableAllSprites();
 };
 
 Game.levelUpScreen = function(){

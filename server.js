@@ -61,7 +61,8 @@ var numberOfPlayers = 0;
 var checkForReset = 0;
 var trapID = 0;
 var currentTraps = [];
-const LEVEL_UP_SCALE = 0.08;
+const LEVEL_UP_SCALE = 0.1;
+
 
 
 
@@ -110,8 +111,8 @@ io.sockets.on('connection', function (socket) {
             var stats = socket.player.stats;
 
             io.emit('dice', frameValues, total);
-            console.log(total + " + " + stats.reach_bonus)
-            total += stats.reach_bonus;
+            console.log(total + " + " + stats.move_bonus)
+            total += stats.move_bonus;
             sockets[turn].emit('draw_circle',socket.player.x, socket.player.y, total, true); // clickable for designated player
 
             for (var i = 0; i < sockets.length; i++)
@@ -122,7 +123,7 @@ io.sockets.on('connection', function (socket) {
                 }
             }
 
-            stats.reach_bonus = 0;
+            stats.move_bonus = 0;
         });
 
         sockets.push(socket);
@@ -170,8 +171,11 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('after level up', function(choice) {
-        var stats = sockets[turn].player.stats;
-        socket.player.stats.level++; // level up
+        var stats = socket.player.stats;
+        stats.max_hp += Math.floor(stats.max_hp * LEVEL_UP_SCALE);
+        stats.max_mp++;
+        stats.level++; // level up
+
         switch (choice){
             case 0:
                 stats.force++;
@@ -188,28 +192,7 @@ io.sockets.on('connection', function (socket) {
 
         if (numberOfPlayers == 0)
         {
-            stats.max_hp += Math.floor(stats.max_hp * LEVEL_UP_SCALE);
-            stats.max_mp += Math.floor(stats.max_mp * LEVEL_UP_SCALE);
-
-            var addHP = Math.floor(stats.max_hp * stats.hp_recovery);
-            var addMP = Math.floor(stats.max_mp * stats.mp_recovery);
-
-            stats.hp += addHP;
-            stats.mp += addMP;
-
-            if (stats.hp > stats.max_hp)
-            {
-                stats.hp = stats.max_hp;
-            }
-
-            if (stats.mp > stats.max_mp)
-            {
-                stats.mp = stats.max_mp;
-            }
-
-            io.emit('update players', getAllPlayers());
-            sockets[turn].emit('your_turn');
-            console.log(sockets[turn].player.name + "'s turn.");
+            your_turn();
         }
     });
 
@@ -262,16 +245,19 @@ io.sockets.on('connection', function (socket) {
                 stats.mitigation = 1 + stats.arcana/3;
                 break;
             case "Bloodlust": //STEROID: Add 2 (+1 for every 4 Force) Power to your next attack.
-                stats.damage_bonus = 2 + (stats.force/4);
+                stats.damage_bonus += 2 + (stats.force/4);
                 break;
             case "Adanai's Embrace": //HARDEN: Absorbs up to 2 (+1 for every 3 Force) damage. Expires after you get attacked.
-                stats.def_bonus = 2 + (stats.force/4);
+                stats.def_bonus += 2 + (stats.force/4);
                 break;
             case "Oros' Blessing": // SNIPE: For this turn, all abilities gain 1 (+1 for every 5 Clarity) Reach.
-                stats.reach_bonus = stats.clarity/5;
+                stats.reach_bonus += stats.clarity/5;
                 break;
-            case "Lightning Step": // BLINK: +4 toward your next roll for every 1 Clarity
-                stats.reach_bonus += 4*stats.clarity;
+            case "Lightning Step": // BLINK: +10 toward your next roll and +1 for every 1 Clarity
+                stats.move_bonus += 10 + stats.clarity;
+                break;
+            case "Dauntless Advance": // CHARGE: +5 and +1 for every Force toward your next roll.
+                stats.move_bonus += 5 + stats.force;
                 break;
 
         }
@@ -287,7 +273,15 @@ io.sockets.on('connection', function (socket) {
         switch (card.title)
         {
             case "Waterweave": // HEAL: Restores 2 (+2 for every 3 Arcana) of the target's health.
-                target.hp += 2 + (2*source.arcana/3); //TODO change to Arcana instead of mp
+                target.hp += Math.floor(2 + (2*source.arcana/3));
+                if (target.hp > target.max_hp)
+                {
+                    target.hp = target.max_hp;
+                }
+                break;
+            case "First Aid": // HEAL: Restores 2 (+1 for every 3 Force) to the target's health. +20% hp recovery for one turn.
+                target.hp += Math.floor(2 + (2*source.force/3));
+                target.hp_recovery_bonus = 0.2;
                 if (target.hp > target.max_hp)
                 {
                     target.hp = target.max_hp;
@@ -300,38 +294,38 @@ io.sockets.on('connection', function (socket) {
 
     function next_turn(){
         turn = currentTurn++ % sockets.length;
-        var stats = sockets[turn].player.stats;
         sockets[turn].player.turn = true;
         if (turn == 0)
         {
             numberOfPlayers = sockets.length;
             io.emit('level up');
         } else {
-            stats.max_hp += Math.floor(stats.max_hp * LEVEL_UP_SCALE);
-            stats.max_mp += Math.floor(stats.max_mp * LEVEL_UP_SCALE);
+            your_turn();
+        }
+    }
 
-            var addHP = Math.floor(stats.max_hp * stats.hp_recovery);
-            var addMP = Math.floor(stats.max_mp * stats.mp_recovery);
+    function your_turn(){
+        var stats = sockets[turn].player.stats;
 
-            stats.hp += addHP;
-            stats.mp += addMP;
+        var addHP = Math.floor(stats.max_hp * (stats.hp_recovery + stats.hp_recovery_bonus));
+        var addMP = Math.floor(stats.max_mp * stats.mp_recovery);
 
-            if (stats.hp > stats.max_hp)
-            {
-                stats.hp = stats.max_hp;
-            }
+        stats.hp += addHP;
+        stats.mp += addMP;
 
-            if (stats.mp > stats.max_mp)
-            {
-                stats.mp = stats.max_mp;
-            }
-
-            io.emit('update players', getAllPlayers());
-            sockets[turn].emit('your_turn');
-            console.log(sockets[turn].player.name + "'s turn.");
+        if (stats.hp > stats.max_hp)
+        {
+            stats.hp = stats.max_hp;
         }
 
+        if (stats.mp > stats.max_mp)
+        {
+            stats.mp = stats.max_mp;
+        }
 
+        io.emit('update players', getAllPlayers());
+        sockets[turn].emit('your_turn');
+        console.log(sockets[turn].player.name + "'s turn.");
     }
 
 });
