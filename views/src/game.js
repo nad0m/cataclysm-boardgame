@@ -51,7 +51,7 @@ Game.preload = function() {
     game.load.image('mat', 'assets/Board-62-height/temp-mat.png');
     game.load.image('card_sprite', 'assets/Board-62-height/temp-card.png');
 
-    game.load.atlasJSONArray('all_cards', 'assets/all_cards2.png', 'assets/all_cards2.json');
+    game.load.atlasJSONHash('all_cards', 'assets/all_cards.png', 'assets/all_cards.json');
     //game.load.atlas('all_cards', 'assets/all_cards.png', 'assets/all_cards.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 
 };
@@ -77,8 +77,8 @@ Game.create = function(){
     game.mage_btn = game.add.button(300, 300, 'mage', Client.loadMage);
     game.ranger_btn = game.add.button(410, 300, 'ranger', Client.loadRanger);
 
-   var str = 'Fireball.png';
-   var test = game.add.button(0, 0, 'all_cards', Game.rollDice, this, 10);
+   /*var str = 'Fireball.png';
+   var test = game.add.button(0, 0, 'all_cards', Game.rollDice, this, 10);*/
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -544,12 +544,12 @@ Game.pickCard = function() {
     game.card_mat = game.add.image(game.world.centerX, game.world.centerY, 'mat');
     game.card_mat.anchor.setTo(0.5, 0.5);
     choiceGroup.add(game.card_mat);
-    Game.createCardChoices(game.card0, game.card_mat.centerX, game.card_mat.centerY, 'card_sprite', cards[0]);
-    Game.createCardChoices(game.card1, game.card_mat.centerX + 70, game.card_mat.centerY, 'card_sprite', cards[1]);
-    Game.createCardChoices(game.card2, game.card_mat.centerX + 140, game.card_mat.centerY, 'card_sprite', cards[2]);
-    Game.createCardChoices(game.card3, game.card_mat.centerX + 210, game.card_mat.centerY, 'card_sprite', cards[3]);
-    Game.createCardChoices(game.card4, game.card_mat.centerX + 280, game.card_mat.centerY, 'card_sprite', cards[4]);
-    Game.createCardChoices(game.card5, game.card_mat.centerX + 350, game.card_mat.centerY, 'card_sprite', cards[5]);
+    Game.createCardChoices(game.card0, game.card_mat.centerX - 350, game.card_mat.centerY, cards[0]);
+    Game.createCardChoices(game.card1, game.card_mat.centerX - 200, game.card_mat.centerY, cards[1]);
+    Game.createCardChoices(game.card2, game.card_mat.centerX - 50, game.card_mat.centerY, cards[2]);
+    Game.createCardChoices(game.card3, game.card_mat.centerX + 100, game.card_mat.centerY, cards[3]);
+    Game.createCardChoices(game.card4, game.card_mat.centerX + 250, game.card_mat.centerY, cards[4]);
+    Game.createCardChoices(game.card5, game.card_mat.centerX + 400, game.card_mat.centerY, cards[5]);
 
     var exit = game.add.button(game.card_mat.centerX-50, game.card_mat.centerY-50, 'exit', function() {
         game.card_mat.destroy();
@@ -565,7 +565,7 @@ Game.pickCard = function() {
 
 };
 
-Game.createCardChoices = function(context, x, y, image, card) {
+Game.createCardChoices = function(context, x, y, card) {
     context = game.add.button(x, y, 'all_cards', function(){
         if (numOfCards < 6) {
             Game.createCardButton(card);
@@ -573,13 +573,13 @@ Game.createCardChoices = function(context, x, y, image, card) {
             cardDesc.destroy();
             //Destroy all cards upon choice
             for (var i = 0; i < cardChoices.length; i++) {
-                cardChoices[i].destroy();
+                setTimeout(cardChoices[i].destroy.bind(cardChoices[i]), 10); // what the hell, phaser?
             }
             game.world.remove(choiceGroup);
             choiceGroup = null;
             cardChoices = [];
         }
-    }, game, 'Bushwack.png');
+    }, game, card.sprite, card.sprite, card.sprite);
 
     context.onInputOver.add(function(){
         cardDesc = game.add.text(x,y, card.title + "\n" +

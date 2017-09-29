@@ -7,7 +7,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":230},
 	"sourceSize": {"w":160,"h":230}
 },
-"Barage.png":
+"Barrage.png":
 {
 	"frame": {"x":1,"y":233,"w":160,"h":230},
 	"rotated": false,

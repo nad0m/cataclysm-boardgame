@@ -163,7 +163,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('update traps', function (id, card, player) {
         currentTraps.push(id);
         trapID++;
-        socket[player.id].player.stats.mp -= card.will;
+        sockets[player.id].player.stats.mp -= card.will;
         io.emit('update players', getAllPlayers());
 });
 
