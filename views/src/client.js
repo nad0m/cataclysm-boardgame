@@ -29,6 +29,7 @@ Client.sendChoice = function(choice){
 };
 
 Client.endTurn = function(){
+    Game.disableTrashInput();
     Game.disableAllSprites();
     Game.checkForTraps();
     Client.socket.emit('end turn');
@@ -42,6 +43,8 @@ Client.sendTrapID = function(id, index, card, player){
 };
 
 Client.attackPhase = function(card, buttonIndex){
+    Game.enableTrashInput(buttonIndex);
+
     if (card.type == "ATTACK")
     {
         Client.socket.emit('attack range', card, buttonIndex); // draw range circle to current client

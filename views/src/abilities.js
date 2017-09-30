@@ -116,7 +116,7 @@ var CardAbilities = [
         natural: 4,
         scale: 0.5,
         max: 13,
-        reach: 3,
+        reach: 2,
         will: 3,
         type: "ATTACK",
         sprite: 'Frenzy.png'
@@ -138,7 +138,7 @@ var CardAbilities = [
         natural: 2,
         scale: 1,
         max: 24,
-        reach: 3,
+        reach: 2,
         will: 5,
         type: "ATTACK",
         sprite: 'OffhandBlow.png'
@@ -175,6 +175,17 @@ var CardAbilities = [
         will: 4,
         type: "SELF",
         sprite: 'AdanaisEmbrace.png'
+    },
+{
+        title: "First Aid",
+        proficiency: "Force",
+        natural: 0,
+        scale: 0,
+        max: 0,
+        reach: 0,
+        will: 4,
+        type: "SPELL",
+        sprite: 'Fireball.png'
     },
 {
         title: "Trueshot",
@@ -263,6 +274,17 @@ var CardAbilities = [
         will: 4,
         type: "SELF",
         sprite: 'OrosBlessing.png'
+    },
+{
+        title: "Injection",
+        proficiency: "Clarity",
+        natural: 0,
+        scale: 0,
+        max: 0,
+        reach: 4,
+        will: 5,
+        type: "SPELL",
+        sprite: 'Fireball.png'
     }
     ];
 var numOfCards = 0;

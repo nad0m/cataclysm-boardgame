@@ -41,6 +41,7 @@ Game.preload = function() {
     game.load.image('sprite','assets/images/sprite-test.png');
     game.load.image('bullet','assets/images/bullet.png');
     game.load.image('remove','assets/images/remove.png');
+    game.load.image('trash','assets/images/trash.png');
     game.load.image('exit','assets/images/exit.png');
     game.load.image('roll-dice','assets/Buttons/ButtonRoll.png');
     game.load.image('end-turn','assets/Buttons/ButtonEnd.png');
@@ -244,6 +245,7 @@ Game.scanForEnemies = function(hero, enemies, card, button){
     var x = hero.x;
     var y = hero.y;
 
+    console.log("hero turn: " + hero.turn);
     for (var i = 0; i < enemies.length; i++)
     {
         if (hero.stats.mp >= card.will && hero.turn && hero.id != enemies[i].id && Phaser.Math.distance(enemies[i].x,enemies[i].y,x,y) < (card.reach*10*6 + hero.stats.reach_bonus)/2+6)
@@ -327,6 +329,8 @@ Game.removePlayer = function(id){
 
 
 Game.rollDice = function() {
+    Game.disableTrashInput();
+
     for(var i in Game.playerMap)
     {
         if (Game.playerMap.hasOwnProperty(i))
@@ -361,6 +365,21 @@ Game.updateDice = function (frameValues, newTotal) {
         i++;
     });
     text.setText("Total: " + newTotal);
+};
+
+Game.enableTrashInput = function (index){
+    game.trash = game.add.button(this.world.centerX-400,this.world.centerY+200,'trash', function(){
+        Game.removeCardFromHand(index);
+    });
+    game.trash.anchor.setTo(0.5,0.5);
+};
+
+Game.disableTrashInput = function (){
+    console.log(typeof game.trash)
+    if (typeof game.trash != 'undefined')
+    {
+        game.trash.destroy();
+    }
 };
 
 Game.enableRoll = function (){
@@ -476,7 +495,7 @@ Game.checkForTraps = function(id){
 
 Game.removeGraphics = function(){
 
-    if (game.graphics != null)
+    if (typeof game.graphics != 'undefined')
     {
         game.graphics.destroy();
     }
@@ -642,11 +661,9 @@ Game.createCardButton = function (card){
                 /* myCards[index].card = null;
                  button.destroy();*/
                 console.log(Game.playerMap[mySpriteID].player.turn);
-                if (Game.playerMap[mySpriteID].player.turn) {
                     myCards[index].cardDesc.destroy();
                     Game.turnSlotOff(index);
                     Client.attackPhase(card, index);
-                }
 
           }, game, card.sprite, card.sprite, card.sprite);
 
@@ -666,13 +683,7 @@ Game.createCardButton = function (card){
                 myCards[index].cardDesc.destroy();
             }, game);
 
-            myCards[index].removeButton = game.add.button(myCards[i].x, myCards[i].y+60, 'remove', function(){
-                Game.removeCardFromHand(index);
-            }, game);
-
             myCards[index].button.anchor.setTo(0.5, 0.5);
-            myCards[index].removeButton.anchor.setTo(0.5, 0.5);
-
             break;
         }
 
@@ -694,7 +705,7 @@ Game.turnSlotOff = function(index){
     {
         if (myCards[i].button != null && i == index)
         {
-            //myCards[i].button.inputEnabled = false;
+            myCards[i].button.inputEnabled = false;
         }
 
         else if (myCards[i].button != null && i != index)
@@ -720,14 +731,14 @@ Game.removeCardFromHand = function(index){
     myCards[index].card = null;
     myCards[index].button.destroy();
     myCards[index].button = null;
-    myCards[index].removeButton.destroy();
-    myCards[index].removeButton = null;
     myCards[index].cardDesc.destroy();
     myCards[index].cardDesc = null;
 
     numOfCards--;
 
+    Game.disableTrashInput();
     Game.disableAllSprites();
+    Game.removeGraphics();
 };
 
 Game.levelUpScreen = function(){

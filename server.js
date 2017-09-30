@@ -61,10 +61,6 @@ var numberOfPlayers = 0;
 var checkForReset = 0;
 var trapID = 0;
 var currentTraps = [];
-const LEVEL_UP_SCALE = 0.1;
-
-
-
 
 io.sockets.on('connection', function (socket) {
 
@@ -79,7 +75,7 @@ io.sockets.on('connection', function (socket) {
             uiX: statBarsX,
             uiY: statBarsY,
             turn: false,
-            cards: []
+            cards: [],
         };
         checkForReset++;
         statBarsY += 80;
@@ -121,7 +117,7 @@ io.sockets.on('connection', function (socket) {
         });
 
         sockets.push(socket);
-        if (sockets.length == 2)
+        if (sockets.length == 1)
         {
             next_turn();
         }
@@ -283,6 +279,9 @@ io.sockets.on('connection', function (socket) {
                 {
                     target.hp = target.max_hp;
                 }
+                break;
+            case "Injection": // STEROID: Add 3 (+1 for every 3 Clarity) to the target's next attack.
+                target.damage_bonus += Math.floor(2 + (source.clarity/3));
                 break;
         }
 
