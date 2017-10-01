@@ -11,8 +11,12 @@ var Warrior = {
     mitigation: 0,
     hp_recovery: 0.1,
     mp_recovery: 0.3,
-    hp_level_scale: 0.1,
+    hp_level_scale: 0.25,
     exp: 0,
+    blue: 'WarriorBlue.png',
+    yellow: 'WarriorYellow.png',
+    green: 'WarriorGreen.png',
+    red: 'WarriorRed.png',
 
     //temporary bonuses, resets after a certain time
     damage_bonus: 0,
@@ -35,8 +39,12 @@ var Mage = {
     mitigation: 0,
     hp_recovery: 0.2,
     mp_recovery: 0.3,
-    hp_level_scale: 0.05,
+    hp_level_scale: 0.15,
     exp: 0,
+    blue: 'WizardBlue.png',
+    yellow: 'WizardYellow.png',
+    green: 'WizardGreen.png',
+    red: 'WizardRed.png',
 
     //temporary bonuses, resets after a certain time
     damage_bonus: 0,
@@ -59,8 +67,12 @@ var Ranger = {
     mitigation: 0,
     hp_recovery: 0.2,
     mp_recovery: 0.3,
-    hp_level_scale: 0.05,
+    hp_level_scale: 0.15,
     exp: 0,
+    blue: 'RangerBlue.png',
+    yellow: 'RangerYellow.png',
+    green: 'RangerGreen.png',
+    red: 'RangerRed.png',
 
     //temporary bonuses, resets after a certain time
     damage_bonus: 0,

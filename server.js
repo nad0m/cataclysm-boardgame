@@ -75,16 +75,12 @@ io.sockets.on('connection', function (socket) {
             uiX: statBarsX,
             uiY: statBarsY,
             turn: false,
-            cards: [],
         };
         checkForReset++;
         statBarsY += 80;
 
         socket.emit('allplayers', getAllPlayers(), socket.player);
         socket.broadcast.emit('newplayer', socket.player);
-
-
-        io.emit('new user', msg);
 
         socket.on('click',function(data){
             console.log('click to '+data.x+', '+data.y);
@@ -167,7 +163,7 @@ io.sockets.on('connection', function (socket) {
         stats.max_hp += Math.floor(stats.max_hp * stats.hp_level_scale);
         stats.max_mp++;
         stats.level++; // level up
-        stats.hp_level_scale += 0.02;
+        //stats.hp_level_scale += 0.01;
 
         switch (choice){
             case 0:
@@ -346,6 +342,10 @@ function resetServer(){
     sockets = [];
     currentTurn = 0;
     turn = 0;
-    statBarsX = 100;
-    statBarsY = 200;
+    statBarsX = 150;
+    statBarsY = 10;
+    numberOfPlayers = 0;
+    checkForReset = 0;
+    trapID = 0;
+    currentTraps = [];
 }

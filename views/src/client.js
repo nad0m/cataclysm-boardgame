@@ -129,6 +129,7 @@ Client.socket.on('level up',function(){
 
 Client.socket.on('your_turn',function(){
     Game.pickCard();
+    Game.turnSlotsOn();
     Game.enableRoll();
     Game.enableEnd();
 });

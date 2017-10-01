@@ -14,7 +14,7 @@ var CardAbilities = [
         title: "Poison Whip ",
         proficiency: "Arcana",
         natural: 2,
-        scale: 1,
+        scale: 2,
         max: 12,
         reach: 4,
         will: 4,
@@ -25,7 +25,7 @@ var CardAbilities = [
         title: "Frost Lance",
         proficiency: "Arcana",
         natural: 6,
-        scale: 0.5,
+        scale: 1.5,
         max: 16,
         reach: 5,
         will: 3,
@@ -69,7 +69,7 @@ var CardAbilities = [
         title: "Geomancer",
         proficiency: "Arcana",
         natural: 10,
-        scale: .334,
+        scale: 1,
         max: 0,
         reach: 5,
         will: 6,
@@ -297,7 +297,8 @@ var myCards =[
         y: 420,
         button: null,
         removeButton: null,
-        cardDesc: null
+        cardDesc: null,
+        isPressed: false
     },
     {
         card: null,
@@ -306,7 +307,8 @@ var myCards =[
         y: 420,
         button: null,
         removeButton: null,
-        cardDesc: null
+        cardDesc: null,
+        isPressed: false
     },
     {
         card: null,
@@ -315,7 +317,8 @@ var myCards =[
         y: 420,
         button: null,
         removeButton: null,
-        cardDesc: null
+        cardDesc: null,
+        isPressed: false
     },
     {
         card: null,
@@ -324,7 +327,8 @@ var myCards =[
         y: 500,
         button: null,
         removeButton: null,
-        cardDesc: null
+        cardDesc: null,
+        isPressed: false
     },
     {
         card: null,
@@ -333,7 +337,8 @@ var myCards =[
         y: 500,
         button: null,
         removeButton: null,
-        cardDesc: null
+        cardDesc: null,
+        isPressed: false
     },
     {
         card: null,
@@ -342,7 +347,8 @@ var myCards =[
         y: 500,
         button: null,
         removeButton: null,
-        cardDesc: null
+        cardDesc: null,
+        isPressed: false
     },
 ];
 

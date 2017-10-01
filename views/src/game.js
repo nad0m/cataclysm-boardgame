@@ -53,6 +53,7 @@ Game.preload = function() {
     game.load.image('card_sprite', 'assets/Board-62-height/temp-card.png');
 
     game.load.atlasJSONHash('all_cards', 'assets/all_cards.png', 'assets/all_cards.json');
+    game.load.atlasJSONHash('sprites', 'assets/character_sprites.png', 'assets/character_sprites.json');
     //game.load.atlas('all_cards', 'assets/all_cards.png', 'assets/all_cards.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 
 };
@@ -110,7 +111,27 @@ Game.createOverlay = function(player){
 };
 
 Game.addNewPlayer = function(player,id,x,y){
-    Game.playerMap[id] = game.add.sprite(x,y,'sprite');
+
+    var sprite_type = "";
+
+    switch(id)
+    {
+        case 0: 
+            sprite_type = player.stats.red;
+            break;
+        case 1: 
+            sprite_type = player.stats.blue;
+            break;
+        case 2: 
+            sprite_type = player.stats.green;
+            break;
+        case 3: 
+            sprite_type = player.stats.yellow;
+            break;
+
+    };
+
+    Game.playerMap[id] = game.add.sprite(x,y,'sprites', sprite_type);
     Game.playerMap[id].anchor.setTo(0.5, 0.5);
     Game.playerMap[id].player = player;
     Game.playerMap[id].inputEnabled = true;
@@ -375,7 +396,6 @@ Game.enableTrashInput = function (index){
 };
 
 Game.disableTrashInput = function (){
-    console.log(typeof game.trash)
     if (typeof game.trash != 'undefined')
     {
         game.trash.destroy();
@@ -661,9 +681,12 @@ Game.createCardButton = function (card){
                 /* myCards[index].card = null;
                  button.destroy();*/
                 console.log(Game.playerMap[mySpriteID].player.turn);
-                    myCards[index].cardDesc.destroy();
+                if (myCards[index].isPressed == false)
+                {
+                   // myCards[index].cardDesc.destroy();
                     Game.turnSlotOff(index);
                     Client.attackPhase(card, index);
+                }
 
           }, game, card.sprite, card.sprite, card.sprite);
 
@@ -705,12 +728,13 @@ Game.turnSlotOff = function(index){
     {
         if (myCards[i].button != null && i == index)
         {
-            myCards[i].button.inputEnabled = false;
+            myCards[i].isPressed = true;
         }
 
         else if (myCards[i].button != null && i != index)
         {
             myCards[i].button.inputEnabled = true;
+            myCards[i].isPressed = false;
         }
     }
 
@@ -723,7 +747,9 @@ Game.turnSlotsOn = function(){
         if (myCards[i].button != null)
         {
             myCards[i].button.inputEnabled = true;
+            
         }
+        myCards[i].isPressed = false;
     }
 };
 
@@ -739,6 +765,7 @@ Game.removeCardFromHand = function(index){
     Game.disableTrashInput();
     Game.disableAllSprites();
     Game.removeGraphics();
+    Game.turnSlotsOn();
 };
 
 Game.levelUpScreen = function(){
