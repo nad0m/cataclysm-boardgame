@@ -6,7 +6,7 @@ var CardAbilities = [
         scale: 0.5,
         max: 8,
         reach: 5,
-        will: 2,
+        will: 3,
         type: "ATTACK",
         sprite: 'Fireball.png'
     },
@@ -17,7 +17,7 @@ var CardAbilities = [
         scale: 2,
         max: 12,
         reach: 4,
-        will: 4,
+        will: 5,
         type: "ATTACK",
         sprite: 'PoisonWhip.png'
     },
@@ -28,7 +28,7 @@ var CardAbilities = [
         scale: 1.5,
         max: 16,
         reach: 5,
-        will: 3,
+        will: 5,
         type: "ATTACK",
         sprite: 'FrostLance.png'
     },
@@ -41,7 +41,8 @@ var CardAbilities = [
         reach: 0,
         will: 6,
         type: "SELF",
-        sprite: 'StoneSkin.png'
+        sprite: 'StoneSkin.png',
+        effect: "+1 and +1 for\nevery 3 Arcana to damage\nreduction permanently."
     },
 {
         title: "Waterweave",
@@ -49,10 +50,11 @@ var CardAbilities = [
         natural: 0,
         scale: 0,
         max: 0,
-        reach: 4,
-        will: 5,
+        reach: 5,
+        will: 7,
         type: "SPELL",
-        sprite: 'Waterweave.png'
+        sprite: 'Waterweave.png',
+        effect: "Heals 2 and\n+2 for every 3 Arcana to\nthe target's health."
     },
 {
         title: "Lightning Step",
@@ -61,9 +63,11 @@ var CardAbilities = [
         scale: 0.3,
         max: 0,
         reach: 3,
-        will: 3,
+        will: 4,
         type: "SELF",
-        sprite: 'LightningStep.png'
+        sprite: 'LightningStep.png',
+        effect: "+10 toward\nyour next roll and +1\nfor every 1 Clarity"
+
     },
 {
         title: "Geomancer",
@@ -72,9 +76,10 @@ var CardAbilities = [
         scale: 1,
         max: 0,
         reach: 5,
-        will: 6,
+        will: 7,
         type: "TRAP",
-        sprite: 'Geomancer.png'
+        sprite: 'Geomancer.png',
+        effect: "Place a trap. Any\nunits who end turn on\ntrap will receive damage."
     },
 
 {
@@ -83,8 +88,8 @@ var CardAbilities = [
         natural: 6,
         scale: 0.5,
         max: 11,
-        reach: 3,
-        will: 4,
+        reach: 4,
+        will: 5,
         type: "ATTACK",
         sprite: 'Gale.png'
     },
@@ -95,7 +100,7 @@ var CardAbilities = [
         scale: 0.5,
         max: 16,
         reach: 2,
-        will: 2,
+        will: 3,
         type: "ATTACK",
         sprite: 'Cleave.png'
     },
@@ -106,9 +111,10 @@ var CardAbilities = [
         scale: 0,
         max: 0,
         reach: 0,
-        will: 4,
+        will: 5,
         type: "SELF",
-        sprite: 'Bloodlust.png'
+        sprite: 'Bloodlust.png',
+        effect: "+2 and +1\nfor every 4 Force to\nyour next attack."
     },
 {
         title: "Frenzy",
@@ -117,7 +123,7 @@ var CardAbilities = [
         scale: 0.5,
         max: 13,
         reach: 2,
-        will: 3,
+        will: 4,
         type: "ATTACK",
         sprite: 'Frenzy.png'
     },
@@ -128,7 +134,7 @@ var CardAbilities = [
         scale: 1,
         max: 28,
         reach: 2,
-        will: 8,
+        will: 9,
         type: "ATTACK",
         sprite: 'IntrepidStrike.png'
     },
@@ -139,7 +145,7 @@ var CardAbilities = [
         scale: 1,
         max: 24,
         reach: 2,
-        will: 5,
+        will: 6,
         type: "ATTACK",
         sprite: 'OffhandBlow.png'
     },
@@ -150,7 +156,7 @@ var CardAbilities = [
         scale: 0.5,
         max: 14,
         reach: 2,
-        will: 3,
+        will: 4,
         type: "ATTACK",
         sprite: 'Grapple.png'
     },
@@ -161,9 +167,10 @@ var CardAbilities = [
         scale: 0.5,
         max: 0,
         reach: 2,
-        will: 4,
+        will: 5,
         type: "SELF",
-        sprite: 'DauntlessAdvance.png'
+        sprite: 'DauntlessAdvance.png',
+        effect: "+5 and\n+1 for every Force\ntoward your next roll."
     },
 {
         title: "Adanai's Embrace",
@@ -174,7 +181,8 @@ var CardAbilities = [
         reach: 0,
         will: 4,
         type: "SELF",
-        sprite: 'AdanaisEmbrace.png'
+        sprite: 'AdanaisEmbrace.png',
+        effect: "Absorbs up\nto 2 and +1 for every\n3 Force damage. Expires\nafter you get attacked."
     },
 {
         title: "First Aid",
@@ -182,10 +190,12 @@ var CardAbilities = [
         natural: 0,
         scale: 0,
         max: 0,
-        reach: 0,
-        will: 4,
+        reach: 3,
+        will: 6,
         type: "SPELL",
-        sprite: 'Fireball.png'
+        sprite: 'Fireball.png',
+        effect: "Heals 2 and\n+1 for every 3 Force to the\ntarget's health. +20% HP\nrecovery for one turn."
+
     },
 {
         title: "Trueshot",
@@ -194,7 +204,7 @@ var CardAbilities = [
         scale: 0.5,
         max: 13,
         reach: 6,
-        will: 2,
+        will: 3,
         type: "ATTACK",
         sprite: 'Trueshot.png'
     },
@@ -213,10 +223,10 @@ var CardAbilities = [
         title: "Nether Whisper",
         proficiency: "Clarity",
         natural: 4,
-        scale: 0.5,
+        scale: 1,
         max: 11,
         reach: 6,
-        will: 4,
+        will: 8,
         type: "ATTACK",
         sprite: 'NetherWhisper.png'
     },
@@ -235,10 +245,10 @@ var CardAbilities = [
         title: "Barrage",
         proficiency: "Clarity",
         natural: 4,
-        scale: 0.5,
+        scale: 1,
         max: 14,
-        reach: 5,
-        will: 5,
+        reach: 4,
+        will: 6,
         type: "ATTACK",
         sprite: 'Barrage.png'
     },
@@ -249,7 +259,7 @@ var CardAbilities = [
         scale: 0.5,
         max: 11,
         reach: 7,
-        will: 4,
+        will: 5,
         type: "ATTACK",
         sprite: 'Windsplitter.png'
     },
@@ -260,9 +270,10 @@ var CardAbilities = [
         scale: 0.334,
         max: 0,
         reach: 3,
-        will: 4,
+        will: 5,
         type: "TRAP",
-        sprite: 'Bushwack.png'
+        sprite: 'Bushwack.png',
+        effect: "Place a trap. Any\nunits who end turn on\ntrap will receive damage."
     },
 {
         title: "Oros' Blessing",
@@ -273,7 +284,8 @@ var CardAbilities = [
         reach: 0,
         will: 4,
         type: "SELF",
-        sprite: 'OrosBlessing.png'
+        sprite: 'OrosBlessing.png',
+        effect: "For this\nturn, all abilities gain 1\nand +1 for every 5\nClarity toward Reach."
     },
 {
         title: "Injection",
@@ -284,7 +296,8 @@ var CardAbilities = [
         reach: 4,
         will: 5,
         type: "SPELL",
-        sprite: 'Fireball.png'
+        sprite: 'Fireball.png',
+        effect: "+3 and +1\nfor every Clarity to\nthe target's next attack."
     }
     ];
 var numOfCards = 0;

@@ -9,7 +9,7 @@ WebFontConfig = {
 
     //  The Google Fonts we want to load (specify as many as you like in the array)
     google: {
-        families: ['Roboto Slab']
+        families: ['Roboto Slab', 'Asap Condensed']
     }
 
 };
@@ -39,7 +39,7 @@ Game.preload = function() {
     game.load.image('player_profile', 'assets/Board-62-height/Players.png');
     game.load.image('banner', 'assets/Board-62-height/Banner.png');
     game.load.image('sprite','assets/images/sprite-test.png');
-    game.load.image('bullet','assets/images/bullet.png');
+    game.load.image('bullet','assets/images/arrow2.png');
     game.load.image('remove','assets/images/remove.png');
     game.load.image('trash','assets/images/trash.png');
     game.load.image('exit','assets/images/exit.png');
@@ -53,6 +53,8 @@ Game.preload = function() {
     game.load.image('card_sprite', 'assets/Board-62-height/temp-card.png');
 
     game.load.atlasJSONHash('all_cards', 'assets/all_cards.png', 'assets/all_cards.json');
+    game.load.atlasJSONHash('cards_hover', 'assets/all_cards_variantshover.png', 'assets/all_cards_variantshover.json');
+    game.load.atlasJSONHash('cards_pressed', 'assets/all_cards_variantspressed.png', 'assets/all_cards_variantspressed.json');
     game.load.atlasJSONHash('sprites', 'assets/character_sprites.png', 'assets/character_sprites.json');
     //game.load.atlas('all_cards', 'assets/all_cards.png', 'assets/all_cards.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 
@@ -269,7 +271,7 @@ Game.scanForEnemies = function(hero, enemies, card, button){
     console.log("hero turn: " + hero.turn);
     for (var i = 0; i < enemies.length; i++)
     {
-        if (hero.stats.mp >= card.will && hero.turn && hero.id != enemies[i].id && Phaser.Math.distance(enemies[i].x,enemies[i].y,x,y) < (card.reach*10*6 + hero.stats.reach_bonus)/2+6)
+        if (hero.stats.mp >= card.will && hero.turn && hero.id != enemies[i].id && Phaser.Math.distance(enemies[i].x,enemies[i].y,x,y) < (card.reach*7*6 + hero.stats.reach_bonus)/2+6)
         {
             Game.enableSpriteInput(enemies[i].id, card, button);
         }
@@ -286,7 +288,7 @@ Game.scanForFriendlies = function (players, player, card, buttonIndex) {
     {
         if (player.turn == true && Game.playerMap.hasOwnProperty(id))
         {
-            if (player.stats.mp >= card.will && game.physics.arcade.distanceBetween(currentSprite, Game.playerMap[id]) < (card.reach*10*6 + player.stats.reach_bonus)/2+6){
+            if (player.stats.mp >= card.will && game.physics.arcade.distanceBetween(currentSprite, Game.playerMap[id]) < (card.reach*7*6 + player.stats.reach_bonus)/2+6){
                 Game.enableFriendlyInput(id, card, buttonIndex);
             }
         }
@@ -330,6 +332,9 @@ Game.movePlayer = function(id,x,y){
 Game.moveBullet = function(players, attacker, defender, card){
     var bullet = game.add.sprite(attacker.x, attacker.y, 'bullet');
     bullet.anchor.setTo(0.5, 0.5);
+    bullet.rotation = game.physics.arcade.angleBetween(attacker, defender);
+
+
     var distance = Phaser.Math.distance(attacker.x,attacker.y,defender.x,defender.y);
     var tween = game.add.tween(bullet);
     var duration = distance*5;
@@ -455,7 +460,7 @@ Game.drawRange = function (x, y, diameter, isPlayerTurn){
 
 Game.drawAttackRange = function (players, player, card, color, isTrap, trapID, slotIndex){
     var graphics = game.add.graphics(player.x, player.y);
-    var diameter = (card.reach + player.stats.reach_bonus)*10;
+    var diameter = (card.reach + player.stats.reach_bonus)*7;
 
     graphics.lineStyle(1);
     graphics.beginFill(color, 0.15);
@@ -610,61 +615,83 @@ Game.pickCard = function() {
     choiceGroup = game.add.group();
     game.card_mat = game.add.image(game.world.centerX, game.world.centerY, 'mat');
     game.card_mat.anchor.setTo(0.5, 0.5);
+    game.card_mat.alpha = 0;
     choiceGroup.add(game.card_mat);
     Game.createCardChoices(game.card0, game.card_mat.centerX - 350, game.card_mat.centerY, cards[0]);
-    Game.createCardChoices(game.card1, game.card_mat.centerX - 200, game.card_mat.centerY, cards[1]);
-    Game.createCardChoices(game.card2, game.card_mat.centerX - 50, game.card_mat.centerY, cards[2]);
-    Game.createCardChoices(game.card3, game.card_mat.centerX + 100, game.card_mat.centerY, cards[3]);
-    Game.createCardChoices(game.card4, game.card_mat.centerX + 250, game.card_mat.centerY, cards[4]);
-    Game.createCardChoices(game.card5, game.card_mat.centerX + 400, game.card_mat.centerY, cards[5]);
+    Game.createCardChoices(game.card1, game.card_mat.centerX - 180, game.card_mat.centerY, cards[1]);
+    Game.createCardChoices(game.card2, game.card_mat.centerX - 10, game.card_mat.centerY, cards[2]);
+    Game.createCardChoices(game.card3, game.card_mat.centerX + 160, game.card_mat.centerY, cards[3]);
+    Game.createCardChoices(game.card4, game.card_mat.centerX + 330, game.card_mat.centerY, cards[4]);
+    Game.createCardChoices(game.card5, game.card_mat.centerX + 500, game.card_mat.centerY, cards[5]);
 
-    var exit = game.add.button(game.card_mat.centerX-50, game.card_mat.centerY-50, 'exit', function() {
-        game.card_mat.destroy();
-        for (var i = 0; i < cardChoices.length; i++) {
-            cardChoices[i].destroy();
-        }
-        cardChoices = [];
-        game.world.remove(choiceGroup);
-        choiceGroup = null;
-    });
+    var exit = game.add.button(game.card_mat.centerX-100, game.card_mat.centerY-130, 'exit', Game.removeCardChoiceMat);
+    exit.anchor.setTo(0.5, 0.5);
 
     choiceGroup.add(exit);
 
+};
+
+Game.removeCardChoiceMat = function(){
+    game.card_mat.destroy();
+    for (var i = 0; i < cardChoices.length; i++) {
+        setTimeout(cardChoices[i].button.destroy.bind(cardChoices[i].button), 10); // what the hell, phaser?
+        cardChoices[i].desc.destroy();
+    }
+    game.world.remove(choiceGroup);
+    choiceGroup = null;
+    cardChoices = [];
 };
 
 Game.createCardChoices = function(context, x, y, card) {
     context = game.add.button(x, y, 'all_cards', function(){
         if (numOfCards < 6) {
             Game.createCardButton(card);
-            game.card_mat.destroy();
-            cardDesc.destroy();
-            //Destroy all cards upon choice
-            for (var i = 0; i < cardChoices.length; i++) {
-                setTimeout(cardChoices[i].destroy.bind(cardChoices[i]), 10); // what the hell, phaser?
-            }
-            game.world.remove(choiceGroup);
-            choiceGroup = null;
-            cardChoices = [];
+            Game.removeCardChoiceMat();
         }
     }, game, card.sprite, card.sprite, card.sprite);
+    context.anchor.setTo(0.5, 0.5);
 
-    context.onInputOver.add(function(){
-        cardDesc = game.add.text(x,y, card.title + "\n" +
-                                      card.proficiency + "\n" +
-                                      "Will required: " + card.will);
-        cardDesc.font = "Roboto Slab";
-        cardDesc.fontSize = 12;
-        cardDesc.fill = "#f44242";
-    }, game);
+    var cardText = "";
 
-    context.onInputOut.add(function(){
-        cardDesc.destroy();
-    }, game);
+    if (card.type == "ATTACK")
+    {
+        cardText = "Type:  " + card.type + "\n" +
+                                    "Will:  " + card.will + "\n" +
+                                    "Reach:  " + card.reach + "\n" +
+                                    "Power:\n" + card.natural + " + (" + card.proficiency + " x " + card.scale + ")";
+    }
+
+    else
+    {
+        cardText = "Type:  " + card.type + "\n" +
+                                    "Will required:  " + card.will + "\n" +
+                                    "Reach:  " + card.reach + "\n" +
+                                    "Effect:  " + card.effect;
+    }
+
+
+
+    cardDesc = game.add.text(x,y, cardText);
+                                    
+    cardDesc.anchor.setTo(0.5, 0.5);
+    cardDesc.font = "Asap Condensed";
+    cardDesc.fontSize = 14;
+        //cardDesc.fill = "#f44242";
+
+    var grd = cardDesc.context.createLinearGradient(0, 0, 0, cardDesc.canvas.height);
+    grd.addColorStop(0, '#70eaff');   
+    grd.addColorStop(1, '#70eaff');
+    cardDesc.fill = grd;
+
+    cardDesc.align = 'left';
+    cardDesc.stroke = '#000000';
+    cardDesc.strokeThickness = 2;
+    cardDesc.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
 
     //var testText = game.add.text(context.centerX, context.centerY, "test" + "\n" + "hello");
     //testText.anchor.setTo(0.5, 0.5);
 
-    cardChoices.push(context);
+    cardChoices.push({button: context, desc: cardDesc});
 };
 
 Game.createCardButton = function (card){
@@ -697,7 +724,7 @@ Game.createCardButton = function (card){
                     card.proficiency + "\n" +
                     "Will required: " + card.will);
                 myCards[index].cardDesc.font = "Roboto Slab";
-                myCards[index].cardDesc.fontSize = 12;
+                myCards[index].cardDesc.fontSize = 14;
                 myCards[index].cardDesc.fill = "#f44242";
                 myCards[index].cardDesc.anchor.setTo(0.5, 0.5);
             }, game);

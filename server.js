@@ -81,6 +81,8 @@ io.sockets.on('connection', function (socket) {
 
         socket.emit('allplayers', getAllPlayers(), socket.player);
         socket.broadcast.emit('newplayer', socket.player);
+        io.emit('new user', msg);
+
 
         socket.on('click',function(data){
             console.log('click to '+data.x+', '+data.y);

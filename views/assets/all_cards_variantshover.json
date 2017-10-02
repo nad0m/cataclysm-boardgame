@@ -1,0 +1,204 @@
+{"frames": {
+
+"AdanaisEmbrace.png":
+{
+	"frame": {"x":1,"y":1,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"Barrage.png":
+{
+	"frame": {"x":1,"y":195,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"Bloodlust.png":
+{
+	"frame": {"x":136,"y":1,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"Bushwack.png":
+{
+	"frame": {"x":136,"y":195,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"Cleave.png":
+{
+	"frame": {"x":271,"y":1,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"DauntlessAdvance.png":
+{
+	"frame": {"x":271,"y":195,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"Fireball.png":
+{
+	"frame": {"x":406,"y":1,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"Frenzy.png":
+{
+	"frame": {"x":406,"y":195,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"FrostLance.png":
+{
+	"frame": {"x":541,"y":1,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"Gale.png":
+{
+	"frame": {"x":541,"y":195,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"Geomancer.png":
+{
+	"frame": {"x":676,"y":1,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"Grapple.png":
+{
+	"frame": {"x":676,"y":195,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"HailyofIron.png":
+{
+	"frame": {"x":811,"y":1,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"IntrepidStrike.png":
+{
+	"frame": {"x":811,"y":195,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"LightningStep.png":
+{
+	"frame": {"x":946,"y":1,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"NetherWhisper.png":
+{
+	"frame": {"x":946,"y":195,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"OffhandBlow.png":
+{
+	"frame": {"x":1081,"y":1,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"OrosBlessing.png":
+{
+	"frame": {"x":1081,"y":195,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"PoisonWhip.png":
+{
+	"frame": {"x":1216,"y":1,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"SkyfathersArrow.png":
+{
+	"frame": {"x":1216,"y":195,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"StoneSkin.png":
+{
+	"frame": {"x":1351,"y":1,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"Trueshot.png":
+{
+	"frame": {"x":1351,"y":195,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"Waterweave.png":
+{
+	"frame": {"x":1486,"y":1,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+},
+"Windsplitter.png":
+{
+	"frame": {"x":1486,"y":195,"w":133,"h":192},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":192},
+	"sourceSize": {"w":133,"h":192}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "all_cards_variantshover.png",
+	"format": "RGBA8888",
+	"size": {"w":1620,"h":388},
+	"scale": "0.83333",
+	"smartupdate": "$TexturePacker:SmartUpdate:3b279e0820ef51bfe216b17a108b5ccf:f46cac70e42cab5e1177ec0e99497ba5:27a8548340cb47d1694bf12661a02eb8$"
+}
+}
