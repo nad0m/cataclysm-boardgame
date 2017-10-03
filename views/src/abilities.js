@@ -306,8 +306,8 @@ var myCards =[
     {
         card: null,
         slot: 1,
-        x: 60,
-        y: 420,
+        x: 70,
+        y: 490,
         button: null,
         removeButton: null,
         cardDesc: null,
@@ -316,8 +316,8 @@ var myCards =[
     {
         card: null,
         slot: 2,
-        x: 130,
-        y: 420,
+        x: 170,
+        y: 490,
         button: null,
         removeButton: null,
         cardDesc: null,
@@ -326,8 +326,8 @@ var myCards =[
     {
         card: null,
         slot: 3,
-        x: 200,
-        y: 420,
+        x: 270,
+        y: 490,
         button: null,
         removeButton: null,
         cardDesc: null,
@@ -336,8 +336,8 @@ var myCards =[
     {
         card: null,
         slot: 4,
-        x: 60,
-        y: 500,
+        x: 370,
+        y: 490,
         button: null,
         removeButton: null,
         cardDesc: null,
@@ -346,23 +346,13 @@ var myCards =[
     {
         card: null,
         slot: 5,
-        x: 130,
-        y: 500,
+        x: 470,
+        y: 490,
         button: null,
         removeButton: null,
         cardDesc: null,
         isPressed: false
-    },
-    {
-        card: null,
-        slot: 6,
-        x: 200,
-        y: 500,
-        button: null,
-        removeButton: null,
-        cardDesc: null,
-        isPressed: false
-    },
+    }
 ];
 
 

@@ -55,8 +55,8 @@ server.lastPlayerID = 0;
 var sockets = [];
 var currentTurn = 0;
 var turn = 0;
-var statBarsX = 150;
-var statBarsY = 10;
+var statBarsX = 257;
+var statBarsY = 36;
 var numberOfPlayers = 0;
 var checkForReset = 0;
 var trapID = 0;
@@ -77,7 +77,7 @@ io.sockets.on('connection', function (socket) {
             turn: false,
         };
         checkForReset++;
-        statBarsY += 80;
+        statBarsY += 69;
 
         socket.emit('allplayers', getAllPlayers(), socket.player);
         socket.broadcast.emit('newplayer', socket.player);

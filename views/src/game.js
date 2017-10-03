@@ -31,7 +31,7 @@ Game.preload = function() {
     game.load.script("BlurX", path + "assets/Layout/BlurX.js");
     game.load.script("BlurY", path + "assets/Layout/BlurY.js");
     game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
-    game.load.image('map', 'assets/Board/Board2.png');
+    game.load.image('map', 'assets/Board/Board.png');
     game.load.image('status', 'assets/Board-62-height/Status.png');
     game.load.image('trap', 'assets/images/trap.png');
     game.load.image('yellow_gem', 'assets/Board-62-height/YellowGem.png');
@@ -41,15 +41,15 @@ Game.preload = function() {
     game.load.image('sprite','assets/images/sprite-test.png');
     game.load.image('bullet','assets/images/arrow2.png');
     game.load.image('remove','assets/images/remove.png');
-    game.load.image('trash','assets/images/trash.png');
-    game.load.image('exit','assets/images/exit.png');
+    game.load.image('trash','assets/Buttons/ButtonTrash.png');
+    game.load.image('exit','assets/images/x-button.png');
     game.load.image('roll-dice','assets/Buttons/ButtonRoll.png');
     game.load.image('end-turn','assets/Buttons/ButtonEnd.png');
     game.load.image('atk-btn', 'assets/Buttons/ButtonOff.png');
-    game.load.image('warrior', 'assets/images/warrior.png');
-    game.load.image('mage','assets/images/Mage.png');
-    game.load.image('ranger','assets/images/Ranger.png');
-    game.load.image('mat', 'assets/Board-62-height/temp-mat.png');
+    game.load.image('warrior', 'assets/Attributes/Force.png');
+    game.load.image('mage','assets/Attributes/Arcana.png');
+    game.load.image('ranger','assets/Attributes/Clarity.png');
+    game.load.image('mat', 'assets/Board/Selection.png');
     game.load.image('card_sprite', 'assets/Board-62-height/temp-card.png');
 
     game.load.atlasJSONHash('all_cards', 'assets/all_cards.png', 'assets/all_cards.json');
@@ -150,10 +150,10 @@ Game.addNewPlayer = function(player,id,x,y){
 
 
 Game.createButtons = function(id){
-    game.roll_btn = game.add.button(this.world.centerX,this.world.centerY,'roll-dice', Game.rollDice);
+    game.roll_btn = game.add.button(408, 100,'roll-dice', Game.rollDice);
     game.roll_btn.anchor.setTo(0.5,0.5);
 
-    game.end_btn = game.add.button(this.world.centerX+100,this.world.centerY,'end-turn', Client.endTurn);
+    game.end_btn = game.add.button(408, 200,'end-turn', Client.endTurn);
     game.end_btn.anchor.setTo(0.5,0.5);
 
     Game.disableInput();
@@ -301,8 +301,6 @@ Game.updateStats = function(players){
     {
         var id = players[i].id;
 
-        title[id].setText(players[id].stats.title + " - Lvl. " + players[id].stats.level + ": " + players[id].name);
-
         var healthOffset = players[id].stats.hp/players[id].stats.max_hp * 100;
         myHealthBar[id].setPercent(healthOffset);
         hp_text[id].setText("HP: " + players[id].stats.hp + "/" + players[id].stats.max_hp);
@@ -394,7 +392,7 @@ Game.updateDice = function (frameValues, newTotal) {
 };
 
 Game.enableTrashInput = function (index){
-    game.trash = game.add.button(this.world.centerX-400,this.world.centerY+200,'trash', function(){
+    game.trash = game.add.button(595, 490,'trash', function(){
         Game.removeCardFromHand(index);
     });
     game.trash.anchor.setTo(0.5,0.5);
@@ -529,30 +527,32 @@ Game.removeGraphics = function(){
 
 Game.createStatBars = function (name, hero, x, y, id){
 
-    title[id] = game.add.text(x, y, hero.title + " - Lvl. " + hero.level + ": " + name, {
-        font: "12px Arial",
-        align: "left"
+    title[id] = game.add.text(x-150, y+10, name, {
+        font: "11px Arial",
+        align: "left",
+        fill: "#ffffff",
+        stroke: '#000000',
+        strokeThickness: 2
+    
     });
     title[id].anchor.setTo(0.5, 0.5);
+    title[id].setShadow(2, 2, 'rgba(0,0,0,0.5)', 2);
 
-    y += 15;
-
-    hp_text[id] = game.add.text(x, y, "HP: " + hero.hp + "/" + hero.max_hp, {
-        font: "12px Arial",
-        align: "left"
+    hp_text[id] = game.add.text(x-88, y+4, "HP: " + hero.hp + "/" + hero.max_hp, {
+        font: "11px Arial",
+        align: "right",
+        fill: "#ffffff",
+        stroke: '#000000',
+        strokeThickness: 2
     });
     hp_text[id].anchor.setTo(0.5, 0.5);
-
-    y += 10;
+    hp_text[id].setShadow(2, 2, 'rgba(0,0,0,0.5)', 2);
 
     var healthConfig = {
-        width: 200,
-        height: 15,
+        width: 103,
+        height: 4,
         x: x,
         y: y,
-        bg: {
-            color: '#bab4b2'
-        },
         bar: {
             color: '#f70000'
         },
@@ -560,26 +560,26 @@ Game.createStatBars = function (name, hero, x, y, id){
         flipped: false
     };
 
-    y += 20;
+    y += 21;
 
-    mp_text[id] = game.add.text(x, y, "MP: " + hero.mp + "/" + hero.max_mp, {
-        font: "12px Arial",
-        align: "left"
+    mp_text[id] = game.add.text(x-88, y-1, "MP: " + hero.mp + "/" + hero.max_mp, {
+        font: "11px Arial",
+        align: "right",
+        fill: "#ffffff",
+        stroke: '#000000',
+        strokeThickness: 2
     });
     mp_text[id].anchor.setTo(0.5, 0.5);
+    mp_text[id].setShadow(2, 2, 'rgba(0,0,0,0.5)', 2);
 
-    y += 10;
 
     var manaConfig = {
-        width: 200,
-        height: 15,
+        width: 104,
+        height: 4,
         x: x,
         y: y,
-        bg: {
-            color: '#bab4b2'
-        },
         bar: {
-            color: '#205aea'
+            color: '#00eaea'
         },
         animationDuration: 300,
         flipped: false
@@ -613,18 +613,18 @@ Game.getRandomCards = function() {
 Game.pickCard = function() {
     var cards = Game.getRandomCards();
     choiceGroup = game.add.group();
-    game.card_mat = game.add.image(game.world.centerX, game.world.centerY, 'mat');
+    game.card_mat = game.add.image(1295, 295, 'mat');
     game.card_mat.anchor.setTo(0.5, 0.5);
-    game.card_mat.alpha = 0;
+    //game.card_mat.alpha = 0;
     choiceGroup.add(game.card_mat);
-    Game.createCardChoices(game.card0, game.card_mat.centerX - 350, game.card_mat.centerY, cards[0]);
-    Game.createCardChoices(game.card1, game.card_mat.centerX - 180, game.card_mat.centerY, cards[1]);
-    Game.createCardChoices(game.card2, game.card_mat.centerX - 10, game.card_mat.centerY, cards[2]);
-    Game.createCardChoices(game.card3, game.card_mat.centerX + 160, game.card_mat.centerY, cards[3]);
-    Game.createCardChoices(game.card4, game.card_mat.centerX + 330, game.card_mat.centerY, cards[4]);
-    Game.createCardChoices(game.card5, game.card_mat.centerX + 500, game.card_mat.centerY, cards[5]);
+    Game.createCardChoices(game.card0, game.card_mat.centerX - 420, game.card_mat.centerY, cards[0]);
+    Game.createCardChoices(game.card1, game.card_mat.centerX - 250, game.card_mat.centerY, cards[1]);
+    Game.createCardChoices(game.card2, game.card_mat.centerX - 80, game.card_mat.centerY, cards[2]);
+    Game.createCardChoices(game.card3, game.card_mat.centerX + 90, game.card_mat.centerY, cards[3]);
+    Game.createCardChoices(game.card4, game.card_mat.centerX + 260, game.card_mat.centerY, cards[4]);
+    Game.createCardChoices(game.card5, game.card_mat.centerX + 430, game.card_mat.centerY, cards[5]);
 
-    var exit = game.add.button(game.card_mat.centerX-100, game.card_mat.centerY-130, 'exit', Game.removeCardChoiceMat);
+    var exit = game.add.button(game.card_mat.centerX + 530, game.card_mat.centerY - 160, 'exit', Game.removeCardChoiceMat);
     exit.anchor.setTo(0.5, 0.5);
 
     choiceGroup.add(exit);
@@ -644,7 +644,7 @@ Game.removeCardChoiceMat = function(){
 
 Game.createCardChoices = function(context, x, y, card) {
     context = game.add.button(x, y, 'all_cards', function(){
-        if (numOfCards < 6) {
+        if (numOfCards < 5) {
             Game.createCardButton(card);
             Game.removeCardChoiceMat();
         }
@@ -717,7 +717,7 @@ Game.createCardButton = function (card){
 
           }, game, card.sprite, card.sprite, card.sprite);
 
-            myCards[index].button.scale.setTo(0.7, 0.7);
+            myCards[index].button.scale.setTo(0.6, 0.6);
 
             myCards[index].button.onInputOver.add(function(){
                 myCards[index].cardDesc = game.add.text(myCards[i].x, myCards[i].y, card.title + "\n" +
@@ -796,7 +796,7 @@ Game.removeCardFromHand = function(index){
 };
 
 Game.levelUpScreen = function(){
-    game.card_mat = game.add.image(game.world.centerX, game.world.centerY, 'mat');
+    game.card_mat = game.add.image(1295, 295, 'mat');
     game.card_mat.anchor.setTo(0.5, 0.5);
 
 
@@ -810,6 +810,11 @@ Game.levelUpScreen = function(){
     clarity = game.add.button(game.card_mat.centerX+200, game.card_mat.centerY, 'ranger', function(){
         Client.sendChoice(2);
     });
+
+    game.prompt.anchor.setTo(0.5, 0.5);
+    force.anchor.setTo(0.5, 0.5);
+    arcana.anchor.setTo(0.5, 0.5);
+    clarity.anchor.setTo(0.5, 0.5);
 
 };
 
@@ -837,18 +842,21 @@ Game.loadBoard = function(hero) {
     game.map.events.onInputUp.add(Game.getCoordinates, this);
 
 
-    Client.askNewPlayer([fname + " " + lname, fname + " " +lname + " has joined the room.", hero]);
+    Client.askNewPlayer([fname, fname + " " +lname + " has joined the room.", hero]);
 
     diceGroup = game.add.group();
     var i;
-    for (i=0; i < 3; i++) {
-        var d = new Dice(game, i*100+360, 100);
+    var x = 90;
+    for (i=0; i < 5; i++) {
+        var d = new Dice(game, x, 344);
+        x += 70;
         diceGroup.add(d);
     }
 
-    text = game.add.text(360,10, "Total: ");
-    text.font = "Roboto Slab";
+    text = game.add.text(x+50,344, "Total: ");
+    text.font = "Revalia";
     text.fontSize = 30;
-    text.fill = "#f44242";
+    text.fill = "#29aff4";
+    text.anchor.setTo(0.5, 0.5);
 };
 
