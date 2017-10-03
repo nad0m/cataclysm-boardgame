@@ -68,8 +68,8 @@ io.sockets.on('connection', function (socket) {
     socket.on('newplayer',function(msg){
         socket.player = {
             id: server.lastPlayerID++,
-            x: randomInt(550,750),
-            y: randomInt(55,400),
+            x: randomInt(680,750),
+            y: randomInt(7,300),
             name: msg[0],
             stats: msg[2],
             uiX: statBarsX,
@@ -223,7 +223,7 @@ io.sockets.on('connection', function (socket) {
         sockets[id].player.stats.hp -= damage;
         stats.damage_bonus = 0; //reset if any bonus exists, e.g. "Bloodlust"
         sockets[id].player.stats.def_bonus = 0; //reset bonus
-        io.emit('attack', getAllPlayers(), socket.player, sockets[id].player, card);
+        io.emit('attack', getAllPlayers(), socket.player, sockets[id].player, card, damage, "#ff0000");
     });
 
     socket.on('apply self', function (id, card){
@@ -259,12 +259,14 @@ io.sockets.on('connection', function (socket) {
     socket.on('apply others', function (id, card){
         var target = sockets[id].player.stats;
         var source = socket.player.stats;
+        var damage = 0;
         source.mp -= card.will;
 
         switch (card.title)
         {
             case "Waterweave": // HEAL: Restores 2 (+2 for every 3 Arcana) of the target's health.
                 target.hp += Math.floor(2 + (2*source.arcana/3));
+                damage = Math.floor(2 + (2*source.arcana/3));
                 if (target.hp > target.max_hp)
                 {
                     target.hp = target.max_hp;
@@ -272,6 +274,7 @@ io.sockets.on('connection', function (socket) {
                 break;
             case "First Aid": // HEAL: Restores 2 (+1 for every 3 Force) to the target's health. +20% hp recovery for one turn.
                 target.hp += Math.floor(2 + (2*source.force/3));
+                damage = Math.floor(2 + (2*source.force/3));
                 target.hp_recovery_bonus = 0.2;
                 if (target.hp > target.max_hp)
                 {
@@ -280,10 +283,11 @@ io.sockets.on('connection', function (socket) {
                 break;
             case "Injection": // STEROID: Add 3 (+1 for every 3 Clarity) to the target's next attack.
                 target.damage_bonus += Math.floor(2 + (source.clarity/3));
+                damage = Math.floor(2 + (2*source.clarity/3));
                 break;
         }
 
-        io.emit('apply others', getAllPlayers(), socket.player, sockets[id].player, card);
+        io.emit('apply others', getAllPlayers(), socket.player, sockets[id].player, card, damage, "#2fff28");
     });
 
     function next_turn(){

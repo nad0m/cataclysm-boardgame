@@ -144,14 +144,14 @@ Client.socket.on('draw_circle',function(x, y, total, isPlayerTurn){
     Game.drawRange(x, y, total, isPlayerTurn);
 });
 
-Client.socket.on('attack', function(players, attacker, defender, card){
+Client.socket.on('attack', function(players, attacker, defender, card, damage, color){
     Game.removeGraphics();
-    Game.moveBullet(players, attacker, defender, card);
+    Game.moveBullet(players, attacker, defender, card, damage, color);
 });
 
-Client.socket.on('apply others', function(players, source, recipient, card){
+Client.socket.on('apply others', function(players, source, recipient, card, damage, color){
     Game.removeGraphics();
-    Game.moveBullet(players, source, recipient, card);
+    Game.moveBullet(players, source, recipient, card, damage, color);
 });
 
 Client.socket.on('player info',function(hero, enemies, card, button){
@@ -180,7 +180,7 @@ Client.socket.on('allplayers',function(data, player){
         Game.updateDice(frameValues, total);
     });
 
-    Game.createButtons(player.id);
+    Game.createButtons(player);
 });
 
 
