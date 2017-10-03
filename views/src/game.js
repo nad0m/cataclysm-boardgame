@@ -9,7 +9,7 @@ WebFontConfig = {
 
     //  The Google Fonts we want to load (specify as many as you like in the array)
     google: {
-        families: ['Roboto Slab', 'Asap Condensed']
+        families: ['Roboto Slab', 'Asap Condensed', 'Revalia']
     }
 
 };
@@ -369,7 +369,7 @@ Game.moveBullet = function(players, attacker, defender, card, damage, color){
         bullet.destroy();
         Game.updateStats(players);
         game.number = game.add.text(defender.x, defender.y-5, damage, {
-        font: "20px Arial",
+        font: "20px Revalia",
         align: "center",
         fill: color,
         stroke: '#000000',

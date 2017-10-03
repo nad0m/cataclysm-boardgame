@@ -348,8 +348,8 @@ function resetServer(){
     sockets = [];
     currentTurn = 0;
     turn = 0;
-    statBarsX = 150;
-    statBarsY = 10;
+    statBarsX = 257;
+    statBarsY = 36;
     numberOfPlayers = 0;
     checkForReset = 0;
     trapID = 0;
