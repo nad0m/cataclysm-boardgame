@@ -39,7 +39,7 @@ Game.preload = function() {
     game.load.image('player_profile', 'assets/Board-62-height/Players.png');
     game.load.image('banner', 'assets/Board-62-height/Banner.png');
     game.load.image('sprite','assets/images/sprite-test.png');
-    game.load.image('bullet','assets/images/arrow2.png');
+    game.load.image('bullet','assets/images/arrow3.png');
     game.load.image('remove','assets/images/remove.png');
     game.load.image('trash','assets/Buttons/ButtonTrash.png');
     game.load.image('exit','assets/images/x-button.png');
