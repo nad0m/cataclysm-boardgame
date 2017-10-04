@@ -1,0 +1,100 @@
+{"frames": {
+
+"arrow3.png":
+{
+	"frame": {"x":1,"y":51,"w":57,"h":12},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":4,"w":57,"h":12},
+	"sourceSize": {"w":60,"h":21}
+},
+"arrow4.png":
+{
+	"frame": {"x":60,"y":42,"w":80,"h":21},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":80,"h":21},
+	"sourceSize": {"w":80,"h":21}
+},
+"barrage.gif":
+{
+	"frame": {"x":144,"y":1,"w":74,"h":35},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":3,"w":74,"h":35},
+	"sourceSize": {"w":80,"h":40}
+},
+"bullet.png":
+{
+	"frame": {"x":287,"y":1,"w":15,"h":16},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":16},
+	"sourceSize": {"w":15,"h":16}
+},
+"firestrike.png":
+{
+	"frame": {"x":95,"y":1,"w":47,"h":38},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":1,"w":47,"h":38},
+	"sourceSize": {"w":48,"h":40}
+},
+"frostlance.png":
+{
+	"frame": {"x":142,"y":41,"w":80,"h":21},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":1,"w":80,"h":21},
+	"sourceSize": {"w":80,"h":22}
+},
+"gale.gif":
+{
+	"frame": {"x":220,"y":1,"w":65,"h":34},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":1,"w":65,"h":34},
+	"sourceSize": {"w":65,"h":35}
+},
+"heal.png":
+{
+	"frame": {"x":53,"y":1,"w":40,"h":39},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":39},
+	"sourceSize": {"w":40,"h":39}
+},
+"strike.png":
+{
+	"frame": {"x":1,"y":1,"w":50,"h":48},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":48},
+	"sourceSize": {"w":50,"h":48}
+},
+"sword.png":
+{
+	"frame": {"x":224,"y":37,"w":80,"h":21},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":80,"h":21},
+	"sourceSize": {"w":80,"h":21}
+},
+"whip.png":
+{
+	"frame": {"x":287,"y":19,"w":44,"h":8},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":2,"w":44,"h":8},
+	"sourceSize": {"w":49,"h":12}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "bullets.png",
+	"format": "RGBA8888",
+	"size": {"w":332,"h":64},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:50d2779f1f936444fd45aa870a724103:a0cbff66296f60aee62f0df6c4ce404e:878d09cf2bf4ec0dfb23d5bcf7e0eb82$"
+}
+}

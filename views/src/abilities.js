@@ -8,7 +8,8 @@ var CardAbilities = [
         reach: 5,
         will: 3,
         type: "ATTACK",
-        sprite: 'Fireball.png'
+        sprite: 'Fireball.png',
+        bullet: 'bullet.png'
     },
 {
         title: "Poison Whip ",
@@ -19,7 +20,8 @@ var CardAbilities = [
         reach: 4,
         will: 5,
         type: "ATTACK",
-        sprite: 'PoisonWhip.png'
+        sprite: 'PoisonWhip.png',
+        bullet: 'whip.png'
     },
 {
         title: "Frost Lance",
@@ -30,7 +32,8 @@ var CardAbilities = [
         reach: 5,
         will: 5,
         type: "ATTACK",
-        sprite: 'FrostLance.png'
+        sprite: 'FrostLance.png',
+        bullet: 'frostlance.png'
     },
 {
         title: "Stone Skin",
@@ -42,7 +45,8 @@ var CardAbilities = [
         will: 6,
         type: "SELF",
         sprite: 'StoneSkin.png',
-        effect: "+1 and +1 for\nevery 3 Arcana to damage\nreduction permanently."
+        effect: "+1 and +1 for\nevery 3 Arcana to damage\nreduction permanently.",
+        bullet: 'bullet.png'
     },
 {
         title: "Waterweave",
@@ -54,7 +58,8 @@ var CardAbilities = [
         will: 7,
         type: "SPELL",
         sprite: 'Waterweave.png',
-        effect: "Heals 2 and\n+2 for every 3 Arcana to\nthe target's health."
+        effect: "Heals 2 and\n+2 for every 3 Arcana to\nthe target's health.",
+        bullet: 'heal.png'
     },
 {
         title: "Lightning Step",
@@ -66,7 +71,8 @@ var CardAbilities = [
         will: 4,
         type: "SELF",
         sprite: 'LightningStep.png',
-        effect: "+10 toward\nyour next roll and +1\nfor every 1 Clarity"
+        effect: "+10 toward\nyour next roll and +1\nfor every 1 Clarity.",
+        bullet: 'bullet.png'
 
     },
 {
@@ -79,7 +85,8 @@ var CardAbilities = [
         will: 7,
         type: "TRAP",
         sprite: 'Geomancer.png',
-        effect: "Place a trap. Any\nunits who end turn on\ntrap will receive damage."
+        effect: "Place a trap. Any\nunits who end turn on\ntrap will receive damage.",
+        bullet: 'bullet.png'
     },
 
 {
@@ -91,7 +98,8 @@ var CardAbilities = [
         reach: 4,
         will: 5,
         type: "ATTACK",
-        sprite: 'Gale.png'
+        sprite: 'Gale.png',
+        bullet: 'gale.gif'
     },
 {
         title: "Cleave",
@@ -102,7 +110,8 @@ var CardAbilities = [
         reach: 2,
         will: 3,
         type: "ATTACK",
-        sprite: 'Cleave.png'
+        sprite: 'Cleave.png',
+        bullet: 'sword.png'
     },
 {
         title: "Bloodlust",
@@ -114,7 +123,8 @@ var CardAbilities = [
         will: 5,
         type: "SELF",
         sprite: 'Bloodlust.png',
-        effect: "+2 and +1\nfor every 4 Force to\nyour next attack."
+        effect: "+2 and +1\nfor every 4 Force to\nyour next attack.",
+        bullet: 'bullet.png'
     },
 {
         title: "Frenzy",
@@ -125,7 +135,8 @@ var CardAbilities = [
         reach: 2,
         will: 4,
         type: "ATTACK",
-        sprite: 'Frenzy.png'
+        sprite: 'Frenzy.png',
+        bullet: 'strike.png'
     },
 {
         title: "Intrepid Strike",
@@ -136,7 +147,8 @@ var CardAbilities = [
         reach: 2,
         will: 9,
         type: "ATTACK",
-        sprite: 'IntrepidStrike.png'
+        sprite: 'IntrepidStrike.png',
+        bullet: 'firestrike.png'
     },
 {
         title: "Offhand Blow",
@@ -147,7 +159,8 @@ var CardAbilities = [
         reach: 2,
         will: 6,
         type: "ATTACK",
-        sprite: 'OffhandBlow.png'
+        sprite: 'OffhandBlow.png',
+        bullet: 'strike.png'
     },
 {
         title: "Grapple",
@@ -158,7 +171,8 @@ var CardAbilities = [
         reach: 2,
         will: 4,
         type: "ATTACK",
-        sprite: 'Grapple.png'
+        sprite: 'Grapple.png',
+        bullet: 'firestrike.png'
     },
 {
         title: "Dauntless Advance",
@@ -170,7 +184,8 @@ var CardAbilities = [
         will: 5,
         type: "SELF",
         sprite: 'DauntlessAdvance.png',
-        effect: "+5 and\n+1 for every Force\ntoward your next roll."
+        effect: "+5 and\n+1 for every Force\ntoward your next roll.",
+        bullet: 'bullet.png'
     },
 {
         title: "Adanai's Embrace",
@@ -182,7 +197,8 @@ var CardAbilities = [
         will: 4,
         type: "SELF",
         sprite: 'AdanaisEmbrace.png',
-        effect: "Absorbs up\nto 2 and +1 for every\n3 Force damage. Expires\nafter you get attacked."
+        effect: "Absorbs up\nto 2 and +1 for every\n3 Force damage. Expires\nafter you get attacked.",
+        bullet: 'bullet.png'
     },
 {
         title: "First Aid",
@@ -194,7 +210,8 @@ var CardAbilities = [
         will: 6,
         type: "SPELL",
         sprite: 'Fireball.png',
-        effect: "Heals 2 and\n+1 for every 3 Force to the\ntarget's health. +20% HP\nrecovery for one turn."
+        effect: "Heals 2 and\n+1 for every 3 Force to the\ntarget's health. +20% HP\nrecovery for one turn.",
+        bullet: 'heal.png'
 
     },
 {
@@ -206,7 +223,8 @@ var CardAbilities = [
         reach: 6,
         will: 3,
         type: "ATTACK",
-        sprite: 'Trueshot.png'
+        sprite: 'Trueshot.png',
+        bullet: 'arrow4.png'
     },
 {
         title: "Skyfather's Arrow",
@@ -217,7 +235,8 @@ var CardAbilities = [
         reach: 8,
         will: 10,
         type: "ATTACK",
-        sprite: 'SkyfathersArrow.png'
+        sprite: 'SkyfathersArrow.png',
+        bullet: 'arrow4.png'
     },
 {
         title: "Nether Whisper",
@@ -228,7 +247,8 @@ var CardAbilities = [
         reach: 6,
         will: 8,
         type: "ATTACK",
-        sprite: 'NetherWhisper.png'
+        sprite: 'NetherWhisper.png',
+        bullet: 'arrow4.png'
     },
 {
         title: "Hail of Iron",
@@ -239,7 +259,8 @@ var CardAbilities = [
         reach: 6,
         will: 4,
         type: "ATTACK",
-        sprite: 'HailyofIron.png'
+        sprite: 'HailyofIron.png',
+        bullet: 'barrage.gif'
     },
 {
         title: "Barrage",
@@ -250,7 +271,8 @@ var CardAbilities = [
         reach: 4,
         will: 6,
         type: "ATTACK",
-        sprite: 'Barrage.png'
+        sprite: 'Barrage.png',
+        bullet: 'barrage.gif'
     },
 {
         title: "Windsplitter",
@@ -261,7 +283,8 @@ var CardAbilities = [
         reach: 7,
         will: 5,
         type: "ATTACK",
-        sprite: 'Windsplitter.png'
+        sprite: 'Windsplitter.png',
+        bullet: 'arrow3.png'
     },
 {
         title: "Bushwack",
@@ -273,7 +296,8 @@ var CardAbilities = [
         will: 5,
         type: "TRAP",
         sprite: 'Bushwack.png',
-        effect: "Place a trap. Any\nunits who end turn on\ntrap will receive damage."
+        effect: "Place a trap. Any\nunits who end turn on\ntrap will receive damage.",
+        bullet: 'arrow3.png'
     },
 {
         title: "Oros' Blessing",
@@ -285,7 +309,8 @@ var CardAbilities = [
         will: 4,
         type: "SELF",
         sprite: 'OrosBlessing.png',
-        effect: "For this\nturn, all abilities gain 1\nand +1 for every 5\nClarity toward Reach."
+        effect: "For this\nturn, all abilities gain 1\nand +1 for every 5\nClarity toward Reach.",
+        bullet: 'bullet.png'
     },
 {
         title: "Injection",
@@ -297,7 +322,8 @@ var CardAbilities = [
         will: 5,
         type: "SPELL",
         sprite: 'Fireball.png',
-        effect: "+3 and +1\nfor every Clarity to\nthe target's next attack."
+        effect: "+3 and +1\nfor every Clarity to\nthe target's next attack.",
+        bullet: 'arrow4.png'
     }
     ];
 var numOfCards = 0;

@@ -39,7 +39,7 @@ Game.preload = function() {
     game.load.image('player_profile', 'assets/Board-62-height/Players.png');
     game.load.image('banner', 'assets/Board-62-height/Banner.png');
     game.load.image('sprite','assets/images/sprite-test.png');
-    game.load.image('bullet','assets/images/arrow2.png');
+    game.load.image('bullet','assets/images/frostlance.png');
     game.load.image('remove','assets/images/remove.png');
     game.load.image('trash','assets/Buttons/ButtonTrash.png');
     game.load.image('exit','assets/images/x-button.png');
@@ -59,6 +59,7 @@ Game.preload = function() {
     game.load.atlasJSONHash('cards_hover', 'assets/all_cards_variantshover.png', 'assets/all_cards_variantshover.json');
     game.load.atlasJSONHash('cards_pressed', 'assets/all_cards_variantspressed.png', 'assets/all_cards_variantspressed.json');
     game.load.atlasJSONHash('sprites', 'assets/character_sprites.png', 'assets/character_sprites.json');
+    game.load.atlasJSONHash('bullets', 'assets/bullets.png', 'assets/bullets.json');
     //game.load.atlas('all_cards', 'assets/all_cards.png', 'assets/all_cards.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 
 };
@@ -353,7 +354,7 @@ Game.movePlayer = function(id,x,y){
 };
 
 Game.moveBullet = function(players, attacker, defender, card, damage, color){
-    var bullet = game.add.sprite(attacker.x, attacker.y, 'bullet');
+    var bullet = game.add.sprite(attacker.x, attacker.y, 'bullets', card.bullet);
     bullet.anchor.setTo(0.5, 0.5);
     bullet.rotation = game.physics.arcade.angleBetween(attacker, defender);
 
@@ -376,7 +377,7 @@ Game.moveBullet = function(players, attacker, defender, card, damage, color){
         strokeThickness: 4
     });
         var textTween = game.add.tween(game.number);
-        textTween.to({x: defender.x, y: defender.y-70}, 400);
+        textTween.to({x: defender.x, y: defender.y-80}, 700);
         textTween.start();
 
         textTween.onComplete.add(function(){
