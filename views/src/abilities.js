@@ -209,7 +209,7 @@ var CardAbilities = [
         reach: 3,
         will: 6,
         type: "SPELL",
-        sprite: 'Fireball.png',
+        sprite: 'FirstAid.png',
         effect: "Heals 2 and\n+1 for every 3 Force to the\ntarget's health. +20% HP\nrecovery for one turn.",
         bullet: 'heal.png'
 
@@ -321,7 +321,7 @@ var CardAbilities = [
         reach: 4,
         will: 5,
         type: "SPELL",
-        sprite: 'Fireball.png',
+        sprite: 'Injection.png',
         effect: "+3 and +1\nfor every Clarity to\nthe target's next attack.",
         bullet: 'arrow4.png'
     }

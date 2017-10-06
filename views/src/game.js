@@ -726,10 +726,7 @@ Game.createCardChoices = function(context, x, y, card) {
     cardDesc.fontSize = 14;
         //cardDesc.fill = "#f44242";
 
-    var grd = cardDesc.context.createLinearGradient(0, 0, 0, cardDesc.canvas.height);
-    grd.addColorStop(0, '#70eaff');   
-    grd.addColorStop(1, '#70eaff');
-    cardDesc.fill = grd;
+    cardDesc.fill = '#ffffff';
 
     cardDesc.align = 'left';
     cardDesc.stroke = '#000000';
