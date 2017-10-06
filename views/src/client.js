@@ -162,6 +162,10 @@ Client.socket.on('update players',function(players){
     Game.updateStats(players);
 });
 
+Client.socket.on('player turn',function(currentPlayer){
+    Game.updateBoard(currentPlayer);
+});
+
 Client.socket.on('allplayers',function(data, player){
     for(var i = 0; i < data.length; i++){
         Game.addNewPlayer(data[i], data[i].id,data[i].x,data[i].y);

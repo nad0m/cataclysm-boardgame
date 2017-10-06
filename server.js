@@ -323,6 +323,7 @@ io.sockets.on('connection', function (socket) {
         }
         sockets[turn].player.turn = true;
         io.emit('update players', getAllPlayers());
+        io.emit('player turn', sockets[turn].player.name)
         sockets[turn].emit('your_turn');
         console.log(sockets[turn].player.name + "'s turn.");
     }

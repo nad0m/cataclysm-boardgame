@@ -9,7 +9,7 @@ WebFontConfig = {
 
     //  The Google Fonts we want to load (specify as many as you like in the array)
     google: {
-        families: ['Roboto Slab', 'Asap Condensed', 'Revalia']
+        families: ['Roboto Slab', 'Asap Condensed', 'Revalia', 'Courier New']
     }
 
 };
@@ -342,6 +342,10 @@ Game.updateStats = function(players){
         }
     }
 
+};
+
+Game.updateBoard = function(player){
+    Game.gameText.setText("-- " + player + "'s turn --");
 };
 
 Game.movePlayer = function(id,x,y){
@@ -912,10 +916,19 @@ Game.loadBoard = function(hero) {
     game.heroSelection.destroy();
     game.choose.destroy();
 
+    var style = {
+        font: "14px Courier New",
+        align: "center",
+        fill: "#000000",
+        stroke: '#00ea5a',
+        strokeThickness: 2,
+    };
 
     Game.playerMap = {};
     Game.traps = {};
     Game.trapCard ={};
+    Game.gameText = game.add.text(570, 20, "Welcome to Cataclysm", style);
+    Game.gameText.anchor.set(0.5);
 
     Client.askNewPlayer([fname, fname + " " +lname + " has joined the room.", hero]);
 
