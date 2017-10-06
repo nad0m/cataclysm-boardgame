@@ -30,7 +30,7 @@ Game.preload = function() {
     game.load.spritesheet("dice", path + "assets/Layout/diceRed.png", 64, 64);
     game.load.script("BlurX", path + "assets/Layout/BlurX.js");
     game.load.script("BlurY", path + "assets/Layout/BlurY.js");
-    game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
+    game.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
     game.load.image('map', 'assets/Board/Board.png');
     game.load.image('status', 'assets/Board-62-height/Status.png');
     game.load.image('trap', 'assets/images/trap.png');
