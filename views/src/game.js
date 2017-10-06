@@ -39,7 +39,6 @@ Game.preload = function() {
     game.load.image('player_profile', 'assets/Board-62-height/Players.png');
     game.load.image('banner', 'assets/Board-62-height/Banner.png');
     game.load.image('sprite','assets/images/sprite-test.png');
-    game.load.image('bullet','assets/images/frostlance.png');
     game.load.image('remove','assets/images/remove.png');
     game.load.image('trash','assets/Buttons/ButtonTrash.png');
     game.load.image('exit','assets/images/x-button.png');
@@ -53,6 +52,7 @@ Game.preload = function() {
     game.load.image('mage-btn','assets/Characters/Heroes/Selection/HeroSelectionWizard.png');
     game.load.image('ranger-btn','assets/Characters/Heroes/Selection/HeroSelectionRanger.png');
     game.load.image('mat', 'assets/Board/Selection.png');
+    game.load.image('card_display', 'assets/Board/card_view.png');
     game.load.image('card_sprite', 'assets/Board-62-height/temp-card.png');
 
     game.load.atlasJSONHash('all_cards', 'assets/all_cards.png', 'assets/all_cards.json');
@@ -767,17 +767,37 @@ Game.createCardButton = function (card){
 
             myCards[index].button.scale.setTo(0.6, 0.6);
 
+
+            var style = {
+                font: "14px Asap Condensed",
+                align: "left",
+                fill: "#ffffff",
+                stroke: '#000000',
+                strokeThickness: 2
+            };
+
+            var str = card.proficiency + "\n" +
+                    "Type: " + card.type + "\n" +
+                    "Will: " + card.will + "\n" +
+                    "Reach: " + card.reach + "\n" +
+                    "Natural: " + card.natural + "\n" +
+                    "Scale: " + card.scale + "\n";
+
+            if (card.type != "ATTACK")
+            {
+                str = str + "Effect: " + card.effect;
+            }
+                                    
             myCards[index].button.onInputOver.add(function(){
-                myCards[index].cardDesc = game.add.text(myCards[i].x, myCards[i].y, card.title + "\n" +
-                    card.proficiency + "\n" +
-                    "Will required: " + card.will);
-                myCards[index].cardDesc.font = "Roboto Slab";
-                myCards[index].cardDesc.fontSize = 14;
-                myCards[index].cardDesc.fill = "#f44242";
+
+                myCards[index].cardView = game.add.image(myCards[i].x, myCards[i].y-220, 'card_display');
+                myCards[index].cardDesc = game.add.text(myCards[i].cardView.centerX, myCards[i].cardView.centerY, str, style);
                 myCards[index].cardDesc.anchor.setTo(0.5, 0.5);
+
             }, game);
 
             myCards[index].button.onInputOut.add(function(){
+                myCards[index].cardView.destroy();
                 myCards[index].cardDesc.destroy();
             }, game);
 

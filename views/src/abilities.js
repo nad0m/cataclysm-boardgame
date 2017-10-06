@@ -337,7 +337,8 @@ var myCards =[
         button: null,
         removeButton: null,
         cardDesc: null,
-        isPressed: false
+        isPressed: false,
+        cardView: null
     },
     {
         card: null,
@@ -347,7 +348,8 @@ var myCards =[
         button: null,
         removeButton: null,
         cardDesc: null,
-        isPressed: false
+        isPressed: false,
+        cardView: null
     },
     {
         card: null,
@@ -357,7 +359,8 @@ var myCards =[
         button: null,
         removeButton: null,
         cardDesc: null,
-        isPressed: false
+        isPressed: false,
+        cardView: null
     },
     {
         card: null,
@@ -367,7 +370,8 @@ var myCards =[
         button: null,
         removeButton: null,
         cardDesc: null,
-        isPressed: false
+        isPressed: false,
+        cardView: null
     },
     {
         card: null,
@@ -377,7 +381,8 @@ var myCards =[
         button: null,
         removeButton: null,
         cardDesc: null,
-        isPressed: false
+        isPressed: false,
+        cardView: null
     }
 ];
 
