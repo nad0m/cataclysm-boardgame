@@ -32,6 +32,7 @@ Game.preload = function() {
     game.load.script("BlurY", path + "assets/Layout/BlurY.js");
     game.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
     game.load.image('map', 'assets/Board/Board.png');
+    /*
     game.load.image('status', 'assets/Board-62-height/Status.png');
     game.load.image('trap', 'assets/images/trap.png');
     game.load.image('yellow_gem', 'assets/Board-62-height/YellowGem.png');
@@ -55,13 +56,16 @@ Game.preload = function() {
     game.load.image('card_display', 'assets/Board/card_view.png');
     game.load.image('card_sprite', 'assets/Board-62-height/temp-card.png');
 
+
     game.load.atlasJSONHash('all_cards', 'assets/all_cards.png', 'assets/all_cards.json');
     game.load.atlasJSONHash('cards_hover', 'assets/all_cards_variantshover.png', 'assets/all_cards_variantshover.json');
     game.load.atlasJSONHash('cards_pressed', 'assets/all_cards_variantspressed.png', 'assets/all_cards_variantspressed.json');
     game.load.atlasJSONHash('sprites', 'assets/character_sprites.png', 'assets/character_sprites.json');
     game.load.atlasJSONHash('bullets', 'assets/bullets.png', 'assets/bullets.json');
     //game.load.atlas('all_cards', 'assets/all_cards.png', 'assets/all_cards.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+    */
 
+    game.load.atlasJSONHash('atlas', 'assets/atlas.png', 'assets/atlas.json');
 };
 
 var text;
@@ -89,7 +93,7 @@ Game.create = function(){
     game.map.anchor.setTo(0.5,0.5);
     game.map.inputEnabled = true;
     game.map.events.onInputUp.add(Game.getCoordinates, this);
-    game.heroSelection = game.add.image(1295, 295, 'mat');
+    game.heroSelection = game.add.image(1295, 295, 'atlas', 'Selection.png');
     game.heroSelection.anchor.setTo(0.5, 0.5);
     game.heroSelection.scale.setTo(0.7, 0.7);
     game.choose = game.add.text(game.heroSelection.centerX, game.heroSelection.centerY-60, "Choose your class:", {
@@ -100,9 +104,12 @@ Game.create = function(){
         strokeThickness: 2
     });
     game.choose.anchor.setTo(0.5, 0.5);
-    game.warrior_btn = game.add.button(game.heroSelection.centerX-200, game.heroSelection.centerY, 'warrior-btn', Client.loadWarrior);
-    game.mage_btn = game.add.button(game.heroSelection.centerX, game.heroSelection.centerY, 'mage-btn', Client.loadMage);
-    game.ranger_btn = game.add.button(game.heroSelection.centerX+200, game.heroSelection.centerY, 'ranger-btn', Client.loadRanger);
+    game.warrior_btn = game.add.button(game.heroSelection.centerX-200, game.heroSelection.centerY, 'atlas',
+        Client.loadWarrior, 'HeroSelectionWarrior.png','HeroSelectionWarrior.png','HeroSelectionWarrior.png');
+    game.mage_btn = game.add.button(game.heroSelection.centerX, game.heroSelection.centerY, 'atlas',
+        Client.loadMage, 'HeroSelectionWizard.png', 'HeroSelectionWizard.png', 'HeroSelectionWizard.png');
+    game.ranger_btn = game.add.button(game.heroSelection.centerX+200, game.heroSelection.centerY, 'atlas',
+        Client.loadRanger, 'HeroSelectionRanger.png', 'HeroSelectionRanger.png', 'HeroSelectionRanger.png');
     game.warrior_btn.anchor.setTo(0.5, 0.5);
     game.mage_btn.anchor.setTo(0.5, 0.5);
     game.ranger_btn.anchor.setTo(0.5, 0.5);
@@ -158,7 +165,7 @@ Game.addNewPlayer = function(player,id,x,y){
 
     };
 
-    Game.playerMap[id] = game.add.sprite(x,y,'sprites', sprite_type);
+    Game.playerMap[id] = game.add.sprite(x,y,'atlas', sprite_type);
     Game.playerMap[id].anchor.setTo(0.5, 0.5);
     Game.playerMap[id].player = player;
     Game.playerMap[id].inputEnabled = true;
@@ -175,10 +182,10 @@ Game.addNewPlayer = function(player,id,x,y){
 
 
 Game.createButtons = function(player){
-    game.roll_btn = game.add.button(408, 100,'roll-dice', Game.rollDice);
+    game.roll_btn = game.add.button(408, 100,'atlas', Game.rollDice, 'ButtonRoll.png', 'ButtonRoll.png', 'ButtonRoll.png');
     game.roll_btn.anchor.setTo(0.5,0.5);
 
-    game.end_btn = game.add.button(408, 200,'end-turn', Client.endTurn);
+    game.end_btn = game.add.button(408, 200,'atlas', Client.endTurn, 'ButtonEnd.png', 'ButtonEnd.png', 'ButtonEnd.png');
     game.end_btn.anchor.setTo(0.5,0.5);
 
     Game.disableInput();
@@ -358,7 +365,7 @@ Game.movePlayer = function(id,x,y){
 };
 
 Game.moveBullet = function(players, attacker, defender, card, damage, color){
-    var bullet = game.add.sprite(attacker.x, attacker.y, 'bullets', card.bullet);
+    var bullet = game.add.sprite(attacker.x, attacker.y, 'atlas', card.bullet);
     bullet.anchor.setTo(0.5, 0.5);
     bullet.rotation = game.physics.arcade.angleBetween(attacker, defender);
 
@@ -440,9 +447,9 @@ Game.updateDice = function (frameValues, newTotal) {
 };
 
 Game.enableTrashInput = function (index){
-    game.trash = game.add.button(595, 490,'trash', function(){
+    game.trash = game.add.button(595, 490,'atlas', function(){
         Game.removeCardFromHand(index);
-    });
+    }, 'ButtonTrash.png');
     game.trash.anchor.setTo(0.5,0.5);
 };
 
@@ -531,7 +538,7 @@ Game.setTrap = function(allPlayers, player, id, index, card){
     var x = game.input.mousePointer.x;
     var y = game.input.mousePointer.y;
 
-    Game.traps[id] = game.add.sprite(x, y, 'trap');
+    Game.traps[id] = game.add.sprite(x, y, 'atlas', 'trap.png');
     Game.traps[id].anchor.setTo(0.5,0.5);
     Game.traps[id].alpha = 0.5;
 
@@ -661,7 +668,7 @@ Game.getRandomCards = function() {
 Game.pickCard = function() {
     var cards = Game.getRandomCards();
     choiceGroup = game.add.group();
-    game.card_mat = game.add.image(1295, 295, 'mat');
+    game.card_mat = game.add.image(1295, 295, 'atlas', 'Selection.png');
     game.card_mat.anchor.setTo(0.5, 0.5);
     //game.card_mat.alpha = 0;
     choiceGroup.add(game.card_mat);
@@ -672,7 +679,8 @@ Game.pickCard = function() {
     Game.createCardChoices(game.card4, game.card_mat.centerX + 260, game.card_mat.centerY, cards[4]);
     Game.createCardChoices(game.card5, game.card_mat.centerX + 430, game.card_mat.centerY, cards[5]);
 
-    var exit = game.add.button(game.card_mat.centerX + 530, game.card_mat.centerY - 160, 'exit', Game.removeCardChoiceMat);
+    var exit = game.add.button(game.card_mat.centerX + 530, game.card_mat.centerY - 160, 'atlas',
+        Game.removeCardChoiceMat, 'x-button-hover.png', 'x-button-hover.png', 'x-button.png');
     exit.anchor.setTo(0.5, 0.5);
 
     choiceGroup.add(exit);
@@ -691,7 +699,7 @@ Game.removeCardChoiceMat = function(){
 };
 
 Game.createCardChoices = function(context, x, y, card) {
-    context = game.add.button(x, y, 'all_cards', function(){
+    context = game.add.button(x, y, 'atlas', function(){
         if (numOfCards < 5) {
             Game.createCardButton(card);
             Game.removeCardChoiceMat();
@@ -749,7 +757,7 @@ Game.createCardButton = function (card){
         {
             numOfCards++;
             myCards[index].card = card;
-            myCards[index].button = game.add.button(myCards[i].x, myCards[i].y, 'all_cards', function(){
+            myCards[index].button = game.add.button(myCards[i].x, myCards[i].y, 'atlas', function(){
                 /* myCards[index].card = null;
                  button.destroy();*/
                 console.log(Game.playerMap[mySpriteID].player.turn);
@@ -787,7 +795,7 @@ Game.createCardButton = function (card){
                                     
             myCards[index].button.onInputOver.add(function(){
 
-                myCards[index].cardView = game.add.image(myCards[i].x, myCards[i].y-220, 'card_display');
+                myCards[index].cardView = game.add.image(myCards[i].x, myCards[i].y-220, 'atlas', 'card_view.png');
                 myCards[index].cardDesc = game.add.text(myCards[i].cardView.centerX, myCards[i].cardView.centerY, str, style);
                 myCards[index].cardDesc.anchor.setTo(0.5, 0.5);
 
@@ -861,7 +869,7 @@ Game.removeCardFromHand = function(index){
 };
 
 Game.levelUpScreen = function(){
-    game.card_mat = game.add.image(1295, 295, 'mat');
+    game.card_mat = game.add.image(1295, 295, 'atlas', 'Selection.png');
     game.card_mat.anchor.setTo(0.5, 0.5);
     game.card_mat.scale.setTo(0.5, 0.5);
 
@@ -873,15 +881,15 @@ Game.levelUpScreen = function(){
         stroke: '#000000',
         strokeThickness: 2
     });
-    force = game.add.button(game.card_mat.centerX-100, game.card_mat.centerY, 'warrior', function(){
+    force = game.add.button(game.card_mat.centerX-100, game.card_mat.centerY, 'atlas', function(){
         Client.sendChoice(0);
-    });
-    arcana = game.add.button(game.card_mat.centerX, game.card_mat.centerY, 'mage', function(){
+    }, 'Force.png', 'Force.png', 'Force.png');
+    arcana = game.add.button(game.card_mat.centerX, game.card_mat.centerY, 'atlas', function(){
         Client.sendChoice(1);
-    });
-    clarity = game.add.button(game.card_mat.centerX+100, game.card_mat.centerY, 'ranger', function(){
+    }, 'Arcana.png', 'Arcana.png', 'Arcana.png');
+    clarity = game.add.button(game.card_mat.centerX+100, game.card_mat.centerY, 'atlas', function(){
         Client.sendChoice(2);
-    });
+    }, 'Clarity.png', 'Clarity.png', 'Clarity.png');
 
     game.forceLabel = game.add.text(game.card_mat.centerX-100, game.card_mat.centerY+30, "Force", {
         font: "14px Arial",
