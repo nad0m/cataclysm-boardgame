@@ -449,7 +449,7 @@ Game.updateDice = function (frameValues, newTotal) {
 Game.enableTrashInput = function (index){
     game.trash = game.add.button(595, 490,'atlas', function(){
         Game.removeCardFromHand(index);
-    }, 'ButtonTrash.png');
+    }, 'ButtonTrash.png', 'ButtonTrash.png', 'ButtonTrash.png');
     game.trash.anchor.setTo(0.5,0.5);
 };
 
